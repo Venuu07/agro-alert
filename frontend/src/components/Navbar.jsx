@@ -4,8 +4,8 @@ import { Activity, AlertTriangle, BarChart3, Zap } from 'lucide-react';
 export const Navbar = ({ activeTab, onTabChange }) => {
   const tabs = [
     { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
-    { id: 'simulate', label: 'Simulate', icon: Zap },
-    { id: 'alerts', label: 'Alerts', icon: AlertTriangle },
+    { id: 'simulate', label: 'Shock Engine', icon: Zap },
+    { id: 'alerts', label: 'Risk Monitor', icon: AlertTriangle },
   ];
 
   return (
@@ -14,13 +14,13 @@ export const Navbar = ({ activeTab, onTabChange }) => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-primary flex items-center justify-center">
+            <div className="w-8 h-8 bg-primary flex items-center justify-center float-animation">
               <Activity size={18} className="text-primary-foreground" />
             </div>
             <div>
-              <h1 className="text-lg font-bold tracking-tight">AGRO ALERT</h1>
+              <h1 className="text-lg font-bold tracking-tight">AGRO INTEL</h1>
               <p className="text-[10px] text-muted-foreground font-mono tracking-wider">
-                EARLY WARNING SYSTEM
+                DECISION INTELLIGENCE PLATFORM
               </p>
             </div>
           </div>
@@ -36,7 +36,7 @@ export const Navbar = ({ activeTab, onTabChange }) => {
                   onClick={() => onTabChange(tab.id)}
                   className={`
                     flex items-center gap-2 px-4 py-2 text-sm font-mono uppercase tracking-wider
-                    transition-colors duration-200
+                    transition-all duration-300
                     ${isActive 
                       ? 'text-primary bg-primary/10 border border-primary/30' 
                       : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
