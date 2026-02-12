@@ -1,19 +1,30 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Activity, AlertTriangle, BarChart3, Zap } from 'lucide-react';
 
 export const Navbar = ({ activeTab, onTabChange }) => {
+  const navigate = useNavigate();
+  
   const tabs = [
     { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
     { id: 'simulate', label: 'Shock Engine', icon: Zap },
     { id: 'alerts', label: 'Risk Monitor', icon: AlertTriangle },
   ];
 
+  const handleLogoClick = () => {
+    navigate('/');
+  };
+
   return (
     <nav className="navbar-glass sticky top-0 z-50" data-testid="navbar">
       <div className="px-6 md:px-8 lg:px-12">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <div className="flex items-center gap-3">
+          {/* Logo - Clickable to Landing Page */}
+          <div 
+            className="flex items-center gap-3 cursor-pointer transition-opacity hover:opacity-80"
+            onClick={handleLogoClick}
+            data-testid="logo-link"
+          >
             <div className="w-9 h-9 bg-primary/10 border border-primary/30 rounded-xl flex items-center justify-center float-animation">
               <Activity size={18} className="text-primary" />
             </div>
