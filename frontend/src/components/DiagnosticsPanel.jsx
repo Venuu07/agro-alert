@@ -134,15 +134,15 @@ export const DiagnosticsPanel = ({ mandi }) => {
 
       {/* External Flags */}
       {(mandi.rainFlag || mandi.festivalFlag) && (
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {mandi.rainFlag && (
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-mono">
+            <div className="flex items-center gap-2 px-3 py-2 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[11px] font-medium rounded-lg">
               <CloudRain size={14} />
               RAIN ACTIVE
             </div>
           )}
           {mandi.festivalFlag && (
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 border border-purple-500/30 text-purple-400 text-xs font-mono">
+            <div className="flex items-center gap-2 px-3 py-2 bg-purple-500/10 border border-purple-500/20 text-purple-400 text-[11px] font-medium rounded-lg">
               <PartyPopper size={14} />
               FESTIVAL PERIOD
             </div>
