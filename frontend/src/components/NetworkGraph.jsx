@@ -118,12 +118,11 @@ export const NetworkGraph = ({ mandis = [], simulationTarget = null, affectedMan
       </div>
 
       {/* SVG Graph */}
-      <div className="relative h-[300px] rounded-xl overflow-hidden bg-secondary/20 border border-border">
+      <div ref={containerRef} className="relative h-[300px] rounded-xl overflow-hidden bg-secondary/20 border border-border">
         <svg
-          ref={svgRef}
           width="100%"
           height="100%"
-          viewBox={`0 0 ${width || 600} ${height || 300}`}
+          viewBox={`0 0 ${width} ${height}`}
           className="network-svg"
         >
           <defs>
