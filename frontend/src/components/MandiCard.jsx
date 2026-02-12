@@ -2,11 +2,11 @@ import React from 'react';
 import { Card } from '../components/ui/card';
 import { StressGauge } from './StressGauge';
 import { StatusBadge } from './StatusBadge';
-import { TrendingUp, TrendingDown, Package } from 'lucide-react';
+import { TrendingUp, TrendingDown, Package, CloudRain, PartyPopper } from 'lucide-react';
 
 export const MandiCard = ({ mandi, onClick }) => {
-  const priceChange = ((mandi.currentPrice - mandi.previousPrice) / mandi.previousPrice) * 100;
-  const arrivalsChange = ((mandi.arrivals - mandi.previousArrivals) / mandi.previousArrivals) * 100;
+  const priceChange = mandi.priceChangePct ?? ((mandi.currentPrice - mandi.previousPrice) / mandi.previousPrice) * 100;
+  const arrivalsChange = mandi.arrivalChangePct ?? ((mandi.arrivals - mandi.previousArrivals) / mandi.previousArrivals) * 100;
   const isPriceUp = priceChange > 0;
   const isArrivalsDown = arrivalsChange < 0;
 
@@ -24,8 +24,10 @@ export const MandiCard = ({ mandi, onClick }) => {
           className="w-full h-full object-cover opacity-60"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />
-        <div className="absolute bottom-3 left-4">
+        <div className="absolute bottom-3 left-4 flex items-center gap-2">
           <span className="data-label">{mandi.commodity}</span>
+          {mandi.rainFlag && <CloudRain size={12} className="text-blue-400" />}
+          {mandi.festivalFlag && <PartyPopper size={12} className="text-purple-400" />}
         </div>
         <div className="absolute top-3 right-3">
           <StatusBadge status={mandi.status} />
@@ -79,13 +81,13 @@ export const MandiCard = ({ mandi, onClick }) => {
           <div className="flex items-center justify-between">
             <span className="data-label">VOLATILITY</span>
             <span className={`font-mono text-sm ${mandi.volatility > 15 ? 'text-red-500' : mandi.volatility > 10 ? 'text-orange-500' : 'text-green-500'}`}>
-              {mandi.volatility}%
+              {mandi.volatility?.toFixed(1) || 0}%
             </span>
           </div>
           <div className="mt-2 h-1.5 bg-secondary overflow-hidden">
             <div 
               className={`h-full transition-all duration-500 ${mandi.volatility > 15 ? 'bg-red-500' : mandi.volatility > 10 ? 'bg-orange-500' : 'bg-green-500'}`}
-              style={{ width: `${Math.min(mandi.volatility * 5, 100)}%` }}
+              style={{ width: `${Math.min((mandi.volatility || 0) * 5, 100)}%` }}
             />
           </div>
         </div>
