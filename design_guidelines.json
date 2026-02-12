@@ -1,0 +1,161 @@
+{
+  "identity": {
+    "persona": "E1",
+    "role": "Creative Designer (Anti-AI)",
+    "mission": "Create a decision support dashboard that feels like a tactical command center, not a CRUD app.",
+    "principles": [
+      "Fusion over Imitation: Mix Fintech precision with Agricultural earthiness.",
+      "Emotion First: The user is an Operator. The emotion is 'Control' and 'Vigilance'.",
+      "Content is King: Data is the hero. Stress scores must dominate.",
+      "Zoom In: Use macro photography of crops to ground the data in reality.",
+      "Negative Space: High density data needs breathing room. Use gaps effectively."
+    ]
+  },
+  "typography": {
+    "fonts": {
+      "headings": {
+        "family": "Barlow Condensed",
+        "weights": ["600", "700", "800"],
+        "usage": "Page titles, Card headers, KPI values",
+        "letterSpacing": "tracking-tight"
+      },
+      "body": {
+        "family": "Manrope",
+        "weights": ["400", "500"],
+        "usage": "General text, descriptions, tooltips"
+      },
+      "mono": {
+        "family": "JetBrains Mono",
+        "weights": ["400", "500"],
+        "usage": "Data tables, coordinates, stress scores, financial figures"
+      }
+    },
+    "rules": [
+      "Never use Inter for headings.",
+      "Use uppercase + wide spacing for labels (e.g., 'STRESS SCORE').",
+      "KPIs should be massive (text-4xl to text-6xl)."
+    ]
+  },
+  "colors": {
+    "theme": "dark",
+    "palette": {
+      "background": {
+        "default": "#09090b",
+        "paper": "#121212",
+        "subtle": "#18181b"
+      },
+      "primary": {
+        "main": "#22c55e",
+        "light": "#4ade80",
+        "dark": "#15803d",
+        "usage": "Safe status, Positive trends, Primary Actions"
+      },
+      "stress": {
+        "high": "#ef4444",
+        "medium": "#f97316",
+        "low": "#22c55e",
+        "usage": "Stress indicators, Alerts"
+      },
+      "text": {
+        "primary": "#f8fafc",
+        "secondary": "#94a3b8",
+        "muted": "#64748b"
+      },
+      "border": {
+        "default": "#27272a",
+        "active": "#3f3f46"
+      }
+    },
+    "gradients": {
+      "stress_high": "linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)",
+      "stress_low": "linear-gradient(135deg, #22c55e 0%, #15803d 100%)"
+    }
+  },
+  "layout": {
+    "grid_system": "Bento Grid (Mode B: High Density)",
+    "spacing": {
+      "container_padding": "p-6 md:p-8 lg:p-12",
+      "gap": "gap-4 md:gap-6",
+      "internal_padding": "p-6"
+    },
+    "strategies": [
+      "Dashboard: Grid of Mandi Cards (3-4 columns).",
+      "Detail View: 2/3 Chart area + 1/3 Diagnostics panel.",
+      "Simulation: Split screen (Controls Left, Impact Right)."
+    ]
+  },
+  "components": {
+    "cards": {
+      "style": "Grid Border",
+      "border": "1px solid #27272a",
+      "radius": "rounded-none",
+      "shadow": "none",
+      "hover": "border-primary/50 transition-colors duration-300"
+    },
+    "buttons": {
+      "style": "Tactical",
+      "radius": "rounded-sm",
+      "text": "uppercase tracking-wider font-mono text-xs"
+    },
+    "charts": {
+      "library": "Recharts",
+      "style": "Minimalist, thin lines, gradient fills with low opacity",
+      "grid": "stroke-dasharray='3 3' stroke='#333'"
+    },
+    "visual_enhancers": {
+      "scanlines": "Overlay a subtle scanline texture on the background.",
+      "glass": "Use 'Crystal Glass' for sticky headers (backdrop-blur-xl, border-b border-white/10).",
+      "glow": "Use subtle glows behind high-stress elements."
+    }
+  },
+  "assets": {
+    "images": [
+      {
+        "category": "Wheat",
+        "url": "https://images.unsplash.com/photo-1756036022884-0c87d038adba?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTN8MHwxfHNlYXJjaHwyfHx3aGVhdCUyMGdyYWluJTIwY2xvc2UlMjB1cCUyMGRhcmslMjBtb29keXxlbnwwfHx8fDE3NzA5MDk5NTR8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Close up wheat grain, dark moody"
+      },
+      {
+        "category": "Onion",
+        "url": "https://images.unsplash.com/photo-1748497100016-4184e19a68a8?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2MjJ8MHwxfHNlYXJjaHwxfHxyZWQlMjBvbmlvbiUyMHBpbGUlMjBkYXJrJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NzA5MDk5NTh8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Red onion pile, dark background"
+      },
+      {
+        "category": "Tomato",
+        "url": "https://images.unsplash.com/photo-1764587492405-550cc80ec939?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1Mjh8MHwxfHNlYXJjaHwxfHx0b21hdG8lMjBmcmVzaCUyMGRhcmslMjBwaG90b2dyYXBoeXxlbnwwfHx8fDE3NzA5MDk5NjF8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Fresh tomato, dark photography"
+      },
+      {
+        "category": "Rice",
+        "url": "https://images.unsplash.com/photo-1586201375761-83865001e31c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODd8MHwxfHNlYXJjaHwyfHx3aGl0ZSUyMHJpY2UlMjBncmFpbiUyMG1hY3JvJTIwZGFya3xlbnwwfHx8fDE3NzA5MDk5NjR8MA&ixlib=rb-4.1.0&q=85",
+        "description": "White rice grain, macro dark"
+      }
+    ],
+    "icons": "Use Lucide React (default). For specialized agri-icons, use Phosphor Icons if needed."
+  },
+  "universal_guidelines": {
+    "anti_ai_rules": [
+      "No gradients on text.",
+      "No 'Inter' font for headings.",
+      "No 'Purple/Teal' generic SaaS colors.",
+      "No centered layouts for dashboards.",
+      "No 'AI Assistant' emojis (🤖, 🧠)."
+    ],
+    "accessibility": {
+      "contrast": "Ensure 4.5:1 contrast ratio for text.",
+      "testing": "All interactive elements must have data-testid attributes."
+    },
+    "motion": {
+      "micro_interactions": "Hover states must be explicit (color change + subtle lift).",
+      "transitions": "Use specific transitions (transition-colors, transition-transform), never transition: all."
+    }
+  },
+  "instructions_to_main_agent": [
+    "Implement the 'Grid Border' style for all cards.",
+    "Use the provided image URLs for crop thumbnails in the Mandi Cards.",
+    "Ensure the 'Stress Score' is the most visually dominant element on the card.",
+    "Use Recharts for all charts. Style them to match the dark theme (dark tooltips, thin grid lines).",
+    "Create a 'Shock Simulator' panel that feels like a mixing board (sliders, toggles).",
+    "Use 'Sonner' for notifications/toasts."
+  ]
+}
