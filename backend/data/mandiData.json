@@ -1,0 +1,216 @@
+{
+  "mandis": [
+    {
+      "id": "mandi-001",
+      "name": "Azadpur Mandi",
+      "location": "Delhi",
+      "commodity": "Tomato",
+      "currentPrice": 4250,
+      "previousPrice": 3980,
+      "arrivals": 2450,
+      "previousArrivals": 2680,
+      "stressScore": 72,
+      "status": "high_risk",
+      "volatility": 18.5,
+      "image": "https://images.unsplash.com/photo-1764587492405-550cc80ec939?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1Mjh8MHwxfHNlYXJjaHwxfHx0b21hdG8lMjBmcmVzaCUyMGRhcmslMjBwaG90b2dyYXBoeXxlbnwwfHx8fDE3NzA5MDk5NjF8MA&ixlib=rb-4.1.0&q=85",
+      "priceHistory": [
+        {"date": "2024-01-01", "price": 3200},
+        {"date": "2024-01-08", "price": 3350},
+        {"date": "2024-01-15", "price": 3500},
+        {"date": "2024-01-22", "price": 3680},
+        {"date": "2024-01-29", "price": 3980},
+        {"date": "2024-02-05", "price": 4250}
+      ],
+      "arrivalsHistory": [
+        {"date": "2024-01-01", "arrivals": 3200},
+        {"date": "2024-01-08", "arrivals": 3000},
+        {"date": "2024-01-15", "arrivals": 2850},
+        {"date": "2024-01-22", "arrivals": 2700},
+        {"date": "2024-01-29", "arrivals": 2680},
+        {"date": "2024-02-05", "arrivals": 2450}
+      ],
+      "connectedMandis": ["mandi-002", "mandi-003"]
+    },
+    {
+      "id": "mandi-002",
+      "name": "Lasalgaon Mandi",
+      "location": "Maharashtra",
+      "commodity": "Onion",
+      "currentPrice": 2850,
+      "previousPrice": 2650,
+      "arrivals": 5200,
+      "previousArrivals": 5800,
+      "stressScore": 58,
+      "status": "watch",
+      "volatility": 12.3,
+      "image": "https://images.unsplash.com/photo-1748497100016-4184e19a68a8?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2MjJ8MHwxfHNlYXJjaHwxfHxyZWQlMjBvbmlvbiUyMHBpbGUlMjBkYXJrJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NzA5MDk5NTh8MA&ixlib=rb-4.1.0&q=85",
+      "priceHistory": [
+        {"date": "2024-01-01", "price": 2200},
+        {"date": "2024-01-08", "price": 2300},
+        {"date": "2024-01-15", "price": 2450},
+        {"date": "2024-01-22", "price": 2550},
+        {"date": "2024-01-29", "price": 2650},
+        {"date": "2024-02-05", "price": 2850}
+      ],
+      "arrivalsHistory": [
+        {"date": "2024-01-01", "arrivals": 6500},
+        {"date": "2024-01-08", "arrivals": 6200},
+        {"date": "2024-01-15", "arrivals": 6000},
+        {"date": "2024-01-22", "arrivals": 5900},
+        {"date": "2024-01-29", "arrivals": 5800},
+        {"date": "2024-02-05", "arrivals": 5200}
+      ],
+      "connectedMandis": ["mandi-001", "mandi-004"]
+    },
+    {
+      "id": "mandi-003",
+      "name": "Indore Mandi",
+      "location": "Madhya Pradesh",
+      "commodity": "Wheat",
+      "currentPrice": 2180,
+      "previousPrice": 2150,
+      "arrivals": 8500,
+      "previousArrivals": 8200,
+      "stressScore": 25,
+      "status": "normal",
+      "volatility": 4.2,
+      "image": "https://images.unsplash.com/photo-1756036022884-0c87d038adba?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTN8MHwxfHNlYXJjaHwyfHx3aGVhdCUyMGdyYWluJTIwY2xvc2UlMjB1cCUyMGRhcmslMjBtb29keXxlbnwwfHx8fDE3NzA5MDk5NTR8MA&ixlib=rb-4.1.0&q=85",
+      "priceHistory": [
+        {"date": "2024-01-01", "price": 2100},
+        {"date": "2024-01-08", "price": 2120},
+        {"date": "2024-01-15", "price": 2130},
+        {"date": "2024-01-22", "price": 2145},
+        {"date": "2024-01-29", "price": 2150},
+        {"date": "2024-02-05", "price": 2180}
+      ],
+      "arrivalsHistory": [
+        {"date": "2024-01-01", "arrivals": 7800},
+        {"date": "2024-01-08", "arrivals": 7900},
+        {"date": "2024-01-15", "arrivals": 8000},
+        {"date": "2024-01-22", "arrivals": 8100},
+        {"date": "2024-01-29", "arrivals": 8200},
+        {"date": "2024-02-05", "arrivals": 8500}
+      ],
+      "connectedMandis": ["mandi-001", "mandi-005"]
+    },
+    {
+      "id": "mandi-004",
+      "name": "Kurnool Mandi",
+      "location": "Andhra Pradesh",
+      "commodity": "Rice",
+      "currentPrice": 3650,
+      "previousPrice": 3580,
+      "arrivals": 4200,
+      "previousArrivals": 4350,
+      "stressScore": 42,
+      "status": "watch",
+      "volatility": 8.7,
+      "image": "https://images.unsplash.com/photo-1586201375761-83865001e31c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODd8MHwxfHNlYXJjaHwyfHx3aGl0ZSUyMHJpY2UlMjBncmFpbiUyMG1hY3JvJTIwZGFya3xlbnwwfHx8fDE3NzA5MDk5NjR8MA&ixlib=rb-4.1.0&q=85",
+      "priceHistory": [
+        {"date": "2024-01-01", "price": 3400},
+        {"date": "2024-01-08", "price": 3450},
+        {"date": "2024-01-15", "price": 3500},
+        {"date": "2024-01-22", "price": 3550},
+        {"date": "2024-01-29", "price": 3580},
+        {"date": "2024-02-05", "price": 3650}
+      ],
+      "arrivalsHistory": [
+        {"date": "2024-01-01", "arrivals": 4800},
+        {"date": "2024-01-08", "arrivals": 4700},
+        {"date": "2024-01-15", "arrivals": 4600},
+        {"date": "2024-01-22", "arrivals": 4500},
+        {"date": "2024-01-29", "arrivals": 4350},
+        {"date": "2024-02-05", "arrivals": 4200}
+      ],
+      "connectedMandis": ["mandi-002", "mandi-005"]
+    },
+    {
+      "id": "mandi-005",
+      "name": "Ghazipur Mandi",
+      "location": "Delhi",
+      "commodity": "Tomato",
+      "currentPrice": 4100,
+      "previousPrice": 3850,
+      "arrivals": 1850,
+      "previousArrivals": 2100,
+      "stressScore": 65,
+      "status": "high_risk",
+      "volatility": 15.2,
+      "image": "https://images.unsplash.com/photo-1764587492405-550cc80ec939?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1Mjh8MHwxfHNlYXJjaHwxfHx0b21hdG8lMjBmcmVzaCUyMGRhcmslMjBwaG90b2dyYXBoeXxlbnwwfHx8fDE3NzA5MDk5NjF8MA&ixlib=rb-4.1.0&q=85",
+      "priceHistory": [
+        {"date": "2024-01-01", "price": 3100},
+        {"date": "2024-01-08", "price": 3300},
+        {"date": "2024-01-15", "price": 3500},
+        {"date": "2024-01-22", "price": 3700},
+        {"date": "2024-01-29", "price": 3850},
+        {"date": "2024-02-05", "price": 4100}
+      ],
+      "arrivalsHistory": [
+        {"date": "2024-01-01", "arrivals": 2600},
+        {"date": "2024-01-08", "arrivals": 2450},
+        {"date": "2024-01-15", "arrivals": 2300},
+        {"date": "2024-01-22", "arrivals": 2200},
+        {"date": "2024-01-29", "arrivals": 2100},
+        {"date": "2024-02-05", "arrivals": 1850}
+      ],
+      "connectedMandis": ["mandi-003", "mandi-004"]
+    },
+    {
+      "id": "mandi-006",
+      "name": "Pimpalgaon Mandi",
+      "location": "Maharashtra",
+      "commodity": "Onion",
+      "currentPrice": 2720,
+      "previousPrice": 2580,
+      "arrivals": 4800,
+      "previousArrivals": 5100,
+      "stressScore": 48,
+      "status": "watch",
+      "volatility": 10.5,
+      "image": "https://images.unsplash.com/photo-1748497100016-4184e19a68a8?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2MjJ8MHwxfHNlYXJjaHwxfHxyZWQlMjBvbmlvbiUyMHBpbGUlMjBkYXJrJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NzA5MDk5NTh8MA&ixlib=rb-4.1.0&q=85",
+      "priceHistory": [
+        {"date": "2024-01-01", "price": 2300},
+        {"date": "2024-01-08", "price": 2380},
+        {"date": "2024-01-15", "price": 2450},
+        {"date": "2024-01-22", "price": 2520},
+        {"date": "2024-01-29", "price": 2580},
+        {"date": "2024-02-05", "price": 2720}
+      ],
+      "arrivalsHistory": [
+        {"date": "2024-01-01", "arrivals": 5600},
+        {"date": "2024-01-08", "arrivals": 5400},
+        {"date": "2024-01-15", "arrivals": 5300},
+        {"date": "2024-01-22", "arrivals": 5200},
+        {"date": "2024-01-29", "arrivals": 5100},
+        {"date": "2024-02-05", "arrivals": 4800}
+      ],
+      "connectedMandis": ["mandi-002", "mandi-001"]
+    }
+  ],
+  "shockTypes": [
+    {
+      "id": "rain",
+      "name": "Heavy Rainfall",
+      "description": "Flooding affects transportation and storage",
+      "icon": "cloud-rain"
+    },
+    {
+      "id": "demand_spike",
+      "name": "Demand Spike",
+      "description": "Sudden increase in demand due to festivals or events",
+      "icon": "trending-up"
+    },
+    {
+      "id": "supply_drop",
+      "name": "Supply Shortage",
+      "description": "Crop failure or logistics disruption",
+      "icon": "package-x"
+    },
+    {
+      "id": "transport",
+      "name": "Transport Strike",
+      "description": "Logistics disruption affecting arrivals",
+      "icon": "truck"
+    }
+  ]
+}

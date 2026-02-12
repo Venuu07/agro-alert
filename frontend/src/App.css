@@ -1,34 +1,184 @@
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+/* App-specific styles */
+
+/* Navbar glass effect */
+.navbar-glass {
+    @apply backdrop-blur-xl bg-background/80 border-b border-border;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
+/* Main container */
+.main-container {
+    @apply min-h-screen bg-background;
+}
+
+/* Dashboard grid */
+.dashboard-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6;
+}
+
+/* Chart container */
+.chart-container {
+    @apply bg-card border border-border p-6;
+}
+
+/* Simulation panel */
+.simulation-panel {
+    @apply bg-card border border-border p-6 space-y-6;
+}
+
+/* Control group */
+.control-group {
+    @apply space-y-3;
+}
+
+/* Impact card */
+.impact-card {
+    @apply bg-secondary/50 border border-border p-4 space-y-2;
+}
+
+/* Recommendation card */
+.recommendation-card {
+    @apply bg-card border border-border p-6 space-y-4 transition-colors duration-200;
+}
+
+.recommendation-card:hover {
+    @apply border-primary/30;
+}
+
+/* Priority indicators */
+.priority-high {
+    @apply border-l-4 border-l-red-500;
+}
+
+.priority-medium {
+    @apply border-l-4 border-l-orange-500;
+}
+
+.priority-low {
+    @apply border-l-4 border-l-green-500;
+}
+
+/* AI insight box */
+.ai-insight-box {
+    @apply bg-primary/5 border border-primary/20 p-4 mt-4;
+}
+
+/* Gauge container */
+.gauge-container {
+    @apply relative w-24 h-24 flex items-center justify-center;
+}
+
+/* Summary stats */
+.summary-stat {
+    @apply flex flex-col items-center justify-center p-4 border border-border bg-card;
+}
+
+/* Tab content */
+.tab-content {
+    @apply mt-6 animate-fade-in;
+}
+
+/* Loading state */
+.loading-skeleton {
+    @apply bg-secondary animate-pulse;
+}
+
+/* Empty state */
+.empty-state {
+    @apply flex flex-col items-center justify-center py-12 text-muted-foreground;
+}
+
+/* Network visualization */
+.network-container {
+    @apply relative w-full h-64 bg-card border border-border overflow-hidden;
+}
+
+.network-node {
+    @apply absolute w-4 h-4 rounded-full bg-primary transition-all duration-300;
+}
+
+.network-node.affected {
+    @apply bg-orange-500 scale-125;
+}
+
+/* Comparison chart */
+.comparison-container {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+}
+
+/* Detail layout */
+.detail-layout {
+    @apply grid grid-cols-1 lg:grid-cols-3 gap-6;
+}
+
+.detail-charts {
+    @apply lg:col-span-2 space-y-6;
+}
+
+.detail-sidebar {
+    @apply space-y-6;
+}
+
+/* Metrics grid */
+.metrics-grid {
+    @apply grid grid-cols-2 gap-4;
+}
+
+/* Status pulse */
+@keyframes status-pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
     }
 }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+.status-pulse {
+    animation: status-pulse 2s ease-in-out infinite;
 }
 
-.App-link {
-    color: #61dafb;
+/* Slider custom track */
+.custom-slider [data-orientation="horizontal"] {
+    @apply h-2;
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+.custom-slider [data-orientation="horizontal"] > span:first-child {
+    @apply bg-secondary;
+}
+
+.custom-slider [data-orientation="horizontal"] > span:nth-child(2) {
+    @apply bg-primary;
+}
+
+/* Select trigger */
+.select-trigger {
+    @apply bg-secondary border-border hover:bg-secondary/80;
+}
+
+/* Section header */
+.section-header {
+    @apply flex items-center justify-between mb-6;
+}
+
+.section-title {
+    @apply text-2xl font-bold;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    @apply flex items-center gap-2 text-sm text-muted-foreground;
+}
+
+.breadcrumb-separator {
+    @apply text-border;
+}
+
+/* Before/After comparison */
+.before-after {
+    @apply relative;
+}
+
+.before-after::before {
+    content: '';
+    @apply absolute left-1/2 top-0 bottom-0 w-px bg-border -translate-x-1/2;
 }
