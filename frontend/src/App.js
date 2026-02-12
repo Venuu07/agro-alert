@@ -14,8 +14,9 @@ import { SimulationPanel } from './components/SimulationPanel';
 import { SimulationResults } from './components/SimulationResults';
 import { RecommendationPanel } from './components/RecommendationPanel';
 import { Button } from './components/ui/button';
-import { ArrowLeft, Loader2, AlertTriangle, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Loader2, AlertTriangle, CheckCircle, BarChart3 } from 'lucide-react';
 import { StressGauge } from './components/StressGauge';
+import { LinkedMandis } from './components/LinkedMandis';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
