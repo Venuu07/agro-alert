@@ -12,22 +12,22 @@ export const MandiCard = ({ mandi, onClick }) => {
 
   return (
     <Card
-      className="card-hover border border-border bg-card cursor-pointer overflow-hidden"
+      className="card-hover border border-border bg-card cursor-pointer overflow-hidden rounded-xl"
       onClick={() => onClick(mandi)}
       data-testid={`mandi-card-${mandi.id}`}
     >
       {/* Image header */}
-      <div className="relative h-24 overflow-hidden">
+      <div className="relative h-28 overflow-hidden rounded-t-xl">
         <img
           src={mandi.image}
           alt={mandi.commodity}
-          className="w-full h-full object-cover opacity-60"
+          className="w-full h-full object-cover opacity-50"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
         <div className="absolute bottom-3 left-4 flex items-center gap-2">
-          <span className="data-label">{mandi.commodity}</span>
-          {mandi.rainFlag && <CloudRain size={12} className="text-blue-400" />}
-          {mandi.festivalFlag && <PartyPopper size={12} className="text-purple-400" />}
+          <span className="data-label bg-background/60 px-2 py-0.5 rounded-md backdrop-blur-sm">{mandi.commodity}</span>
+          {mandi.rainFlag && <CloudRain size={14} className="text-blue-400" />}
+          {mandi.festivalFlag && <PartyPopper size={14} className="text-purple-400" />}
         </div>
         <div className="absolute top-3 right-3">
           <StatusBadge status={mandi.status} />
@@ -35,11 +35,11 @@ export const MandiCard = ({ mandi, onClick }) => {
       </div>
 
       {/* Content */}
-      <div className="p-5 space-y-4">
+      <div className="p-6 space-y-5">
         {/* Header row */}
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
-            <h3 className="text-lg font-bold truncate">{mandi.name}</h3>
+            <h3 className="text-lg font-semibold truncate">{mandi.name}</h3>
             <p className="text-sm text-muted-foreground">{mandi.location}</p>
           </div>
           <StressGauge score={mandi.stressScore} size={72} />
