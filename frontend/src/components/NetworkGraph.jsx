@@ -248,8 +248,8 @@ export const NetworkGraph = ({
 
       {/* SVG Graph */}
       <div 
-        className="relative rounded-xl overflow-hidden bg-secondary/20 border border-border"
-        style={{ height: '400px' }}
+        className="relative rounded-xl overflow-hidden border border-border"
+        style={{ height: '400px', backgroundColor: 'rgb(15, 18, 25)' }}
       >
         <svg
           width="100%"
