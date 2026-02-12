@@ -1,4 +1,4 @@
-# Food System Early Warning & Shock Simulator - PRD
+# AGRO INTEL - Decision Intelligence Platform - PRD
 
 ## Original Problem Statement
 Build a modern, visually impressive, production-quality full stack web application for mandi/agricultural market operators to monitor price stability, detect stress signals, simulate disruptions, and receive intervention recommendations.
@@ -12,22 +12,22 @@ Build a modern, visually impressive, production-quality full stack web applicati
 - Decision intelligence dashboard (NOT CRUD app)
 - Modern fintech-style UI (Stripe/Vercel inspiration)
 - Dark theme with green accent
-- Stress score as dominant visual element
-- Shock simulation capability
-- Intervention recommendations
+- Market Stress Index as dominant visual element
+- Shock Propagation capability
+- Stabilization Strategy recommendations
 
 ---
 
 ## What's Been Implemented
 
-### Phase 1: UI/UX Foundation (Completed Jan 2026)
+### Phase 1: UI/UX Foundation (Completed)
 - Modern dark theme dashboard with 6 mandi cards
 - Price and arrivals charts using Recharts
 - Stress gauges and status badges
 - Shock simulation interface with intensity/duration sliders
 - Responsive design with smooth animations
 
-### Phase 2: Backend Logic Engines (Completed Dec 2025)
+### Phase 2: Backend Logic Engines (Completed)
 
 #### 1. Stress Score Engine ✅
 Deterministic calculation using exact rules:
@@ -56,7 +56,45 @@ Rule-based recommendations:
 #### 4. LLM Integration ✅
 - **Provider**: Emergent LLM Key (OpenAI GPT-4o)
 - **Usage**: Explanation text only (NOT decision-making)
-- **Purpose**: Generate human-readable insights for recommendations
+- **Purpose**: Generate human-readable AI Intelligence Analysis
+
+### Phase 3: UI/UX Refinement (Completed Dec 2025)
+
+#### Terminology & Branding Updates
+- "Stress Score" → **Market Stress Index (MSI)**
+- "Simulator" → **Shock Propagation Engine**
+- "Recommendations" → **Stabilization Strategy Engine**
+- "Alerts" → **System Risk Monitor**
+- App name: "AGRO ALERT" → **AGRO INTEL - Decision Intelligence Platform**
+
+#### New Components
+1. **System Stability Overview Panel** - Premium header metrics
+   - System Stability Score (%)
+   - Volatility Dampening (%)
+   - Supply Stress Level (Critical/Moderate/Low)
+   - Avg Market Stress Index
+
+2. **Enhanced Risk Monitor** - Operational Intelligence Center
+   - Critical Risk section with pulsing indicators
+   - Elevated Watch section
+   - Individual stress gauges per alert
+   - Real-time threat assessment header
+
+3. **Restructured Recommendation Panel**
+   - Detected Signals cards
+   - System Interpretation section
+   - Expected Impact (Cost vs Stability Gain)
+   - Tradeoff Visualization Bar (Cost ←→ Stability)
+   - AI Intelligence Analysis section
+
+#### Premium Styling
+- `.system-overview-panel` - Gradient backgrounds with subtle glow
+- `.metric-card-premium` - Hover animations with shimmer effect
+- `.intelligence-panel` - Decision-science styling
+- `.risk-card` - Left-border severity indicators
+- `.tradeoff-bar` - Gradient slider visualization
+- `.critical-indicator` - Pulsing animation for high-risk items
+- `.score-glow-animation` - Glow effect for critical scores
 
 ---
 
@@ -74,7 +112,7 @@ Rule-based recommendations:
 - `stressBreakdown`: { priceStress, supplyStress, instabilityStress, externalStress }
 - `simulationParameters`: { elasticity, supplyBefore, supplyAfter, demandBefore, demandAfter }
 - `rippleLevel`: 1 (60%) or 2 (30%)
-- `aiInsight`: LLM-generated explanation text
+- `aiInsight`: LLM-generated AI Intelligence Analysis
 
 ---
 
@@ -89,15 +127,16 @@ Rule-based recommendations:
 
 ## P0/P1/P2 Features Remaining
 
-### P0 (Critical) - DONE ✅
+### P0 (Critical) - ALL DONE ✅
 - [x] Dashboard with stress scores
 - [x] Mandi detail view with charts
 - [x] Shock simulation panel
 - [x] Intervention recommendations
-- [x] **Stress Score Engine**
-- [x] **Shock Simulation Engine**
-- [x] **Recommendation Engine**
-- [x] **LLM Integration for explanations**
+- [x] Stress Score Engine
+- [x] Shock Simulation Engine
+- [x] Recommendation Engine
+- [x] LLM Integration for explanations
+- [x] UI/UX Refinement & Polish
 
 ### P1 (Important) - NOT STARTED
 - [ ] Real-time data integration (WebSocket/SSE)
@@ -121,18 +160,21 @@ Rule-based recommendations:
 ├── backend/
 │   ├── data/
 │   │   └── mandiData.json (6 mandis with rainFlag, festivalFlag, baseSupply, baseDemand)
-│   ├── tests/
-│   │   └── test_food_system_api.py
 │   ├── server.py (Stress Engine, Simulation Engine, Recommendation Engine, LLM Integration)
 │   └── .env (EMERGENT_LLM_KEY)
 └── frontend/
     ├── src/
     │   ├── components/
+    │   │   ├── SystemOverview.jsx (NEW - System stability metrics)
     │   │   ├── DiagnosticsPanel.jsx (stress breakdown, external flags)
     │   │   ├── SimulationResults.jsx (elasticity model, ripple effects)
-    │   │   ├── RecommendationPanel.jsx (AI insights)
-    │   │   └── MandiCard.jsx (rain/festival icons)
-    │   └── App.js (routing)
+    │   │   ├── RecommendationPanel.jsx (AI insights, tradeoff viz)
+    │   │   ├── MandiCard.jsx (rain/festival icons, MSI label)
+    │   │   ├── StressGauge.jsx (enhanced with glow animation)
+    │   │   └── Navbar.jsx (new branding, nav tabs)
+    │   ├── App.js (routing, AlertsView as Risk Monitor)
+    │   ├── App.css
+    │   └── index.css (premium animations)
     └── .env
 ```
 
@@ -142,3 +184,15 @@ Rule-based recommendations:
 - **Backend**: 100% (24/24 tests passed)
 - **Frontend**: 100%
 - **Test Report**: `/app/test_reports/iteration_2.json`
+
+---
+
+## Design Philosophy
+**Target Feel**: Funded SaaS startup, Decision Intelligence Platform, NOT student hackathon UI
+
+**Design Tone**:
+- Minimal
+- Premium
+- Confident
+- Analytical
+- High-signal
