@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import "@/App.css";
-import { BrowserRouter, Routes, Route, useNavigate, useParams } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate, useParams, useLocation } from "react-router-dom";
 import axios from "axios";
 import { Toaster, toast } from 'sonner';
 import { Navbar } from './components/Navbar';
@@ -13,6 +13,9 @@ import { DiagnosticsPanel } from './components/DiagnosticsPanel';
 import { SimulationPanel } from './components/SimulationPanel';
 import { SimulationResults } from './components/SimulationResults';
 import { RecommendationPanel } from './components/RecommendationPanel';
+import { LandingPage } from './components/LandingPage';
+import { JarvisAssistant } from './components/JarvisAssistant';
+import { NetworkGraph } from './components/NetworkGraph';
 import { Button } from './components/ui/button';
 import { ArrowLeft, Loader2, AlertTriangle, CheckCircle, BarChart3 } from 'lucide-react';
 import { StressGauge } from './components/StressGauge';
@@ -22,26 +25,8 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 // Dashboard View
-const Dashboard = () => {
+const Dashboard = ({ stressData, loading }) => {
   const navigate = useNavigate();
-  const [stressData, setStressData] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  const fetchStressData = useCallback(async () => {
-    try {
-      const response = await axios.get(`${API}/stress`);
-      setStressData(response.data);
-    } catch (error) {
-      console.error('Failed to fetch stress data:', error);
-      toast.error('Failed to load market data');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchStressData();
-  }, [fetchStressData]);
 
   const handleMandiClick = (mandi) => {
     navigate(`/mandi/${mandi.id}`);
@@ -56,9 +41,16 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in" data-testid="dashboard">
+    <div className="space-y-8 animate-fade-in" data-testid="dashboard">
       {/* System Stability Overview */}
       {stressData && <SystemOverview data={stressData} />}
+      
+      {/* Network Graph */}
+      {stressData && (
+        <div className="network-section">
+          <NetworkGraph mandis={stressData.mandis} />
+        </div>
+      )}
       
       {/* Summary Stats */}
       {stressData && <SummaryStats data={stressData} />}
@@ -86,7 +78,7 @@ const Dashboard = () => {
 };
 
 // Mandi Detail View
-const MandiDetail = () => {
+const MandiDetail = ({ onMandiLoaded }) => {
   const navigate = useNavigate();
   const { mandiId } = useParams();
   const [mandi, setMandi] = useState(null);
@@ -99,6 +91,7 @@ const MandiDetail = () => {
     try {
       const response = await axios.get(`${API}/mandi/${mandiId}`);
       setMandi(response.data);
+      onMandiLoaded && onMandiLoaded(response.data);
       
       // Fetch connected mandis
       if (response.data.connectedMandis?.length > 0) {
@@ -111,11 +104,11 @@ const MandiDetail = () => {
     } catch (error) {
       console.error('Failed to fetch mandi detail:', error);
       toast.error('Failed to load mandi details');
-      navigate('/');
+      navigate('/app');
     } finally {
       setLoading(false);
     }
-  }, [mandiId, navigate]);
+  }, [mandiId, navigate, onMandiLoaded]);
 
   const fetchRecommendations = useCallback(async () => {
     setRecLoading(true);
@@ -162,8 +155,8 @@ const MandiDetail = () => {
       {/* Back Button */}
       <Button 
         variant="ghost" 
-        onClick={() => navigate('/')}
-        className="font-mono text-xs uppercase tracking-wider rounded-lg"
+        onClick={() => navigate('/app')}
+        className="font-mono text-xs uppercase tracking-wider rounded-xl"
         data-testid="back-btn"
       >
         <ArrowLeft size={14} className="mr-2" />
@@ -223,7 +216,7 @@ const MandiDetail = () => {
 };
 
 // Simulation View
-const SimulateView = () => {
+const SimulateView = ({ stressData, onSimulationComplete }) => {
   const [mandis, setMandis] = useState([]);
   const [shockTypes, setShockTypes] = useState([]);
   const [simulationResults, setSimulationResults] = useState(null);
@@ -261,6 +254,7 @@ const SimulateView = () => {
       // Run simulation
       const simRes = await axios.post(`${API}/simulate`, params);
       setSimulationResults(simRes.data);
+      onSimulationComplete && onSimulationComplete(simRes.data);
       toast.success('Simulation completed');
     } catch (error) {
       console.error('Simulation failed:', error);
@@ -282,13 +276,22 @@ const SimulateView = () => {
     <div className="animate-fade-in" data-testid="simulate-view">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Simulation Controls */}
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1 space-y-6">
           <SimulationPanel 
             mandis={mandis}
             shockTypes={shockTypes}
             onSimulate={handleSimulate}
             isLoading={loading}
           />
+          
+          {/* Network Graph in Simulation */}
+          {stressData && (
+            <NetworkGraph 
+              mandis={stressData.mandis} 
+              simulationTarget={simulationResults?.originalMandiId}
+              affectedMandis={simulationResults?.affectedMandis || []}
+            />
+          )}
         </div>
 
         {/* Results */}
@@ -299,7 +302,7 @@ const SimulateView = () => {
               originalData={originalMandi?.priceHistory || []}
             />
           ) : (
-            <div className="bg-card border border-border p-12 text-center">
+            <div className="bg-card border border-border p-12 text-center rounded-2xl">
               <div className="text-muted-foreground">
                 <p className="text-lg font-bold mb-2">NO SIMULATION YET</p>
                 <p className="text-sm">Configure and run a simulation to see projected impacts</p>
@@ -350,7 +353,7 @@ const AlertsView = () => {
       <div className="system-overview-panel p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-red-500/20 border border-red-500/30 flex items-center justify-center">
+            <div className="w-10 h-10 bg-red-500/20 border border-red-500/30 rounded-xl flex items-center justify-center">
               <AlertTriangle size={20} className="text-red-500" />
             </div>
             <div>
@@ -453,7 +456,7 @@ const AlertsView = () => {
 
       {highRiskMandis.length === 0 && watchMandis.length === 0 && (
         <div className="text-center py-12">
-          <div className="w-16 h-16 mx-auto mb-4 bg-green-500/10 border border-green-500/30 flex items-center justify-center">
+          <div className="w-16 h-16 mx-auto mb-4 bg-green-500/10 border border-green-500/30 rounded-xl flex items-center justify-center">
             <CheckCircle size={32} className="text-green-500" />
           </div>
           <p className="text-lg font-bold text-green-500">SYSTEM STABLE</p>
@@ -467,13 +470,45 @@ const AlertsView = () => {
 // Main App with Tab Navigation
 const MainApp = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [stressData, setStressData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [currentMandi, setCurrentMandi] = useState(null);
+  const [simulationResults, setSimulationResults] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const fetchStressData = useCallback(async () => {
+    try {
+      const response = await axios.get(`${API}/stress`);
+      setStressData(response.data);
+    } catch (error) {
+      console.error('Failed to fetch stress data:', error);
+      toast.error('Failed to load market data');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchStressData();
+  }, [fetchStressData]);
+
+  // Sync active tab with route
+  useEffect(() => {
+    if (location.pathname === '/app' || location.pathname === '/app/') {
+      setActiveTab('dashboard');
+    } else if (location.pathname.includes('/simulate')) {
+      setActiveTab('simulate');
+    } else if (location.pathname.includes('/alerts')) {
+      setActiveTab('alerts');
+    }
+  }, [location]);
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
-    if (tab === 'dashboard') navigate('/');
-    else if (tab === 'simulate') navigate('/simulate');
-    else if (tab === 'alerts') navigate('/alerts');
+    if (tab === 'dashboard') navigate('/app');
+    else if (tab === 'simulate') navigate('/app/simulate');
+    else if (tab === 'alerts') navigate('/app/alerts');
   };
 
   return (
@@ -481,13 +516,40 @@ const MainApp = () => {
       <Navbar activeTab={activeTab} onTabChange={handleTabChange} />
       <main className="px-6 md:px-8 lg:px-12 py-8">
         <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/mandi/:mandiId" element={<MandiDetail />} />
-          <Route path="/simulate" element={<SimulateView />} />
+          <Route path="/" element={<Dashboard stressData={stressData} loading={loading} />} />
+          <Route path="/mandi/:mandiId" element={<MandiDetail onMandiLoaded={setCurrentMandi} />} />
+          <Route path="/simulate" element={<SimulateView stressData={stressData} onSimulationComplete={setSimulationResults} />} />
           <Route path="/alerts" element={<AlertsView />} />
         </Routes>
       </main>
+      
+      {/* Jarvis Assistant */}
+      <JarvisAssistant 
+        stressData={stressData}
+        currentMandi={currentMandi}
+        simulationResults={simulationResults}
+      />
     </div>
+  );
+};
+
+// Landing Wrapper
+const LandingWrapper = () => {
+  const navigate = useNavigate();
+
+  const handleEnterPlatform = () => {
+    navigate('/app');
+  };
+
+  const handleRunSimulator = () => {
+    navigate('/app/simulate');
+  };
+
+  return (
+    <LandingPage 
+      onEnterPlatform={handleEnterPlatform}
+      onRunSimulator={handleRunSimulator}
+    />
   );
 };
 
@@ -498,15 +560,19 @@ function App() {
         position="top-right" 
         toastOptions={{
           style: {
-            background: '#121212',
-            border: '1px solid #27272a',
+            background: 'hsl(240 6% 10%)',
+            border: '1px solid hsl(240 5% 18%)',
             color: '#f8fafc',
-            fontFamily: 'JetBrains Mono, monospace',
-            fontSize: '12px',
+            fontFamily: 'Inter, sans-serif',
+            fontSize: '13px',
+            borderRadius: '12px',
           },
         }}
       />
-      <MainApp />
+      <Routes>
+        <Route path="/" element={<LandingWrapper />} />
+        <Route path="/app/*" element={<MainApp />} />
+      </Routes>
     </BrowserRouter>
   );
 }
