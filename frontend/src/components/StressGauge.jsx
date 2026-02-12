@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const StressGauge = ({ score, size = 96 }) => {
+export const StressGauge = ({ score, size = 96, showLabel = true }) => {
   const radius = (size - 12) / 2;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (score / 100) * circumference;
@@ -19,10 +19,11 @@ export const StressGauge = ({ score, size = 96 }) => {
   
   const color = getColor(score);
   const glowClass = getGlowClass(score);
+  const isHighRisk = score >= 60;
   
   return (
     <div 
-      className="gauge-container" 
+      className={`gauge-container ${isHighRisk ? 'critical-indicator' : ''}`}
       style={{ width: size, height: size }}
       data-testid="stress-gauge"
     >
@@ -33,6 +34,15 @@ export const StressGauge = ({ score, size = 96 }) => {
         className={glowClass}
       >
         {/* Background circle */}
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="#1a1a1a"
+          strokeWidth="6"
+        />
+        {/* Secondary track */}
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -54,19 +64,43 @@ export const StressGauge = ({ score, size = 96 }) => {
           strokeDashoffset={strokeDashoffset}
           transform={`rotate(-90 ${size / 2} ${size / 2})`}
           style={{
-            transition: 'stroke-dashoffset 0.5s ease-out',
+            transition: 'stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         />
+        {/* Glow effect for high risk */}
+        {isHighRisk && (
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            fill="none"
+            stroke={color}
+            strokeWidth="2"
+            strokeLinecap="square"
+            strokeDasharray={circumference}
+            strokeDashoffset={strokeDashoffset}
+            transform={`rotate(-90 ${size / 2} ${size / 2})`}
+            style={{
+              filter: 'blur(4px)',
+              opacity: 0.5,
+            }}
+          />
+        )}
       </svg>
       {/* Score text */}
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span 
-          className="font-mono text-2xl font-bold"
-          style={{ color }}
+          className={`font-mono font-bold ${isHighRisk ? 'score-glow-animation' : ''}`}
+          style={{ 
+            color,
+            fontSize: size > 80 ? '1.5rem' : '1.25rem',
+          }}
         >
           {score}
         </span>
-        <span className="data-label text-[10px]">STRESS</span>
+        {showLabel && (
+          <span className="data-label text-[8px]">MSI</span>
+        )}
       </div>
     </div>
   );
