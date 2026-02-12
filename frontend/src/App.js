@@ -230,6 +230,7 @@ const SimulateView = ({ stressData, onSimulationComplete }) => {
   const [shockTypes, setShockTypes] = useState([]);
   const [simulationResults, setSimulationResults] = useState(null);
   const [originalMandi, setOriginalMandi] = useState(null);
+  const [shockContext, setShockContext] = useState(null);
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
 
@@ -260,10 +261,21 @@ const SimulateView = ({ stressData, onSimulationComplete }) => {
       const mandiRes = await axios.get(`${API}/mandi/${params.mandiId}`);
       setOriginalMandi(mandiRes.data);
 
+      // Store shock context for Jarvis
+      if (params.shockDescription) {
+        setShockContext({
+          description: params.shockDescription,
+          detectedSignals: params.detectedSignals || []
+        });
+      }
+
       // Run simulation
       const simRes = await axios.post(`${API}/simulate`, params);
       setSimulationResults(simRes.data);
-      onSimulationComplete && onSimulationComplete(simRes.data);
+      onSimulationComplete && onSimulationComplete({
+        ...simRes.data,
+        shockContext: params.shockDescription
+      });
       toast.success('Simulation completed');
     } catch (error) {
       console.error('Simulation failed:', error);
@@ -282,7 +294,7 @@ const SimulateView = ({ stressData, onSimulationComplete }) => {
   }
 
   return (
-    <div className="animate-fade-in" data-testid="simulate-view">
+    <div className="animate-fade-in space-y-6" data-testid="simulate-view">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Simulation Controls */}
         <div className="lg:col-span-1 space-y-6">
@@ -304,11 +316,12 @@ const SimulateView = ({ stressData, onSimulationComplete }) => {
         </div>
 
         {/* Results */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 space-y-6">
           {simulationResults ? (
             <SimulationResults 
               results={simulationResults}
               originalData={originalMandi?.priceHistory || []}
+              shockContext={shockContext}
             />
           ) : (
             <div className="bg-card border border-border p-12 text-center rounded-2xl">
@@ -320,6 +333,9 @@ const SimulateView = ({ stressData, onSimulationComplete }) => {
           )}
         </div>
       </div>
+      
+      {/* Transfer Recommendations */}
+      <TransferRecommendations />
     </div>
   );
 };
