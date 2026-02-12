@@ -332,7 +332,14 @@ def execute_transfer(
     
     dest_prev_arrivals = dest_commodity.get("arrivals", 0) if dest_commodity else 0
     dest_prev_price = dest_commodity.get("currentPrice", source_prev_price) if dest_commodity else source_prev_price
-    dest_demand = dest_commodity.get("baseDemand", dest_prev_arrivals) if dest_commodity else dest_prev_arrivals
+    # For destination demand, use a reasonable default based on transferred quantity if commodity doesn't exist
+    dest_demand = dest_commodity.get("baseDemand", dest_prev_arrivals) if dest_commodity else quantity
+    
+    # Ensure demands are positive
+    if source_demand <= 0:
+        source_demand = source_prev_arrivals if source_prev_arrivals > 0 else 1000
+    if dest_demand <= 0:
+        dest_demand = quantity  # Use transferred quantity as baseline demand
     
     # Step 2 & 3: Adjust supplies
     source_new_arrivals = source_prev_arrivals - quantity
