@@ -218,10 +218,14 @@ export const NetworkGraph = ({
           <rect x="0" y="0" width="1000" height="640" fill="transparent" />
           
           {/* Draw edges first (underneath nodes) */}
-          {edges && edges.map((edge, i) => {
+          {edges && edges.length > 0 && edges.map((edge, i) => {
+            console.log('[NetworkGraph] Drawing edge:', i, edge);
             const from = nodes.find(n => n.id === edge.from);
             const to = nodes.find(n => n.id === edge.to);
-            if (!from || !to) return null;
+            if (!from || !to) {
+              console.log('[NetworkGraph] Skipping edge - missing nodes:', edge.from, edge.to);
+              return null;
+            }
             
             const isHighlighted = simulationTarget && (
               edge.from === simulationTarget || 
@@ -243,7 +247,8 @@ export const NetworkGraph = ({
           })}
           
           {/* Draw nodes */}
-          {nodes.map((node) => {
+          {nodes && nodes.length > 0 && nodes.map((node, idx) => {
+            console.log('[NetworkGraph] Drawing node:', idx, node.id, 'at', node.x, node.y);
             const impact = getImpact(node);
             const color = getNodeColor(impact);
             const radius = 16 + impact * 12;
@@ -252,7 +257,7 @@ export const NetworkGraph = ({
             
             return (
               <g 
-                key={node.id}
+                key={`node-${node.id}`}
                 onMouseEnter={() => setHoveredNode(node.id)}
                 onMouseLeave={() => setHoveredNode(null)}
                 onClick={() => onNodeClick && onNodeClick(node)}
@@ -267,34 +272,6 @@ export const NetworkGraph = ({
                     fill={color}
                     opacity={0.2}
                   />
-                )}
-                
-                {/* Pulse ring for shock origin */}
-                {isTarget && (
-                  <circle
-                    cx={node.x}
-                    cy={node.y}
-                    r={radius + 5}
-                    fill="none"
-                    stroke={color}
-                    strokeWidth={2}
-                    opacity={0.6}
-                  >
-                    <animate
-                      attributeName="r"
-                      from={radius}
-                      to={radius + 25}
-                      dur="1.5s"
-                      repeatCount="indefinite"
-                    />
-                    <animate
-                      attributeName="opacity"
-                      from="0.6"
-                      to="0"
-                      dur="1.5s"
-                      repeatCount="indefinite"
-                    />
-                  </circle>
                 )}
                 
                 {/* Main node circle */}
