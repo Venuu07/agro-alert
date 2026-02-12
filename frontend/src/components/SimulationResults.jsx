@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrendingUp, TrendingDown, AlertTriangle, ArrowRight, Box, Users } from 'lucide-react';
+import { TrendingUp, TrendingDown, AlertTriangle, ArrowRight, Box, Users, Zap } from 'lucide-react';
 import { PriceChart } from './PriceChart';
 
 export const SimulationResults = ({ results, originalData }) => {
@@ -10,30 +10,38 @@ export const SimulationResults = ({ results, originalData }) => {
   return (
     <div className="space-y-6 animate-fade-in" data-testid="simulation-results">
       {/* Impact Summary */}
-      <div className="bg-card border border-border p-6">
-        <h3 className="text-lg font-bold mb-4">SIMULATION IMPACT</h3>
+      <div className="system-overview-panel p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 bg-orange-500/20 border border-orange-500/30 flex items-center justify-center">
+            <Zap size={20} className="text-orange-500" />
+          </div>
+          <div>
+            <h3 className="text-lg font-bold">PROPAGATION ANALYSIS</h3>
+            <p className="text-xs text-muted-foreground font-mono">SHOCK IMPACT PROJECTION</p>
+          </div>
+        </div>
         
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-          <div className="p-4 bg-secondary/30 border border-border">
+          <div className="metric-card-premium">
             <span className="data-label">ORIGINAL PRICE</span>
-            <p className="font-mono text-2xl mt-1">₹{results.originalPrice.toLocaleString()}</p>
+            <p className="font-mono text-2xl font-bold mt-2">₹{results.originalPrice.toLocaleString()}</p>
           </div>
-          <div className="p-4 bg-secondary/30 border border-border">
-            <span className="data-label">PREDICTED PRICE</span>
-            <p className={`font-mono text-2xl mt-1 ${results.predictedPrice > results.originalPrice ? 'text-red-500' : 'text-green-500'}`}>
+          <div className="metric-card-premium">
+            <span className="data-label">PROJECTED PRICE</span>
+            <p className={`font-mono text-2xl font-bold mt-2 ${results.predictedPrice > results.originalPrice ? 'text-red-500' : 'text-green-500'}`}>
               ₹{Math.round(results.predictedPrice).toLocaleString()}
             </p>
           </div>
-          <div className="p-4 bg-secondary/30 border border-border">
-            <span className="data-label">PRICE IMPACT</span>
-            <p className={`font-mono text-2xl mt-1 flex items-center gap-2 ${priceImpact > 0 ? 'text-red-500' : 'text-green-500'}`}>
+          <div className="metric-card-premium">
+            <span className="data-label">PRICE DELTA</span>
+            <p className={`font-mono text-2xl font-bold mt-2 flex items-center gap-2 ${priceImpact > 0 ? 'text-red-500' : 'text-green-500'}`}>
               {priceImpact > 0 ? <TrendingUp size={20} /> : <TrendingDown size={20} />}
               {priceImpact > 0 ? '+' : ''}{priceImpact.toFixed(1)}%
             </p>
           </div>
-          <div className="p-4 bg-secondary/30 border border-border">
-            <span className="data-label">STRESS CHANGE</span>
-            <p className={`font-mono text-2xl mt-1 ${results.newStressScore > results.previousStressScore ? 'text-red-500' : 'text-green-500'}`}>
+          <div className="metric-card-premium">
+            <span className="data-label">STRESS INDEX Δ</span>
+            <p className={`font-mono text-2xl font-bold mt-2 ${results.newStressScore > results.previousStressScore ? 'text-red-500' : 'text-green-500'}`}>
               {results.previousStressScore} → {results.newStressScore}
             </p>
           </div>
@@ -41,13 +49,13 @@ export const SimulationResults = ({ results, originalData }) => {
 
         {/* Arrivals Impact */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="p-4 bg-secondary/30 border border-border">
-            <span className="data-label">ARRIVALS BEFORE</span>
-            <p className="font-mono text-xl mt-1">{results.originalArrivals?.toLocaleString() || '-'} qt</p>
+          <div className="signal-card">
+            <span className="data-label">SUPPLY BEFORE</span>
+            <p className="font-mono text-lg font-bold mt-1">{results.originalArrivals?.toLocaleString() || '-'} qt</p>
           </div>
-          <div className="p-4 bg-secondary/30 border border-border">
-            <span className="data-label">ARRIVALS AFTER</span>
-            <p className={`font-mono text-xl mt-1 ${(results.predictedArrivals || 0) < (results.originalArrivals || 0) ? 'text-orange-500' : 'text-green-500'}`}>
+          <div className="signal-card">
+            <span className="data-label">SUPPLY AFTER</span>
+            <p className={`font-mono text-lg font-bold mt-1 ${(results.predictedArrivals || 0) < (results.originalArrivals || 0) ? 'text-orange-500' : 'text-green-500'}`}>
               {results.predictedArrivals?.toLocaleString() || '-'} qt
             </p>
           </div>
