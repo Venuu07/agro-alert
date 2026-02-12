@@ -90,6 +90,7 @@ const MandiDetail = () => {
   const navigate = useNavigate();
   const { mandiId } = useParams();
   const [mandi, setMandi] = useState(null);
+  const [linkedMandis, setLinkedMandis] = useState([]);
   const [recommendations, setRecommendations] = useState(null);
   const [loading, setLoading] = useState(true);
   const [recLoading, setRecLoading] = useState(false);
@@ -98,6 +99,15 @@ const MandiDetail = () => {
     try {
       const response = await axios.get(`${API}/mandi/${mandiId}`);
       setMandi(response.data);
+      
+      // Fetch connected mandis
+      if (response.data.connectedMandis?.length > 0) {
+        const linkedPromises = response.data.connectedMandis.map(id => 
+          axios.get(`${API}/mandi/${id}`)
+        );
+        const linkedResults = await Promise.all(linkedPromises);
+        setLinkedMandis(linkedResults.map(r => r.data));
+      }
     } catch (error) {
       console.error('Failed to fetch mandi detail:', error);
       toast.error('Failed to load mandi details');
@@ -132,6 +142,10 @@ const MandiDetail = () => {
       fetchRecommendations();
     }
   }, [mandi, fetchRecommendations]);
+
+  const handleLinkedMandiClick = (linkedMandi) => {
+    navigate(`/mandi/${linkedMandi.id}`);
+  };
 
   if (loading) {
     return (
