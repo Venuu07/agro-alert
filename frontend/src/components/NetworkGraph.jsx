@@ -202,7 +202,15 @@ export const NetworkGraph = ({
 
       <div className="relative rounded-xl overflow-hidden border border-border" style={{ height: '400px', backgroundColor: '#0a0d14' }}>
         <svg width="100%" height="100%" viewBox="0 0 1000 640" preserveAspectRatio="xMidYMid meet">
+          {/* Debug: Always render these test circles */}
+          <circle cx="200" cy="200" r="25" fill="#ff0000" />
+          <circle cx="500" cy="320" r="25" fill="#00ff00" />
+          
+          {/* Dynamic content */}
           {svgContent}
+          
+          {/* Debug: Show count */}
+          <text x="50" y="50" fill="white" fontSize="14">Nodes: {graphData?.nodes?.length || 0}</text>
         </svg>
       </div>
     </div>
