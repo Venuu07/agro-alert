@@ -432,7 +432,7 @@
 
 /* Enhanced chart container */
 .chart-premium {
-    @apply relative;
+    @apply relative rounded-xl overflow-hidden;
 }
 
 .chart-premium::before {
@@ -443,25 +443,66 @@
     right: 0;
     bottom: 0;
     pointer-events: none;
-    background: radial-gradient(ellipse at center bottom, hsl(var(--primary) / 0.05), transparent 70%);
+    background: radial-gradient(ellipse at center bottom, hsl(var(--primary) / 0.04), transparent 70%);
+    border-radius: 0.75rem;
 }
 
 /* Risk monitor card */
 .risk-card {
-    @apply relative p-4 border transition-all duration-300 cursor-pointer;
+    @apply relative p-5 rounded-xl transition-all duration-300 cursor-pointer;
     background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-soft);
 }
 
 .risk-card:hover {
     transform: translateX(4px);
+    box-shadow: var(--shadow-card);
 }
 
 .risk-card-critical {
     border-left: 4px solid rgb(239 68 68);
-    background: linear-gradient(90deg, rgba(239, 68, 68, 0.05) 0%, transparent 100%);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    background: linear-gradient(90deg, rgba(239, 68, 68, 0.06) 0%, transparent 100%);
 }
 
 .risk-card-watch {
     border-left: 4px solid rgb(249 115 22);
-    background: linear-gradient(90deg, rgba(249, 115, 22, 0.05) 0%, transparent 100%);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    background: linear-gradient(90deg, rgba(249, 115, 22, 0.06) 0%, transparent 100%);
+}
+
+/* Linked Mandis Section */
+.linked-mandis-panel {
+    @apply p-6 rounded-xl;
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-soft);
+}
+
+.linked-mandi-pill {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 cursor-pointer;
+    background: hsl(var(--secondary) / 0.5);
+    border: 1px solid hsl(var(--border));
+}
+
+.linked-mandi-pill:hover {
+    background: hsl(var(--secondary) / 0.8);
+    border-color: hsl(var(--primary) / 0.3);
+    transform: translateY(-1px);
+}
+
+/* Page Header */
+.page-header {
+    @apply mb-8;
+}
+
+.page-header-title {
+    @apply text-3xl font-semibold tracking-tight mb-2;
+}
+
+.page-header-subtitle {
+    @apply text-muted-foreground text-sm;
 }
