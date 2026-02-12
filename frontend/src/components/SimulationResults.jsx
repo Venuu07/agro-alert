@@ -1,12 +1,11 @@
 import React from 'react';
-import { TrendingUp, TrendingDown, AlertTriangle, ArrowRight } from 'lucide-react';
+import { TrendingUp, TrendingDown, AlertTriangle, ArrowRight, Box, Users } from 'lucide-react';
 import { PriceChart } from './PriceChart';
 
 export const SimulationResults = ({ results, originalData }) => {
   if (!results) return null;
 
   const priceImpact = results.priceImpact;
-  const isNegative = priceImpact < 0;
 
   return (
     <div className="space-y-6 animate-fade-in" data-testid="simulation-results">
@@ -14,7 +13,7 @@ export const SimulationResults = ({ results, originalData }) => {
       <div className="bg-card border border-border p-6">
         <h3 className="text-lg font-bold mb-4">SIMULATION IMPACT</h3>
         
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           <div className="p-4 bg-secondary/30 border border-border">
             <span className="data-label">ORIGINAL PRICE</span>
             <p className="font-mono text-2xl mt-1">₹{results.originalPrice.toLocaleString()}</p>
@@ -22,7 +21,7 @@ export const SimulationResults = ({ results, originalData }) => {
           <div className="p-4 bg-secondary/30 border border-border">
             <span className="data-label">PREDICTED PRICE</span>
             <p className={`font-mono text-2xl mt-1 ${results.predictedPrice > results.originalPrice ? 'text-red-500' : 'text-green-500'}`}>
-              ₹{results.predictedPrice.toLocaleString()}
+              ₹{Math.round(results.predictedPrice).toLocaleString()}
             </p>
           </div>
           <div className="p-4 bg-secondary/30 border border-border">
@@ -33,11 +32,72 @@ export const SimulationResults = ({ results, originalData }) => {
             </p>
           </div>
           <div className="p-4 bg-secondary/30 border border-border">
+            <span className="data-label">STRESS CHANGE</span>
+            <p className={`font-mono text-2xl mt-1 ${results.newStressScore > results.previousStressScore ? 'text-red-500' : 'text-green-500'}`}>
+              {results.previousStressScore} → {results.newStressScore}
+            </p>
+          </div>
+        </div>
+
+        {/* Arrivals Impact */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="p-4 bg-secondary/30 border border-border">
+            <span className="data-label">ARRIVALS BEFORE</span>
+            <p className="font-mono text-xl mt-1">{results.originalArrivals?.toLocaleString() || '-'} qt</p>
+          </div>
+          <div className="p-4 bg-secondary/30 border border-border">
+            <span className="data-label">ARRIVALS AFTER</span>
+            <p className={`font-mono text-xl mt-1 ${(results.predictedArrivals || 0) < (results.originalArrivals || 0) ? 'text-orange-500' : 'text-green-500'}`}>
+              {results.predictedArrivals?.toLocaleString() || '-'} qt
+            </p>
+          </div>
+          <div className="p-4 bg-secondary/30 border border-border">
             <span className="data-label">DURATION</span>
-            <p className="font-mono text-2xl mt-1">{results.duration} days</p>
+            <p className="font-mono text-xl mt-1">{results.duration} days</p>
+          </div>
+          <div className="p-4 bg-secondary/30 border border-border">
+            <span className="data-label">NEW STATUS</span>
+            <p className={`font-mono text-xl mt-1 uppercase ${results.newStatus === 'high_risk' ? 'text-red-500' : results.newStatus === 'watch' ? 'text-orange-500' : 'text-green-500'}`}>
+              {results.newStatus?.replace('_', ' ')}
+            </p>
           </div>
         </div>
       </div>
+
+      {/* Simulation Parameters (Elasticity Model) */}
+      {results.simulationParameters && (
+        <div className="bg-card border border-border p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Box size={18} className="text-primary" />
+            <h3 className="text-lg font-bold">ELASTICITY MODEL</h3>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+            <div className="p-3 bg-secondary/30 border border-border text-center">
+              <span className="text-xs text-muted-foreground">ELASTICITY</span>
+              <p className="font-mono text-lg">{results.simulationParameters.elasticity}</p>
+            </div>
+            <div className="p-3 bg-secondary/30 border border-border text-center">
+              <span className="text-xs text-muted-foreground">SUPPLY BEFORE</span>
+              <p className="font-mono text-lg">{Math.round(results.simulationParameters.supplyBefore)}</p>
+            </div>
+            <div className="p-3 bg-secondary/30 border border-border text-center">
+              <span className="text-xs text-muted-foreground">SUPPLY AFTER</span>
+              <p className="font-mono text-lg text-orange-500">{Math.round(results.simulationParameters.supplyAfter)}</p>
+            </div>
+            <div className="p-3 bg-secondary/30 border border-border text-center">
+              <span className="text-xs text-muted-foreground">DEMAND BEFORE</span>
+              <p className="font-mono text-lg">{Math.round(results.simulationParameters.demandBefore)}</p>
+            </div>
+            <div className="p-3 bg-secondary/30 border border-border text-center">
+              <span className="text-xs text-muted-foreground">DEMAND AFTER</span>
+              <p className="font-mono text-lg">{Math.round(results.simulationParameters.demandAfter)}</p>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-3 font-mono">
+            Formula: price_new = price_old × (Demand/Supply)^{results.simulationParameters.elasticity}
+          </p>
+        </div>
+      )}
 
       {/* Before/After Chart */}
       <PriceChart 
@@ -53,9 +113,12 @@ export const SimulationResults = ({ results, originalData }) => {
           <div className="flex items-center gap-2 mb-4">
             <AlertTriangle size={18} className="text-orange-500" />
             <h3 className="text-lg font-bold">RIPPLE EFFECT</h3>
+            <span className="text-xs text-muted-foreground ml-2">
+              ({results.affectedMandis.length} mandis affected)
+            </span>
           </div>
           <p className="text-sm text-muted-foreground mb-4">
-            Connected mandis affected by the simulated shock
+            Impact decays: Level 1 = 60%, Level 2 = 30%
           </p>
 
           <div className="space-y-3">
@@ -67,15 +130,22 @@ export const SimulationResults = ({ results, originalData }) => {
                 data-testid={`affected-mandi-${affected.mandiId}`}
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 border border-orange-500/50 bg-orange-500/10 flex items-center justify-center">
-                    <ArrowRight size={16} className="text-orange-500" />
+                  <div className={`w-10 h-10 border flex items-center justify-center ${affected.rippleLevel === 1 ? 'border-orange-500/50 bg-orange-500/10' : 'border-yellow-500/50 bg-yellow-500/10'}`}>
+                    <Users size={16} className={affected.rippleLevel === 1 ? 'text-orange-500' : 'text-yellow-500'} />
                   </div>
                   <div>
                     <p className="font-mono text-sm">{affected.mandiName}</p>
-                    <p className="text-xs text-muted-foreground">Connected Market</p>
+                    <p className="text-xs text-muted-foreground">
+                      Level {affected.rippleLevel} • {affected.rippleLevel === 1 ? '60%' : '30%'} impact
+                    </p>
                   </div>
                 </div>
                 <div className="text-right">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-xs text-muted-foreground">₹{affected.originalPrice?.toLocaleString()}</span>
+                    <ArrowRight size={12} className="text-muted-foreground" />
+                    <span className="text-xs text-orange-500">₹{Math.round(affected.newPrice || 0).toLocaleString()}</span>
+                  </div>
                   <div className="flex items-center gap-2">
                     <span className="font-mono text-sm text-muted-foreground">
                       {affected.previousStressScore}
@@ -85,9 +155,6 @@ export const SimulationResults = ({ results, originalData }) => {
                       {affected.newStressScore}
                     </span>
                   </div>
-                  <p className="text-xs text-orange-500 font-mono">
-                    +{affected.priceChange.toFixed(1)}% price impact
-                  </p>
                 </div>
               </div>
             ))}

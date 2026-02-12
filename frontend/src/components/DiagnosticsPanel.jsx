@@ -1,11 +1,11 @@
 import React from 'react';
 import { StressGauge } from './StressGauge';
 import { StatusBadge } from './StatusBadge';
-import { TrendingUp, TrendingDown, Activity, Package, Gauge, AlertCircle } from 'lucide-react';
+import { TrendingUp, TrendingDown, Activity, Package, CloudRain, PartyPopper, AlertCircle } from 'lucide-react';
 
 export const DiagnosticsPanel = ({ mandi }) => {
-  const priceChange = ((mandi.currentPrice - mandi.previousPrice) / mandi.previousPrice) * 100;
-  const arrivalsChange = ((mandi.arrivals - mandi.previousArrivals) / mandi.previousArrivals) * 100;
+  const priceChange = mandi.priceChangePct ?? ((mandi.currentPrice - mandi.previousPrice) / mandi.previousPrice) * 100;
+  const arrivalsChange = mandi.arrivalChangePct ?? ((mandi.arrivals - mandi.previousArrivals) / mandi.previousArrivals) * 100;
 
   const metrics = [
     {
@@ -24,7 +24,7 @@ export const DiagnosticsPanel = ({ mandi }) => {
     },
     {
       label: 'VOLATILITY',
-      value: `${mandi.volatility}%`,
+      value: `${mandi.volatility?.toFixed(1) || 0}%`,
       threshold: mandi.volatility > 15 ? 'high' : mandi.volatility > 10 ? 'medium' : 'low',
       icon: Activity,
     },
@@ -105,6 +105,49 @@ export const DiagnosticsPanel = ({ mandi }) => {
               High stress detected. Immediate intervention recommended.
             </p>
           </div>
+        </div>
+      )}
+
+      {/* Stress Breakdown */}
+      {mandi.stressBreakdown && (
+        <div className="space-y-3">
+          <span className="data-label">STRESS BREAKDOWN</span>
+          <div className="grid grid-cols-2 gap-2">
+            <div className="p-2 bg-secondary/30 border border-border">
+              <span className="text-xs text-muted-foreground">Price Stress</span>
+              <p className="font-mono text-lg">{mandi.stressBreakdown.priceStress}</p>
+            </div>
+            <div className="p-2 bg-secondary/30 border border-border">
+              <span className="text-xs text-muted-foreground">Supply Stress</span>
+              <p className="font-mono text-lg">{mandi.stressBreakdown.supplyStress}</p>
+            </div>
+            <div className="p-2 bg-secondary/30 border border-border">
+              <span className="text-xs text-muted-foreground">Instability</span>
+              <p className="font-mono text-lg">{mandi.stressBreakdown.instabilityStress}</p>
+            </div>
+            <div className="p-2 bg-secondary/30 border border-border">
+              <span className="text-xs text-muted-foreground">External</span>
+              <p className="font-mono text-lg">{mandi.stressBreakdown.externalStress}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* External Flags */}
+      {(mandi.rainFlag || mandi.festivalFlag) && (
+        <div className="flex gap-2">
+          {mandi.rainFlag && (
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-mono">
+              <CloudRain size={14} />
+              RAIN ACTIVE
+            </div>
+          )}
+          {mandi.festivalFlag && (
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 border border-purple-500/30 text-purple-400 text-xs font-mono">
+              <PartyPopper size={14} />
+              FESTIVAL PERIOD
+            </div>
+          )}
         </div>
       )}
     </div>
