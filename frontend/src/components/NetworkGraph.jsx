@@ -171,6 +171,12 @@ export const NetworkGraph = ({
 
   const { nodes, edges } = graphData;
 
+  // Debug logging
+  console.log('[NetworkGraph] Rendering with:', { nodeCount: nodes?.length, edgeCount: edges?.length });
+  if (nodes?.length > 0) {
+    console.log('[NetworkGraph] First node:', nodes[0]);
+  }
+
   // If no nodes, show empty state
   if (!nodes || nodes.length === 0) {
     return (
