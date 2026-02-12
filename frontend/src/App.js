@@ -137,7 +137,7 @@ const MandiDetail = ({ onMandiLoaded }) => {
   }, [mandi, fetchRecommendations]);
 
   const handleLinkedMandiClick = (linkedMandi) => {
-    navigate(`/mandi/${linkedMandi.id}`);
+    navigate(`/app/mandi/${linkedMandi.id}`);
   };
 
   if (loading) {
