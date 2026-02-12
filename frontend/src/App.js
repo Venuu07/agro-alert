@@ -6,6 +6,7 @@ import { Toaster, toast } from 'sonner';
 import { Navbar } from './components/Navbar';
 import { MandiCard } from './components/MandiCard';
 import { SummaryStats } from './components/SummaryStats';
+import { SystemOverview } from './components/SystemOverview';
 import { PriceChart } from './components/PriceChart';
 import { ArrivalsChart } from './components/ArrivalsChart';
 import { DiagnosticsPanel } from './components/DiagnosticsPanel';
@@ -30,7 +31,7 @@ const Dashboard = () => {
       setStressData(response.data);
     } catch (error) {
       console.error('Failed to fetch stress data:', error);
-      toast.error('Failed to load mandi data');
+      toast.error('Failed to load market data');
     } finally {
       setLoading(false);
     }
@@ -53,15 +54,18 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="space-y-8 animate-fade-in" data-testid="dashboard">
+    <div className="space-y-6 animate-fade-in" data-testid="dashboard">
+      {/* System Stability Overview */}
+      {stressData && <SystemOverview data={stressData} />}
+      
       {/* Summary Stats */}
       {stressData && <SummaryStats data={stressData} />}
       
       {/* Mandi Cards Grid */}
       <div>
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">MARKET OVERVIEW</h2>
-          <span className="data-label">{stressData?.totalMandis || 0} MANDIS TRACKED</span>
+          <h2 className="text-2xl font-bold">MARKET STRESS INDEX</h2>
+          <span className="data-label">{stressData?.totalMandis || 0} MANDIS MONITORED</span>
         </div>
         <div className="dashboard-grid">
           {stressData?.mandis.map((mandi, index) => (
