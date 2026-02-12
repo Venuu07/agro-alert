@@ -107,6 +107,49 @@ export const DiagnosticsPanel = ({ mandi }) => {
           </div>
         </div>
       )}
+
+      {/* Stress Breakdown */}
+      {mandi.stressBreakdown && (
+        <div className="space-y-3">
+          <span className="data-label">STRESS BREAKDOWN</span>
+          <div className="grid grid-cols-2 gap-2">
+            <div className="p-2 bg-secondary/30 border border-border">
+              <span className="text-xs text-muted-foreground">Price Stress</span>
+              <p className="font-mono text-lg">{mandi.stressBreakdown.priceStress}</p>
+            </div>
+            <div className="p-2 bg-secondary/30 border border-border">
+              <span className="text-xs text-muted-foreground">Supply Stress</span>
+              <p className="font-mono text-lg">{mandi.stressBreakdown.supplyStress}</p>
+            </div>
+            <div className="p-2 bg-secondary/30 border border-border">
+              <span className="text-xs text-muted-foreground">Instability</span>
+              <p className="font-mono text-lg">{mandi.stressBreakdown.instabilityStress}</p>
+            </div>
+            <div className="p-2 bg-secondary/30 border border-border">
+              <span className="text-xs text-muted-foreground">External</span>
+              <p className="font-mono text-lg">{mandi.stressBreakdown.externalStress}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* External Flags */}
+      {(mandi.rainFlag || mandi.festivalFlag) && (
+        <div className="flex gap-2">
+          {mandi.rainFlag && (
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-mono">
+              <CloudRain size={14} />
+              RAIN ACTIVE
+            </div>
+          )}
+          {mandi.festivalFlag && (
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 border border-purple-500/30 text-purple-400 text-xs font-mono">
+              <PartyPopper size={14} />
+              FESTIVAL PERIOD
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
