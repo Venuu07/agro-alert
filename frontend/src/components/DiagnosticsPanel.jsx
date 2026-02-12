@@ -1,11 +1,11 @@
 import React from 'react';
 import { StressGauge } from './StressGauge';
 import { StatusBadge } from './StatusBadge';
-import { TrendingUp, TrendingDown, Activity, Package, Gauge, AlertCircle } from 'lucide-react';
+import { TrendingUp, TrendingDown, Activity, Package, CloudRain, PartyPopper, AlertCircle } from 'lucide-react';
 
 export const DiagnosticsPanel = ({ mandi }) => {
-  const priceChange = ((mandi.currentPrice - mandi.previousPrice) / mandi.previousPrice) * 100;
-  const arrivalsChange = ((mandi.arrivals - mandi.previousArrivals) / mandi.previousArrivals) * 100;
+  const priceChange = mandi.priceChangePct ?? ((mandi.currentPrice - mandi.previousPrice) / mandi.previousPrice) * 100;
+  const arrivalsChange = mandi.arrivalChangePct ?? ((mandi.arrivals - mandi.previousArrivals) / mandi.previousArrivals) * 100;
 
   const metrics = [
     {
@@ -24,7 +24,7 @@ export const DiagnosticsPanel = ({ mandi }) => {
     },
     {
       label: 'VOLATILITY',
-      value: `${mandi.volatility}%`,
+      value: `${mandi.volatility?.toFixed(1) || 0}%`,
       threshold: mandi.volatility > 15 ? 'high' : mandi.volatility > 10 ? 'medium' : 'low',
       icon: Activity,
     },
