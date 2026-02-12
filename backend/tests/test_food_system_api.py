@@ -468,5 +468,54 @@ class TestStressCalculationRules:
             assert external_stress == expected_external, f"External stress should be {expected_external}, got {external_stress}"
 
 
+class TestJarvisAIAssistant:
+    """Tests for POST /api/jarvis/chat - Jarvis Decision Intelligence Assistant"""
+    
+    def test_jarvis_chat_basic(self):
+        """Test Jarvis chat endpoint returns response"""
+        payload = {
+            "message": "What is market stress?",
+            "systemContext": "",
+            "conversationHistory": []
+        }
+        response = requests.post(f"{BASE_URL}/api/jarvis/chat", json=payload)
+        assert response.status_code == 200
+        data = response.json()
+        
+        assert "response" in data
+        assert len(data["response"]) > 0
+    
+    def test_jarvis_chat_with_context(self):
+        """Test Jarvis chat with system context"""
+        payload = {
+            "message": "Why is this mandi high risk?",
+            "systemContext": "**Current Mandi Analysis (Azadpur Mandi):**\n- Stress Score: 65/100 (watch)\n- Price Change: +6.8%\n- Arrival Change: -8.6%",
+            "conversationHistory": []
+        }
+        response = requests.post(f"{BASE_URL}/api/jarvis/chat", json=payload)
+        assert response.status_code == 200
+        data = response.json()
+        
+        assert "response" in data
+        assert len(data["response"]) > 0
+    
+    def test_jarvis_chat_with_history(self):
+        """Test Jarvis chat with conversation history"""
+        payload = {
+            "message": "What should I do about it?",
+            "systemContext": "",
+            "conversationHistory": [
+                {"role": "user", "content": "What is market stress?"},
+                {"role": "assistant", "content": "Market stress is a measure of instability in agricultural markets."}
+            ]
+        }
+        response = requests.post(f"{BASE_URL}/api/jarvis/chat", json=payload)
+        assert response.status_code == 200
+        data = response.json()
+        
+        assert "response" in data
+        assert len(data["response"]) > 0
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

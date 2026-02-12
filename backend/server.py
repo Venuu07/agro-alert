@@ -809,11 +809,79 @@ async def get_all_mandis():
                 "id": m["id"], 
                 "name": m["name"], 
                 "location": m["location"],
-                "commodity": m["commodity"]
+                "commodity": m["commodity"],
+                "connectedMandis": m.get("connectedMandis", [])
             }
             for m in BASE_DATA["mandis"]
         ]
     }
+
+# ============================================================
+# JARVIS AI ASSISTANT - Decision Intelligence Chat
+# ============================================================
+class JarvisRequest(BaseModel):
+    message: str
+    systemContext: str = ""
+    conversationHistory: List[Dict[str, str]] = []
+
+class JarvisResponse(BaseModel):
+    response: str
+
+@api_router.post("/jarvis/chat", response_model=JarvisResponse)
+async def jarvis_chat(request: JarvisRequest):
+    """Jarvis Decision Intelligence Assistant - interprets system outputs and explains market dynamics"""
+    try:
+        from emergentintegrations.llm.chat import LlmChat, UserMessage
+        
+        llm_key = os.environ.get('EMERGENT_LLM_KEY')
+        if not llm_key:
+            return JarvisResponse(response="Jarvis is currently unavailable. Please check API configuration.")
+        
+        system_message = """You are Jarvis, a Decision Intelligence Assistant for agricultural market operators. 
+Your role is to interpret pre-computed system outputs and explain market dynamics in a clear, analytical manner.
+
+IMPORTANT GUIDELINES:
+1. You DO NOT compute any values - all numbers are pre-computed by deterministic engines
+2. You EXPLAIN stress signals, price dynamics, shock propagation, and recommendations
+3. Be analytical, calm, and expert-like in your responses
+4. Reference specific metrics when available (Market Stress Index, Supply/Demand, etc.)
+5. Keep responses structured and concise (under 150 words unless detailed analysis requested)
+
+RESPONSE FORMAT for market queries:
+**Detected Signals**
+• Key observations from the data
+
+**System Interpretation**
+• Analytical reasoning about the situation
+
+**Suggested Action**
+• Clear, actionable insight
+
+Avoid generic AI responses. Be specific to the agricultural market context."""
+
+        chat = LlmChat(
+            api_key=llm_key,
+            session_id=f"jarvis-{uuid.uuid4()}",
+            system_message=system_message
+        ).with_model("openai", "gpt-4o")
+        
+        # Build context-aware prompt
+        context_prompt = f"""
+CURRENT SYSTEM CONTEXT:
+{request.systemContext if request.systemContext else "No specific context provided."}
+
+USER QUERY: {request.message}
+
+Provide a helpful, analytical response based on the system context above. If the context is empty, respond based on general agricultural market knowledge."""
+
+        user_message = UserMessage(text=context_prompt)
+        response = await chat.send_message(user_message)
+        
+        return JarvisResponse(response=response)
+        
+    except Exception as e:
+        logger.error(f"Jarvis chat error: {e}")
+        return JarvisResponse(response="I apologize, but I encountered an issue processing your request. Please try again.")
 
 # Include the router in the main app
 app.include_router(api_router)
