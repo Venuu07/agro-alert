@@ -164,18 +164,18 @@ export const SimulationPanel = ({
         <Button 
           onClick={handleSimulate}
           disabled={!selectedMandi || !selectedShock || isLoading}
-          className="w-full uppercase tracking-wider font-mono h-12"
+          className="w-full uppercase tracking-wider font-mono h-12 btn-premium"
           data-testid="run-simulation-btn"
         >
           {isLoading ? (
             <>
               <Loader2 size={18} className="mr-2 animate-spin" />
-              SIMULATING...
+              PROPAGATING...
             </>
           ) : (
             <>
               <Zap size={18} className="mr-2" />
-              RUN SIMULATION
+              RUN PROPAGATION MODEL
             </>
           )}
         </Button>
