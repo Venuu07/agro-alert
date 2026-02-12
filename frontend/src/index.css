@@ -31,11 +31,6 @@
         --chart-4: 215 20% 65%;
         --chart-5: 142 40% 35%;
         --radius: 0rem;
-        
-        /* Custom colors */
-        --stress-high: 0 84% 60%;
-        --stress-medium: 38 92% 50%;
-        --stress-low: 142 71% 45%;
     }
 }
 
@@ -63,7 +58,6 @@
     }
 }
 
-/* Custom scrollbar */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -77,18 +71,9 @@
     @apply bg-border rounded-full;
 }
 
-::-webkit-scrollbar-thumb:hover {
-    @apply bg-muted-foreground/50;
-}
-
-/* Stress gauge animations */
 @keyframes pulse-glow {
-    0%, 100% {
-        filter: drop-shadow(0 0 8px currentColor);
-    }
-    50% {
-        filter: drop-shadow(0 0 16px currentColor);
-    }
+    0%, 100% { filter: drop-shadow(0 0 8px currentColor); }
+    50% { filter: drop-shadow(0 0 16px currentColor); }
 }
 
 .stress-high {
@@ -96,15 +81,9 @@
     animation: pulse-glow 2s ease-in-out infinite;
 }
 
-.stress-medium {
-    @apply text-orange-500;
-}
+.stress-medium { @apply text-orange-500; }
+.stress-low { @apply text-green-500; }
 
-.stress-low {
-    @apply text-green-500;
-}
-
-/* Card hover effects */
 .card-hover {
     @apply transition-all duration-300;
 }
@@ -114,144 +93,60 @@
     transform: translateY(-2px);
 }
 
-/* Scanline effect */
-.scanlines {
-    position: relative;
+.navbar-glass {
+    @apply backdrop-blur-xl bg-background/80 border-b border-border;
 }
 
-.scanlines::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0, 0, 0, 0.03) 2px,
-        rgba(0, 0, 0, 0.03) 4px
-    );
-    pointer-events: none;
-}
-
-/* Glass effect */
-.glass {
-    @apply backdrop-blur-xl bg-card/80 border-b border-white/10;
-}
-
-/* Data label style */
 .data-label {
     @apply uppercase tracking-wider text-xs text-muted-foreground font-mono;
 }
 
-/* KPI value style */
 .kpi-value {
     font-family: 'JetBrains Mono', monospace;
     @apply text-4xl font-medium tracking-tight;
 }
 
-/* Status badges */
-.status-normal {
-    @apply bg-green-500/10 text-green-500 border-green-500/30;
-}
+.status-normal { @apply bg-green-500/10 text-green-500 border-green-500/30; }
+.status-watch { @apply bg-orange-500/10 text-orange-500 border-orange-500/30; }
+.status-high-risk { @apply bg-red-500/10 text-red-500 border-red-500/30; }
 
-.status-watch {
-    @apply bg-orange-500/10 text-orange-500 border-orange-500/30;
-}
-
-.status-high-risk {
-    @apply bg-red-500/10 text-red-500 border-red-500/30;
-}
-
-/* Ripple animation for network effect */
 @keyframes ripple {
-    0% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    100% {
-        transform: scale(1.5);
-        opacity: 0;
-    }
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1.5); opacity: 0; }
 }
 
-.ripple-effect {
-    animation: ripple 1.5s ease-out infinite;
-}
+.ripple-effect { animation: ripple 1.5s ease-out infinite; }
 
-/* Chart tooltip styling */
-.recharts-tooltip-wrapper {
-    @apply !outline-none;
-}
-
-.recharts-default-tooltip {
-    @apply !bg-card !border-border !rounded-none !shadow-lg;
-}
-
-/* Slider track glow */
-.slider-glow {
-    box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
-}
-
-/* Button tactical style */
-.btn-tactical {
-    @apply uppercase tracking-wider text-xs font-mono px-4 py-2 border transition-colors duration-200;
-}
-
-.btn-tactical:hover {
-    @apply bg-primary text-primary-foreground;
-}
-
-/* Network connection lines */
-.connection-line {
-    stroke-dasharray: 8;
-    animation: dash 20s linear infinite;
-}
-
-@keyframes dash {
-    to {
-        stroke-dashoffset: -100;
-    }
-}
-
-/* Fade in animation */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.animate-fade-in {
-    animation: fadeIn 0.3s ease-out forwards;
+.animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+.animate-fade-in-delay-1 { animation: fadeIn 0.3s ease-out 0.1s forwards; opacity: 0; }
+.animate-fade-in-delay-2 { animation: fadeIn 0.3s ease-out 0.2s forwards; opacity: 0; }
+.animate-fade-in-delay-3 { animation: fadeIn 0.3s ease-out 0.3s forwards; opacity: 0; }
+
+@keyframes status-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
 }
 
-.animate-fade-in-delay-1 {
-    animation: fadeIn 0.3s ease-out 0.1s forwards;
-    opacity: 0;
-}
+.status-pulse { animation: status-pulse 2s ease-in-out infinite; }
 
-.animate-fade-in-delay-2 {
-    animation: fadeIn 0.3s ease-out 0.2s forwards;
-    opacity: 0;
-}
+.gauge-container { @apply relative flex items-center justify-center; }
+.summary-stat { @apply flex flex-col items-center justify-center p-4 border border-border bg-card; }
+.chart-container { @apply bg-card border border-border p-6; }
+.simulation-panel { @apply bg-card border border-border p-6 space-y-6; }
+.control-group { @apply space-y-3; }
+.impact-card { @apply bg-secondary/50 border border-border p-4 space-y-2; }
+.recommendation-card { @apply bg-card border border-border p-6 space-y-4 transition-colors duration-200; }
+.recommendation-card:hover { @apply border-primary/30; }
+.priority-high { @apply border-l-4 border-l-red-500; }
+.priority-medium { @apply border-l-4 border-l-orange-500; }
+.priority-low { @apply border-l-4 border-l-green-500; }
+.ai-insight-box { @apply bg-primary/5 border border-primary/20 p-4 mt-4; }
 
-.animate-fade-in-delay-3 {
-    animation: fadeIn 0.3s ease-out 0.3s forwards;
-    opacity: 0;
-}
-
-/* Focus states */
-input:focus, select:focus, button:focus {
-    @apply outline-none ring-1 ring-primary/50;
-}
-
-/* Debug wrapper */
 @layer base {
-    [data-debug-wrapper="true"] {
-        display: contents !important;
-    }
+    [data-debug-wrapper="true"] { display: contents !important; }
 }
