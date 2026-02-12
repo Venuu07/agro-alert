@@ -54,11 +54,11 @@ export const SimulationPanel = ({
   return (
     <div className="simulation-panel" data-testid="simulation-panel">
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-8 h-8 bg-primary flex items-center justify-center">
-          <Zap size={18} className="text-primary-foreground" />
+        <div className="w-10 h-10 bg-primary/20 border border-primary/30 flex items-center justify-center float-animation">
+          <Zap size={20} className="text-primary" />
         </div>
         <div>
-          <h2 className="text-xl font-bold">SHOCK SIMULATOR</h2>
+          <h2 className="text-xl font-bold">SHOCK PROPAGATION ENGINE</h2>
           <p className="text-xs text-muted-foreground font-mono">MODEL DISRUPTION SCENARIOS</p>
         </div>
       </div>
