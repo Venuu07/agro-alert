@@ -111,23 +111,23 @@ export const DiagnosticsPanel = ({ mandi }) => {
       {/* Stress Breakdown */}
       {mandi.stressBreakdown && (
         <div className="space-y-3">
-          <span className="data-label">STRESS BREAKDOWN</span>
+          <span className="data-label">STRESS FACTOR BREAKDOWN</span>
           <div className="grid grid-cols-2 gap-2">
-            <div className="p-2 bg-secondary/30 border border-border">
-              <span className="text-xs text-muted-foreground">Price Stress</span>
-              <p className="font-mono text-lg">{mandi.stressBreakdown.priceStress}</p>
+            <div className="signal-card">
+              <span className="text-xs text-muted-foreground">Price Factor</span>
+              <p className="font-mono text-lg font-bold">{mandi.stressBreakdown.priceStress}</p>
             </div>
-            <div className="p-2 bg-secondary/30 border border-border">
-              <span className="text-xs text-muted-foreground">Supply Stress</span>
-              <p className="font-mono text-lg">{mandi.stressBreakdown.supplyStress}</p>
+            <div className="signal-card">
+              <span className="text-xs text-muted-foreground">Supply Factor</span>
+              <p className="font-mono text-lg font-bold">{mandi.stressBreakdown.supplyStress}</p>
             </div>
-            <div className="p-2 bg-secondary/30 border border-border">
-              <span className="text-xs text-muted-foreground">Instability</span>
-              <p className="font-mono text-lg">{mandi.stressBreakdown.instabilityStress}</p>
+            <div className="signal-card">
+              <span className="text-xs text-muted-foreground">Volatility Factor</span>
+              <p className="font-mono text-lg font-bold">{mandi.stressBreakdown.instabilityStress}</p>
             </div>
-            <div className="p-2 bg-secondary/30 border border-border">
-              <span className="text-xs text-muted-foreground">External</span>
-              <p className="font-mono text-lg">{mandi.stressBreakdown.externalStress}</p>
+            <div className="signal-card">
+              <span className="text-xs text-muted-foreground">External Factor</span>
+              <p className="font-mono text-lg font-bold">{mandi.stressBreakdown.externalStress}</p>
             </div>
           </div>
         </div>
