@@ -7,17 +7,17 @@ export const StatusBadge = ({ status }) => {
       case 'high_risk':
         return {
           label: 'HIGH RISK',
-          className: 'status-high-risk border font-mono text-xs tracking-wider',
+          className: 'status-high-risk border font-mono text-[10px] tracking-wider rounded-md px-2 py-0.5',
         };
       case 'watch':
         return {
           label: 'WATCH',
-          className: 'status-watch border font-mono text-xs tracking-wider',
+          className: 'status-watch border font-mono text-[10px] tracking-wider rounded-md px-2 py-0.5',
         };
       default:
         return {
-          label: 'NORMAL',
-          className: 'status-normal border font-mono text-xs tracking-wider',
+          label: 'STABLE',
+          className: 'status-normal border font-mono text-[10px] tracking-wider rounded-md px-2 py-0.5',
         };
     }
   };

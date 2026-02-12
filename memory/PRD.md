@@ -1,4 +1,4 @@
-# Food System Early Warning & Shock Simulator - PRD
+# AGRO INTEL - Decision Intelligence Platform - PRD
 
 ## Original Problem Statement
 Build a modern, visually impressive, production-quality full stack web application for mandi/agricultural market operators to monitor price stability, detect stress signals, simulate disruptions, and receive intervention recommendations.
@@ -8,26 +8,18 @@ Build a modern, visually impressive, production-quality full stack web applicati
 2. **Government Officials** - Track regional market stability, intervention planning
 3. **Policy Makers** - Simulate disruption scenarios, understand ripple effects
 
-## Core Requirements (Static)
-- Decision intelligence dashboard (NOT CRUD app)
-- Modern fintech-style UI (Stripe/Vercel inspiration)
-- Dark theme with green accent
-- Stress score as dominant visual element
-- Shock simulation capability
-- Intervention recommendations
-
 ---
 
 ## What's Been Implemented
 
-### Phase 1: UI/UX Foundation (Completed Jan 2026)
+### Phase 1: UI/UX Foundation (Completed)
 - Modern dark theme dashboard with 6 mandi cards
 - Price and arrivals charts using Recharts
 - Stress gauges and status badges
 - Shock simulation interface with intensity/duration sliders
 - Responsive design with smooth animations
 
-### Phase 2: Backend Logic Engines (Completed Dec 2025)
+### Phase 2: Backend Logic Engines (Completed)
 
 #### 1. Stress Score Engine ✅
 Deterministic calculation using exact rules:
@@ -56,7 +48,53 @@ Rule-based recommendations:
 #### 4. LLM Integration ✅
 - **Provider**: Emergent LLM Key (OpenAI GPT-4o)
 - **Usage**: Explanation text only (NOT decision-making)
-- **Purpose**: Generate human-readable insights for recommendations
+- **Purpose**: Generate human-readable AI Intelligence Analysis
+
+### Phase 3: UI/UX Refinement (Completed Dec 2025)
+
+#### Typography & Branding
+- **Global Font**: Inter (clean, modern sans-serif)
+- **Monospace Font**: JetBrains Mono (for data)
+- App name: "AGRO INTEL - Decision Intelligence Platform"
+
+#### Terminology Updates
+- "Stress Score" → **Market Stress Index (MSI)**
+- "Simulator" → **Shock Propagation Engine**
+- "Recommendations" → **Stabilization Strategy Engine**
+- "Alerts" → **System Risk Monitor**
+- "Normal" → **STABLE**
+
+#### Visual Design System
+- **Border Radius**: 12-16px (rounded corners on all components)
+- **Shadows**: 3-tier system (--shadow-soft, --shadow-card, --shadow-elevated)
+- **Spacing**: Increased padding (p-5 to p-6, gap-3 to gap-6)
+
+#### New Components
+1. **System Stability Overview Panel** - Premium header metrics
+   - System Stability Score (%)
+   - Volatility Dampening (%)
+   - Supply Stress Level (Critical/Moderate/Low)
+   - Avg Market Stress Index
+
+2. **Linked Markets Section** (NEW)
+   - Shows connected mandis with mini stress gauges
+   - Clickable pills to navigate to linked mandis
+   - Network Effect explanation text
+
+3. **Enhanced Page Header**
+   - Large mandi name with icon
+   - Breadcrumb context (location, commodity, analysis type)
+
+4. **Premium Risk Cards**
+   - Left border severity indicators
+   - Gradient backgrounds
+   - Large stress index display
+
+#### Microinteractions
+- Card hover: translateY(-4px) + elevated shadow
+- Button hover: translateY(-2px) + glow effect
+- Critical pulse animation for high-risk items
+- Smooth chart transitions
 
 ---
 
@@ -64,17 +102,11 @@ Rule-based recommendations:
 
 ### Core APIs
 - `GET /api/stress` - Returns all mandis with computed stress scores and breakdown
-- `GET /api/mandi/{id}` - Detailed mandi info with stress breakdown
+- `GET /api/mandi/{id}` - Detailed mandi info with stress breakdown and connected mandis
 - `GET /api/mandis` - List of mandis for dropdowns
 - `GET /api/shock-types` - Available shock scenarios
 - `POST /api/simulate` - Run shock simulation with elasticity-based pricing
 - `POST /api/recommend` - Get rule-based recommendations with AI explanations
-
-### Response Schema Highlights
-- `stressBreakdown`: { priceStress, supplyStress, instabilityStress, externalStress }
-- `simulationParameters`: { elasticity, supplyBefore, supplyAfter, demandBefore, demandAfter }
-- `rippleLevel`: 1 (60%) or 2 (30%)
-- `aiInsight`: LLM-generated explanation text
 
 ---
 
@@ -89,15 +121,17 @@ Rule-based recommendations:
 
 ## P0/P1/P2 Features Remaining
 
-### P0 (Critical) - DONE ✅
+### P0 (Critical) - ALL DONE ✅
 - [x] Dashboard with stress scores
 - [x] Mandi detail view with charts
 - [x] Shock simulation panel
 - [x] Intervention recommendations
-- [x] **Stress Score Engine**
-- [x] **Shock Simulation Engine**
-- [x] **Recommendation Engine**
-- [x] **LLM Integration for explanations**
+- [x] Stress Score Engine
+- [x] Shock Simulation Engine
+- [x] Recommendation Engine
+- [x] LLM Integration for explanations
+- [x] UI/UX Refinement & Polish
+- [x] Linked Markets Section
 
 ### P1 (Important) - NOT STARTED
 - [ ] Real-time data integration (WebSocket/SSE)
@@ -121,24 +155,40 @@ Rule-based recommendations:
 ├── backend/
 │   ├── data/
 │   │   └── mandiData.json (6 mandis with rainFlag, festivalFlag, baseSupply, baseDemand)
-│   ├── tests/
-│   │   └── test_food_system_api.py
 │   ├── server.py (Stress Engine, Simulation Engine, Recommendation Engine, LLM Integration)
 │   └── .env (EMERGENT_LLM_KEY)
 └── frontend/
     ├── src/
     │   ├── components/
-    │   │   ├── DiagnosticsPanel.jsx (stress breakdown, external flags)
-    │   │   ├── SimulationResults.jsx (elasticity model, ripple effects)
-    │   │   ├── RecommendationPanel.jsx (AI insights)
-    │   │   └── MandiCard.jsx (rain/festival icons)
-    │   └── App.js (routing)
+    │   │   ├── SystemOverview.jsx (System stability metrics)
+    │   │   ├── LinkedMandis.jsx (NEW - Connected markets)
+    │   │   ├── DiagnosticsPanel.jsx (stress breakdown)
+    │   │   ├── SimulationResults.jsx (elasticity model)
+    │   │   ├── RecommendationPanel.jsx (AI insights, tradeoff viz)
+    │   │   ├── MandiCard.jsx (rounded, premium cards)
+    │   │   ├── StressGauge.jsx (MSI label, glow animation)
+    │   │   ├── StatusBadge.jsx (rounded badges)
+    │   │   └── Navbar.jsx (Inter font, rounded buttons)
+    │   ├── App.js (page header, linked mandis integration)
+    │   └── index.css (Inter font, premium shadows, rounded corners)
     └── .env
 ```
 
 ---
 
-## Testing Status
-- **Backend**: 100% (24/24 tests passed)
-- **Frontend**: 100%
-- **Test Report**: `/app/test_reports/iteration_2.json`
+## Design Philosophy
+**Target Feel**: Funded SaaS startup, Decision Intelligence Platform, NOT student hackathon UI
+
+**Design Tone**:
+- Minimal
+- Premium
+- Spacious
+- Analytical
+- High-signal
+
+**Visual Language**:
+- Inter typography (clean, modern)
+- Rounded corners (12-16px)
+- Soft shadows (3-tier depth)
+- Premium hover states
+- Calm, analytical microinteractions

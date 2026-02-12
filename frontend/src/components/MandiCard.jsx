@@ -12,22 +12,22 @@ export const MandiCard = ({ mandi, onClick }) => {
 
   return (
     <Card
-      className="card-hover border border-border bg-card cursor-pointer overflow-hidden"
+      className="card-hover border border-border bg-card cursor-pointer overflow-hidden rounded-xl"
       onClick={() => onClick(mandi)}
       data-testid={`mandi-card-${mandi.id}`}
     >
       {/* Image header */}
-      <div className="relative h-24 overflow-hidden">
+      <div className="relative h-28 overflow-hidden rounded-t-xl">
         <img
           src={mandi.image}
           alt={mandi.commodity}
-          className="w-full h-full object-cover opacity-60"
+          className="w-full h-full object-cover opacity-50"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
         <div className="absolute bottom-3 left-4 flex items-center gap-2">
-          <span className="data-label">{mandi.commodity}</span>
-          {mandi.rainFlag && <CloudRain size={12} className="text-blue-400" />}
-          {mandi.festivalFlag && <PartyPopper size={12} className="text-purple-400" />}
+          <span className="data-label bg-background/60 px-2 py-0.5 rounded-md backdrop-blur-sm">{mandi.commodity}</span>
+          {mandi.rainFlag && <CloudRain size={14} className="text-blue-400" />}
+          {mandi.festivalFlag && <PartyPopper size={14} className="text-purple-400" />}
         </div>
         <div className="absolute top-3 right-3">
           <StatusBadge status={mandi.status} />
@@ -35,11 +35,11 @@ export const MandiCard = ({ mandi, onClick }) => {
       </div>
 
       {/* Content */}
-      <div className="p-5 space-y-4">
+      <div className="p-6 space-y-5">
         {/* Header row */}
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
-            <h3 className="text-lg font-bold truncate">{mandi.name}</h3>
+            <h3 className="text-lg font-semibold truncate">{mandi.name}</h3>
             <p className="text-sm text-muted-foreground">{mandi.location}</p>
           </div>
           <StressGauge score={mandi.stressScore} size={72} />
@@ -77,16 +77,16 @@ export const MandiCard = ({ mandi, onClick }) => {
         </div>
 
         {/* Volatility indicator */}
-        <div className="pt-3 border-t border-border">
-          <div className="flex items-center justify-between">
+        <div className="pt-4 border-t border-border/50">
+          <div className="flex items-center justify-between mb-2">
             <span className="data-label">VOLATILITY</span>
             <span className={`font-mono text-sm ${mandi.volatility > 15 ? 'text-red-500' : mandi.volatility > 10 ? 'text-orange-500' : 'text-green-500'}`}>
               {mandi.volatility?.toFixed(1) || 0}%
             </span>
           </div>
-          <div className="mt-2 h-1.5 bg-secondary overflow-hidden">
+          <div className="h-1.5 bg-secondary/50 rounded-full overflow-hidden">
             <div 
-              className={`h-full transition-all duration-500 ${mandi.volatility > 15 ? 'bg-red-500' : mandi.volatility > 10 ? 'bg-orange-500' : 'bg-green-500'}`}
+              className={`h-full rounded-full transition-all duration-700 ${mandi.volatility > 15 ? 'bg-red-500' : mandi.volatility > 10 ? 'bg-orange-500' : 'bg-green-500'}`}
               style={{ width: `${Math.min((mandi.volatility || 0) * 5, 100)}%` }}
             />
           </div>

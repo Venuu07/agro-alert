@@ -54,11 +54,11 @@ export const SimulationPanel = ({
   return (
     <div className="simulation-panel" data-testid="simulation-panel">
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-8 h-8 bg-primary flex items-center justify-center">
-          <Zap size={18} className="text-primary-foreground" />
+        <div className="w-10 h-10 bg-primary/20 border border-primary/30 flex items-center justify-center float-animation">
+          <Zap size={20} className="text-primary" />
         </div>
         <div>
-          <h2 className="text-xl font-bold">SHOCK SIMULATOR</h2>
+          <h2 className="text-xl font-bold">SHOCK PROPAGATION ENGINE</h2>
           <p className="text-xs text-muted-foreground font-mono">MODEL DISRUPTION SCENARIOS</p>
         </div>
       </div>
@@ -164,18 +164,18 @@ export const SimulationPanel = ({
         <Button 
           onClick={handleSimulate}
           disabled={!selectedMandi || !selectedShock || isLoading}
-          className="w-full uppercase tracking-wider font-mono h-12"
+          className="w-full uppercase tracking-wider font-mono h-12 btn-premium"
           data-testid="run-simulation-btn"
         >
           {isLoading ? (
             <>
               <Loader2 size={18} className="mr-2 animate-spin" />
-              SIMULATING...
+              PROPAGATING...
             </>
           ) : (
             <>
               <Zap size={18} className="mr-2" />
-              RUN SIMULATION
+              RUN PROPAGATION MODEL
             </>
           )}
         </Button>

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -10,27 +10,30 @@
         --foreground: 210 40% 98%;
         --card: 240 6% 7%;
         --card-foreground: 210 40% 98%;
-        --popover: 240 6% 7%;
+        --popover: 240 6% 9%;
         --popover-foreground: 210 40% 98%;
         --primary: 142 71% 45%;
         --primary-foreground: 0 0% 100%;
-        --secondary: 240 5% 15%;
+        --secondary: 240 5% 12%;
         --secondary-foreground: 210 40% 98%;
         --muted: 240 5% 15%;
-        --muted-foreground: 215 20% 65%;
+        --muted-foreground: 215 20% 55%;
         --accent: 142 71% 45%;
         --accent-foreground: 0 0% 100%;
         --destructive: 0 84% 60%;
         --destructive-foreground: 0 0% 98%;
-        --border: 240 5% 17%;
-        --input: 240 5% 17%;
+        --border: 240 5% 14%;
+        --input: 240 5% 14%;
         --ring: 142 71% 45%;
         --chart-1: 142 71% 45%;
         --chart-2: 0 84% 60%;
         --chart-3: 38 92% 50%;
         --chart-4: 215 20% 65%;
         --chart-5: 142 40% 35%;
-        --radius: 0rem;
+        --radius: 0.75rem;
+        --shadow-soft: 0 4px 24px -4px rgba(0, 0, 0, 0.3);
+        --shadow-card: 0 8px 32px -8px rgba(0, 0, 0, 0.4);
+        --shadow-elevated: 0 12px 48px -12px rgba(0, 0, 0, 0.5);
     }
 
     * {
@@ -44,14 +47,17 @@
     body {
         background-color: hsl(var(--background));
         color: hsl(var(--foreground));
-        font-family: 'Manrope', sans-serif;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+        line-height: 1.6;
     }
     
     h1, h2, h3, h4, h5, h6 {
-        font-family: 'Barlow Condensed', sans-serif;
-        letter-spacing: -0.025em;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
     }
     
     code, .font-mono, [data-mono] {
@@ -66,13 +72,14 @@
 @layer components {
     .navbar-glass {
         @apply backdrop-blur-xl border-b;
-        background-color: hsl(var(--background) / 0.8);
+        background-color: hsl(var(--background) / 0.85);
         border-color: hsl(var(--border));
     }
 
     .data-label {
-        @apply uppercase tracking-wider text-xs font-mono;
+        @apply uppercase tracking-wider text-[11px] font-medium;
         color: hsl(var(--muted-foreground));
+        letter-spacing: 0.08em;
     }
 
     .kpi-value {
@@ -103,21 +110,30 @@
     }
     
     .summary-stat { 
-        @apply flex flex-col items-center justify-center p-4 border;
+        @apply flex flex-col items-center justify-center p-5 rounded-xl;
         background-color: hsl(var(--card));
-        border-color: hsl(var(--border));
+        border: 1px solid hsl(var(--border));
+        box-shadow: var(--shadow-soft);
+        transition: all 0.3s ease;
+    }
+
+    .summary-stat:hover {
+        box-shadow: var(--shadow-card);
+        transform: translateY(-2px);
     }
     
     .chart-container { 
-        @apply p-6 border;
+        @apply p-6 rounded-xl;
         background-color: hsl(var(--card));
-        border-color: hsl(var(--border));
+        border: 1px solid hsl(var(--border));
+        box-shadow: var(--shadow-soft);
     }
     
     .simulation-panel { 
-        @apply p-6 space-y-6 border;
+        @apply p-8 space-y-6 rounded-xl;
         background-color: hsl(var(--card));
-        border-color: hsl(var(--border));
+        border: 1px solid hsl(var(--border));
+        box-shadow: var(--shadow-card);
     }
     
     .control-group { 
@@ -125,49 +141,65 @@
     }
     
     .impact-card { 
-        @apply p-4 space-y-2 border;
+        @apply p-5 space-y-2 rounded-lg;
         background-color: hsl(var(--secondary) / 0.5);
-        border-color: hsl(var(--border));
+        border: 1px solid hsl(var(--border));
     }
     
     .recommendation-card { 
-        @apply p-6 space-y-4 border transition-colors duration-200;
+        @apply p-6 space-y-4 rounded-xl transition-all duration-300;
         background-color: hsl(var(--card));
-        border-color: hsl(var(--border));
+        border: 1px solid hsl(var(--border));
+        box-shadow: var(--shadow-soft);
     }
     
     .recommendation-card:hover { 
         border-color: hsl(var(--primary) / 0.3);
+        box-shadow: var(--shadow-card);
     }
     
     .priority-high { 
         border-left-width: 4px;
         border-left-color: rgb(239 68 68);
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
     }
     
     .priority-medium { 
         border-left-width: 4px;
         border-left-color: rgb(249 115 22);
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
     }
     
     .priority-low { 
         border-left-width: 4px;
         border-left-color: rgb(34 197 94);
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
     }
     
     .ai-insight-box { 
-        @apply p-4 mt-4 border;
+        @apply p-5 mt-4 rounded-lg;
         background-color: hsl(var(--primary) / 0.05);
-        border-color: hsl(var(--primary) / 0.2);
+        border: 1px solid hsl(var(--primary) / 0.2);
     }
 
     .card-hover {
-        @apply transition-all duration-300;
+        @apply transition-all duration-300 rounded-xl;
+        box-shadow: var(--shadow-soft);
     }
 
     .card-hover:hover {
-        border-color: hsl(var(--primary) / 0.5);
-        transform: translateY(-2px);
+        border-color: hsl(var(--primary) / 0.4);
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-elevated);
+    }
+
+    /* Premium Dashboard Grid */
+    .dashboard-grid {
+        @apply grid gap-6;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
     }
 }
 
@@ -247,4 +279,230 @@
 @keyframes status-pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }
+}
+
+@keyframes critical-pulse {
+    0%, 100% { 
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+    }
+    50% { 
+        box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+    }
+}
+
+@keyframes score-glow {
+    0%, 100% { 
+        text-shadow: 0 0 10px currentColor;
+    }
+    50% { 
+        text-shadow: 0 0 20px currentColor, 0 0 30px currentColor;
+    }
+}
+
+@keyframes subtle-float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-3px); }
+}
+
+@keyframes gradient-shift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* Premium System Overview Panel */
+.system-overview-panel {
+    @apply relative overflow-hidden rounded-2xl;
+    background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(240 6% 9%) 100%);
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-card);
+}
+
+.system-overview-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.4), transparent);
+    border-radius: 1rem 1rem 0 0;
+}
+
+.metric-card-premium {
+    @apply relative p-5 overflow-hidden transition-all duration-300 rounded-xl;
+    background: linear-gradient(180deg, hsl(var(--secondary) / 0.6) 0%, hsl(var(--secondary) / 0.3) 100%);
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-soft);
+}
+
+.metric-card-premium:hover {
+    border-color: hsl(var(--primary) / 0.4);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card);
+}
+
+.metric-card-premium::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.05), transparent);
+    transition: left 0.5s ease;
+}
+
+.metric-card-premium:hover::after {
+    left: 100%;
+}
+
+/* Critical indicator animation */
+.critical-indicator {
+    animation: critical-pulse 2s ease-in-out infinite;
+}
+
+/* Score glow animation */
+.score-glow-animation {
+    animation: score-glow 2s ease-in-out infinite;
+}
+
+/* Subtle float animation */
+.float-animation {
+    animation: subtle-float 3s ease-in-out infinite;
+}
+
+/* Premium button styles */
+.btn-premium {
+    @apply relative overflow-hidden rounded-xl;
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(142 71% 38%) 100%);
+    transition: all 0.3s ease;
+}
+
+.btn-premium:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px -8px hsl(var(--primary) / 0.5);
+}
+
+.btn-premium:active {
+    transform: translateY(0);
+}
+
+/* Tradeoff slider */
+.tradeoff-bar {
+    @apply relative h-2.5 rounded-full overflow-hidden;
+    background: linear-gradient(90deg, hsl(142 71% 45%), hsl(38 92% 50%), hsl(0 84% 60%));
+}
+
+.tradeoff-indicator {
+    @apply absolute top-1/2 -translate-y-1/2 w-5 h-5 rounded-full border-2 border-white;
+    background: hsl(var(--background));
+    box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+    transition: left 0.5s ease;
+}
+
+/* Intelligence panel styling */
+.intelligence-panel {
+    @apply p-5 rounded-xl;
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.03) 0%, hsl(var(--primary) / 0.06) 100%);
+    border: 1px solid hsl(var(--primary) / 0.15);
+}
+
+.intelligence-panel-header {
+    @apply flex items-center gap-2 pb-3 mb-4;
+    border-bottom: 1px solid hsl(var(--primary) / 0.15);
+}
+
+/* Decision signal cards */
+.signal-card {
+    @apply p-4 rounded-lg transition-all duration-200;
+    background: hsl(var(--secondary) / 0.4);
+    border: 1px solid hsl(var(--border));
+}
+
+.signal-card:hover {
+    background: hsl(var(--secondary) / 0.6);
+    border-color: hsl(var(--primary) / 0.3);
+}
+
+/* Enhanced chart container */
+.chart-premium {
+    @apply relative rounded-xl overflow-hidden;
+}
+
+.chart-premium::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center bottom, hsl(var(--primary) / 0.04), transparent 70%);
+    border-radius: 0.75rem;
+}
+
+/* Risk monitor card */
+.risk-card {
+    @apply relative p-5 rounded-xl transition-all duration-300 cursor-pointer;
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-soft);
+}
+
+.risk-card:hover {
+    transform: translateX(4px);
+    box-shadow: var(--shadow-card);
+}
+
+.risk-card-critical {
+    border-left: 4px solid rgb(239 68 68);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    background: linear-gradient(90deg, rgba(239, 68, 68, 0.06) 0%, transparent 100%);
+}
+
+.risk-card-watch {
+    border-left: 4px solid rgb(249 115 22);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    background: linear-gradient(90deg, rgba(249, 115, 22, 0.06) 0%, transparent 100%);
+}
+
+/* Linked Mandis Section */
+.linked-mandis-panel {
+    @apply p-6 rounded-xl;
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-soft);
+}
+
+.linked-mandi-pill {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 cursor-pointer;
+    background: hsl(var(--secondary) / 0.5);
+    border: 1px solid hsl(var(--border));
+}
+
+.linked-mandi-pill:hover {
+    background: hsl(var(--secondary) / 0.8);
+    border-color: hsl(var(--primary) / 0.3);
+    transform: translateY(-1px);
+}
+
+/* Page Header */
+.page-header {
+    @apply mb-8;
+}
+
+.page-header-title {
+    @apply text-3xl font-semibold tracking-tight mb-2;
+}
+
+.page-header-subtitle {
+    @apply text-muted-foreground text-sm;
 }

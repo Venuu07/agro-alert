@@ -45,20 +45,19 @@ export const DiagnosticsPanel = ({ mandi }) => {
   };
 
   return (
-    <div className="bg-card border border-border p-6 space-y-6" data-testid="diagnostics-panel">
+    <div className="bg-card border border-border p-6 space-y-6 rounded-xl" style={{ boxShadow: 'var(--shadow-card)' }} data-testid="diagnostics-panel">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-xl font-bold">{mandi.name}</h3>
-          <p className="text-sm text-muted-foreground">{mandi.location} • {mandi.commodity}</p>
+          <p className="text-sm text-muted-foreground mb-1">{mandi.location} • {mandi.commodity}</p>
         </div>
         <StatusBadge status={mandi.status} />
       </div>
 
       {/* Stress Score */}
-      <div className="flex items-center justify-center py-4 border border-border bg-secondary/30">
+      <div className="flex items-center justify-center py-6 rounded-xl bg-gradient-to-b from-secondary/50 to-secondary/20">
         <div className="text-center">
-          <span className="data-label block mb-2">STRESS SCORE</span>
+          <span className="data-label block mb-2">MARKET STRESS INDEX</span>
           <StressGauge score={mandi.stressScore} size={120} />
         </div>
       </div>
@@ -97,10 +96,10 @@ export const DiagnosticsPanel = ({ mandi }) => {
 
       {/* Alerts */}
       {mandi.stressScore >= 60 && (
-        <div className="p-4 bg-red-500/10 border border-red-500/30 flex items-start gap-3">
+        <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg flex items-start gap-3">
           <AlertCircle size={20} className="text-red-500 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="font-mono text-sm text-red-500 uppercase tracking-wider">Critical Alert</p>
+            <p className="font-medium text-sm text-red-500 uppercase tracking-wider">Critical Alert</p>
             <p className="text-sm text-muted-foreground mt-1">
               High stress detected. Immediate intervention recommended.
             </p>
@@ -111,23 +110,23 @@ export const DiagnosticsPanel = ({ mandi }) => {
       {/* Stress Breakdown */}
       {mandi.stressBreakdown && (
         <div className="space-y-3">
-          <span className="data-label">STRESS BREAKDOWN</span>
-          <div className="grid grid-cols-2 gap-2">
-            <div className="p-2 bg-secondary/30 border border-border">
-              <span className="text-xs text-muted-foreground">Price Stress</span>
-              <p className="font-mono text-lg">{mandi.stressBreakdown.priceStress}</p>
+          <span className="data-label">STRESS FACTOR BREAKDOWN</span>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="signal-card">
+              <span className="text-[11px] text-muted-foreground">Price Factor</span>
+              <p className="font-mono text-xl font-semibold mt-1">{mandi.stressBreakdown.priceStress}</p>
             </div>
-            <div className="p-2 bg-secondary/30 border border-border">
-              <span className="text-xs text-muted-foreground">Supply Stress</span>
-              <p className="font-mono text-lg">{mandi.stressBreakdown.supplyStress}</p>
+            <div className="signal-card">
+              <span className="text-[11px] text-muted-foreground">Supply Factor</span>
+              <p className="font-mono text-xl font-semibold mt-1">{mandi.stressBreakdown.supplyStress}</p>
             </div>
-            <div className="p-2 bg-secondary/30 border border-border">
-              <span className="text-xs text-muted-foreground">Instability</span>
-              <p className="font-mono text-lg">{mandi.stressBreakdown.instabilityStress}</p>
+            <div className="signal-card">
+              <span className="text-[11px] text-muted-foreground">Volatility Factor</span>
+              <p className="font-mono text-xl font-semibold mt-1">{mandi.stressBreakdown.instabilityStress}</p>
             </div>
-            <div className="p-2 bg-secondary/30 border border-border">
-              <span className="text-xs text-muted-foreground">External</span>
-              <p className="font-mono text-lg">{mandi.stressBreakdown.externalStress}</p>
+            <div className="signal-card">
+              <span className="text-[11px] text-muted-foreground">External Factor</span>
+              <p className="font-mono text-xl font-semibold mt-1">{mandi.stressBreakdown.externalStress}</p>
             </div>
           </div>
         </div>
@@ -135,15 +134,15 @@ export const DiagnosticsPanel = ({ mandi }) => {
 
       {/* External Flags */}
       {(mandi.rainFlag || mandi.festivalFlag) && (
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {mandi.rainFlag && (
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-mono">
+            <div className="flex items-center gap-2 px-3 py-2 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[11px] font-medium rounded-lg">
               <CloudRain size={14} />
               RAIN ACTIVE
             </div>
           )}
           {mandi.festivalFlag && (
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 border border-purple-500/30 text-purple-400 text-xs font-mono">
+            <div className="flex items-center gap-2 px-3 py-2 bg-purple-500/10 border border-purple-500/20 text-purple-400 text-[11px] font-medium rounded-lg">
               <PartyPopper size={14} />
               FESTIVAL PERIOD
             </div>

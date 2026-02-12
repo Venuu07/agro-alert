@@ -6,6 +6,7 @@ import { Toaster, toast } from 'sonner';
 import { Navbar } from './components/Navbar';
 import { MandiCard } from './components/MandiCard';
 import { SummaryStats } from './components/SummaryStats';
+import { SystemOverview } from './components/SystemOverview';
 import { PriceChart } from './components/PriceChart';
 import { ArrivalsChart } from './components/ArrivalsChart';
 import { DiagnosticsPanel } from './components/DiagnosticsPanel';
@@ -13,7 +14,9 @@ import { SimulationPanel } from './components/SimulationPanel';
 import { SimulationResults } from './components/SimulationResults';
 import { RecommendationPanel } from './components/RecommendationPanel';
 import { Button } from './components/ui/button';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { ArrowLeft, Loader2, AlertTriangle, CheckCircle, BarChart3 } from 'lucide-react';
+import { StressGauge } from './components/StressGauge';
+import { LinkedMandis } from './components/LinkedMandis';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -30,7 +33,7 @@ const Dashboard = () => {
       setStressData(response.data);
     } catch (error) {
       console.error('Failed to fetch stress data:', error);
-      toast.error('Failed to load mandi data');
+      toast.error('Failed to load market data');
     } finally {
       setLoading(false);
     }
@@ -53,15 +56,18 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="space-y-8 animate-fade-in" data-testid="dashboard">
+    <div className="space-y-6 animate-fade-in" data-testid="dashboard">
+      {/* System Stability Overview */}
+      {stressData && <SystemOverview data={stressData} />}
+      
       {/* Summary Stats */}
       {stressData && <SummaryStats data={stressData} />}
       
       {/* Mandi Cards Grid */}
       <div>
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">MARKET OVERVIEW</h2>
-          <span className="data-label">{stressData?.totalMandis || 0} MANDIS TRACKED</span>
+          <h2 className="text-2xl font-bold">MARKET STRESS INDEX</h2>
+          <span className="data-label">{stressData?.totalMandis || 0} MANDIS MONITORED</span>
         </div>
         <div className="dashboard-grid">
           {stressData?.mandis.map((mandi, index) => (
@@ -84,6 +90,7 @@ const MandiDetail = () => {
   const navigate = useNavigate();
   const { mandiId } = useParams();
   const [mandi, setMandi] = useState(null);
+  const [linkedMandis, setLinkedMandis] = useState([]);
   const [recommendations, setRecommendations] = useState(null);
   const [loading, setLoading] = useState(true);
   const [recLoading, setRecLoading] = useState(false);
@@ -92,6 +99,15 @@ const MandiDetail = () => {
     try {
       const response = await axios.get(`${API}/mandi/${mandiId}`);
       setMandi(response.data);
+      
+      // Fetch connected mandis
+      if (response.data.connectedMandis?.length > 0) {
+        const linkedPromises = response.data.connectedMandis.map(id => 
+          axios.get(`${API}/mandi/${id}`)
+        );
+        const linkedResults = await Promise.all(linkedPromises);
+        setLinkedMandis(linkedResults.map(r => r.data));
+      }
     } catch (error) {
       console.error('Failed to fetch mandi detail:', error);
       toast.error('Failed to load mandi details');
@@ -127,6 +143,10 @@ const MandiDetail = () => {
     }
   }, [mandi, fetchRecommendations]);
 
+  const handleLinkedMandiClick = (linkedMandi) => {
+    navigate(`/mandi/${linkedMandi.id}`);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]" data-testid="loading-detail">
@@ -138,24 +158,43 @@ const MandiDetail = () => {
   if (!mandi) return null;
 
   return (
-    <div className="space-y-6 animate-fade-in" data-testid="mandi-detail">
+    <div className="space-y-8 animate-fade-in" data-testid="mandi-detail">
       {/* Back Button */}
       <Button 
         variant="ghost" 
         onClick={() => navigate('/')}
-        className="font-mono uppercase tracking-wider"
+        className="font-mono text-xs uppercase tracking-wider rounded-lg"
         data-testid="back-btn"
       >
-        <ArrowLeft size={16} className="mr-2" />
+        <ArrowLeft size={14} className="mr-2" />
         Back to Dashboard
       </Button>
+
+      {/* Page Header */}
+      <div className="page-header">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 bg-primary/10 border border-primary/20 rounded-xl flex items-center justify-center">
+            <BarChart3 size={28} className="text-primary" />
+          </div>
+          <div>
+            <h1 className="page-header-title">{mandi.name}</h1>
+            <p className="page-header-subtitle">
+              {mandi.location} • {mandi.commodity} • Market Stress Index Analysis
+            </p>
+          </div>
+        </div>
+      </div>
 
       {/* Detail Layout */}
       <div className="detail-layout">
         {/* Charts Column */}
-        <div className="detail-charts">
-          <PriceChart data={mandi.priceHistory} title="PRICE HISTORY" />
-          <ArrivalsChart data={mandi.arrivalsHistory} title="ARRIVALS HISTORY" />
+        <div className="detail-charts space-y-6">
+          <div className="chart-container">
+            <PriceChart data={mandi.priceHistory} title="PRICE HISTORY" />
+          </div>
+          <div className="chart-container">
+            <ArrivalsChart data={mandi.arrivalsHistory} title="ARRIVALS HISTORY" />
+          </div>
         </div>
 
         {/* Diagnostics Column */}
@@ -163,6 +202,13 @@ const MandiDetail = () => {
           <DiagnosticsPanel mandi={mandi} />
         </div>
       </div>
+
+      {/* Linked Mandis */}
+      <LinkedMandis 
+        linkedMandis={linkedMandis} 
+        currentMandiId={mandiId}
+        onMandiClick={handleLinkedMandiClick}
+      />
 
       {/* Recommendations */}
       <RecommendationPanel 
@@ -266,7 +312,7 @@ const SimulateView = () => {
   );
 };
 
-// Alerts View (placeholder)
+// Alerts View (Risk Monitor)
 const AlertsView = () => {
   const navigate = useNavigate();
   const [stressData, setStressData] = useState(null);
@@ -296,56 +342,109 @@ const AlertsView = () => {
 
   const highRiskMandis = stressData?.mandis.filter(m => m.status === 'high_risk') || [];
   const watchMandis = stressData?.mandis.filter(m => m.status === 'watch') || [];
+  const totalAlerts = highRiskMandis.length + watchMandis.length;
 
   return (
     <div className="space-y-6 animate-fade-in" data-testid="alerts-view">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">ACTIVE ALERTS</h2>
-        <span className="data-label">{highRiskMandis.length + watchMandis.length} ALERTS</span>
+      {/* Header */}
+      <div className="system-overview-panel p-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-red-500/20 border border-red-500/30 flex items-center justify-center">
+              <AlertTriangle size={20} className="text-red-500" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold">SYSTEM RISK MONITOR</h2>
+              <p className="text-xs text-muted-foreground font-mono">REAL-TIME THREAT ASSESSMENT</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="text-right">
+              <span className="font-mono text-3xl font-bold text-red-500">{totalAlerts}</span>
+              <p className="text-xs text-muted-foreground font-mono">ACTIVE WARNINGS</p>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* High Risk */}
+      {/* Critical Risk */}
       {highRiskMandis.length > 0 && (
         <div className="space-y-3">
-          <h3 className="text-lg font-bold text-red-500">HIGH RISK</h3>
-          {highRiskMandis.map((mandi) => (
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
+            <h3 className="text-lg font-bold text-red-500 uppercase tracking-wider">CRITICAL RISK</h3>
+            <span className="text-xs text-muted-foreground font-mono">({highRiskMandis.length})</span>
+          </div>
+          {highRiskMandis.map((mandi, index) => (
             <div 
               key={mandi.id}
-              className="p-4 bg-red-500/5 border border-red-500/30 flex items-center justify-between cursor-pointer hover:bg-red-500/10 transition-colors"
+              className="risk-card risk-card-critical animate-fade-in"
+              style={{ animationDelay: `${index * 0.05}s` }}
               onClick={() => navigate(`/mandi/${mandi.id}`)}
               data-testid={`alert-${mandi.id}`}
             >
-              <div>
-                <p className="font-mono text-sm">{mandi.name}</p>
-                <p className="text-xs text-muted-foreground">{mandi.location} • {mandi.commodity}</p>
-              </div>
-              <div className="text-right">
-                <p className="font-mono text-2xl text-red-500">{mandi.stressScore}</p>
-                <p className="text-xs text-muted-foreground">stress score</p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <StressGauge score={mandi.stressScore} size={60} showLabel={false} />
+                  <div>
+                    <p className="font-mono text-sm font-bold">{mandi.name}</p>
+                    <p className="text-xs text-muted-foreground">{mandi.location} • {mandi.commodity}</p>
+                    <div className="flex items-center gap-3 mt-1">
+                      <span className="text-xs font-mono text-red-500">
+                        Price: {mandi.priceChangePct > 0 ? '+' : ''}{mandi.priceChangePct?.toFixed(1)}%
+                      </span>
+                      <span className="text-xs font-mono text-orange-500">
+                        Supply: {mandi.arrivalChangePct?.toFixed(1)}%
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="font-mono text-3xl font-bold text-red-500">{mandi.stressScore}</p>
+                  <p className="text-[10px] text-muted-foreground uppercase font-mono">STRESS INDEX</p>
+                </div>
               </div>
             </div>
           ))}
         </div>
       )}
 
-      {/* Watch */}
+      {/* Elevated Watch */}
       {watchMandis.length > 0 && (
         <div className="space-y-3">
-          <h3 className="text-lg font-bold text-orange-500">UNDER WATCH</h3>
-          {watchMandis.map((mandi) => (
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-orange-500 rounded-full" />
+            <h3 className="text-lg font-bold text-orange-500 uppercase tracking-wider">ELEVATED WATCH</h3>
+            <span className="text-xs text-muted-foreground font-mono">({watchMandis.length})</span>
+          </div>
+          {watchMandis.map((mandi, index) => (
             <div 
               key={mandi.id}
-              className="p-4 bg-orange-500/5 border border-orange-500/30 flex items-center justify-between cursor-pointer hover:bg-orange-500/10 transition-colors"
+              className="risk-card risk-card-watch animate-fade-in"
+              style={{ animationDelay: `${index * 0.05}s` }}
               onClick={() => navigate(`/mandi/${mandi.id}`)}
               data-testid={`alert-${mandi.id}`}
             >
-              <div>
-                <p className="font-mono text-sm">{mandi.name}</p>
-                <p className="text-xs text-muted-foreground">{mandi.location} • {mandi.commodity}</p>
-              </div>
-              <div className="text-right">
-                <p className="font-mono text-2xl text-orange-500">{mandi.stressScore}</p>
-                <p className="text-xs text-muted-foreground">stress score</p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <StressGauge score={mandi.stressScore} size={60} showLabel={false} />
+                  <div>
+                    <p className="font-mono text-sm font-bold">{mandi.name}</p>
+                    <p className="text-xs text-muted-foreground">{mandi.location} • {mandi.commodity}</p>
+                    <div className="flex items-center gap-3 mt-1">
+                      <span className="text-xs font-mono text-orange-500">
+                        Price: {mandi.priceChangePct > 0 ? '+' : ''}{mandi.priceChangePct?.toFixed(1)}%
+                      </span>
+                      <span className="text-xs font-mono text-muted-foreground">
+                        Supply: {mandi.arrivalChangePct?.toFixed(1)}%
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="font-mono text-3xl font-bold text-orange-500">{mandi.stressScore}</p>
+                  <p className="text-[10px] text-muted-foreground uppercase font-mono">STRESS INDEX</p>
+                </div>
               </div>
             </div>
           ))}
@@ -353,9 +452,12 @@ const AlertsView = () => {
       )}
 
       {highRiskMandis.length === 0 && watchMandis.length === 0 && (
-        <div className="text-center py-12 text-muted-foreground">
-          <p className="text-lg font-bold">NO ACTIVE ALERTS</p>
-          <p className="text-sm">All mandis are operating normally</p>
+        <div className="text-center py-12">
+          <div className="w-16 h-16 mx-auto mb-4 bg-green-500/10 border border-green-500/30 flex items-center justify-center">
+            <CheckCircle size={32} className="text-green-500" />
+          </div>
+          <p className="text-lg font-bold text-green-500">SYSTEM STABLE</p>
+          <p className="text-sm text-muted-foreground mt-1">All markets operating within normal parameters</p>
         </div>
       )}
     </div>
