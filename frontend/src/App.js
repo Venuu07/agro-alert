@@ -29,7 +29,7 @@ const Dashboard = ({ stressData, loading }) => {
   const navigate = useNavigate();
 
   const handleMandiClick = (mandi) => {
-    navigate(`/mandi/${mandi.id}`);
+    navigate(`/app/mandi/${mandi.id}`);
   };
 
   if (loading) {
