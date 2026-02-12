@@ -174,16 +174,20 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
 |----------|--------|-------------|
 | `/api/stress` | GET | Get stress overview for all mandis |
 | `/api/mandi/{id}` | GET | Get detailed info for specific mandi |
-| `/api/mandi/{id}/commodities` | GET | **NEW**: Get multi-commodity data with stress |
+| `/api/mandi/{id}/commodities` | GET | Get multi-commodity data with stress |
 | `/api/mandis` | GET | Get list of all mandis for dropdowns |
 | `/api/shock-types` | GET | Get available shock types |
 | `/api/simulate` | POST | Run shock simulation |
 | `/api/recommend` | POST | Get intervention recommendations |
-| `/api/interpret-context` | POST | **NEW**: Interpret shock description keywords |
-| `/api/surplus-deficit/{id}` | GET | **NEW**: Get surplus/deficit analysis |
-| `/api/surplus-deficit` | GET | **NEW**: Get all mandis surplus/deficit |
-| `/api/transfer-recommendations` | GET | **NEW**: Get transfer recommendations |
+| `/api/interpret-context` | POST | Interpret shock description keywords |
+| `/api/surplus-deficit/{id}` | GET | Get surplus/deficit analysis |
+| `/api/surplus-deficit` | GET | Get all mandis surplus/deficit |
+| `/api/transfer-recommendations` | GET | Get transfer recommendations |
 | `/api/jarvis/chat` | POST | Jarvis AI assistant chat |
+| `/api/graph` | GET | **NEW**: Get network graph nodes & edges |
+| `/api/graph?origin=<id>` | GET | **NEW**: Graph with shock propagation impacts |
+| `/api/forecast` | GET | **NEW**: EMA-based price forecast |
+| `/api/simulate-with-graph` | POST | **NEW**: Simulation with graph payload |
 
 ---
 
