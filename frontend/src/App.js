@@ -194,9 +194,15 @@ const MandiDetail = ({ onMandiLoaded }) => {
         </div>
 
         {/* Diagnostics Column */}
-        <div className="detail-sidebar">
+        <div className="detail-sidebar space-y-6">
           <DiagnosticsPanel mandi={mandi} />
         </div>
+      </div>
+
+      {/* Multi-Commodity & Supply-Demand Intelligence */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <CommodityPanel mandiId={mandiId} mandiName={mandi.name} />
+        <SurplusDeficitPanel mandiId={mandiId} />
       </div>
 
       {/* Linked Mandis */}
