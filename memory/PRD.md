@@ -8,14 +8,6 @@ Build a modern, visually impressive, production-quality full stack web applicati
 2. **Government Officials** - Track regional market stability, intervention planning
 3. **Policy Makers** - Simulate disruption scenarios, understand ripple effects
 
-## Core Requirements (Static)
-- Decision intelligence dashboard (NOT CRUD app)
-- Modern fintech-style UI (Stripe/Vercel inspiration)
-- Dark theme with green accent
-- Market Stress Index as dominant visual element
-- Shock Propagation capability
-- Stabilization Strategy recommendations
-
 ---
 
 ## What's Been Implemented
@@ -60,12 +52,22 @@ Rule-based recommendations:
 
 ### Phase 3: UI/UX Refinement (Completed Dec 2025)
 
-#### Terminology & Branding Updates
+#### Typography & Branding
+- **Global Font**: Inter (clean, modern sans-serif)
+- **Monospace Font**: JetBrains Mono (for data)
+- App name: "AGRO INTEL - Decision Intelligence Platform"
+
+#### Terminology Updates
 - "Stress Score" → **Market Stress Index (MSI)**
 - "Simulator" → **Shock Propagation Engine**
 - "Recommendations" → **Stabilization Strategy Engine**
 - "Alerts" → **System Risk Monitor**
-- App name: "AGRO ALERT" → **AGRO INTEL - Decision Intelligence Platform**
+- "Normal" → **STABLE**
+
+#### Visual Design System
+- **Border Radius**: 12-16px (rounded corners on all components)
+- **Shadows**: 3-tier system (--shadow-soft, --shadow-card, --shadow-elevated)
+- **Spacing**: Increased padding (p-5 to p-6, gap-3 to gap-6)
 
 #### New Components
 1. **System Stability Overview Panel** - Premium header metrics
@@ -74,27 +76,25 @@ Rule-based recommendations:
    - Supply Stress Level (Critical/Moderate/Low)
    - Avg Market Stress Index
 
-2. **Enhanced Risk Monitor** - Operational Intelligence Center
-   - Critical Risk section with pulsing indicators
-   - Elevated Watch section
-   - Individual stress gauges per alert
-   - Real-time threat assessment header
+2. **Linked Markets Section** (NEW)
+   - Shows connected mandis with mini stress gauges
+   - Clickable pills to navigate to linked mandis
+   - Network Effect explanation text
 
-3. **Restructured Recommendation Panel**
-   - Detected Signals cards
-   - System Interpretation section
-   - Expected Impact (Cost vs Stability Gain)
-   - Tradeoff Visualization Bar (Cost ←→ Stability)
-   - AI Intelligence Analysis section
+3. **Enhanced Page Header**
+   - Large mandi name with icon
+   - Breadcrumb context (location, commodity, analysis type)
 
-#### Premium Styling
-- `.system-overview-panel` - Gradient backgrounds with subtle glow
-- `.metric-card-premium` - Hover animations with shimmer effect
-- `.intelligence-panel` - Decision-science styling
-- `.risk-card` - Left-border severity indicators
-- `.tradeoff-bar` - Gradient slider visualization
-- `.critical-indicator` - Pulsing animation for high-risk items
-- `.score-glow-animation` - Glow effect for critical scores
+4. **Premium Risk Cards**
+   - Left border severity indicators
+   - Gradient backgrounds
+   - Large stress index display
+
+#### Microinteractions
+- Card hover: translateY(-4px) + elevated shadow
+- Button hover: translateY(-2px) + glow effect
+- Critical pulse animation for high-risk items
+- Smooth chart transitions
 
 ---
 
@@ -102,17 +102,11 @@ Rule-based recommendations:
 
 ### Core APIs
 - `GET /api/stress` - Returns all mandis with computed stress scores and breakdown
-- `GET /api/mandi/{id}` - Detailed mandi info with stress breakdown
+- `GET /api/mandi/{id}` - Detailed mandi info with stress breakdown and connected mandis
 - `GET /api/mandis` - List of mandis for dropdowns
 - `GET /api/shock-types` - Available shock scenarios
 - `POST /api/simulate` - Run shock simulation with elasticity-based pricing
 - `POST /api/recommend` - Get rule-based recommendations with AI explanations
-
-### Response Schema Highlights
-- `stressBreakdown`: { priceStress, supplyStress, instabilityStress, externalStress }
-- `simulationParameters`: { elasticity, supplyBefore, supplyAfter, demandBefore, demandAfter }
-- `rippleLevel`: 1 (60%) or 2 (30%)
-- `aiInsight`: LLM-generated AI Intelligence Analysis
 
 ---
 
@@ -137,6 +131,7 @@ Rule-based recommendations:
 - [x] Recommendation Engine
 - [x] LLM Integration for explanations
 - [x] UI/UX Refinement & Polish
+- [x] Linked Markets Section
 
 ### P1 (Important) - NOT STARTED
 - [ ] Real-time data integration (WebSocket/SSE)
@@ -165,25 +160,19 @@ Rule-based recommendations:
 └── frontend/
     ├── src/
     │   ├── components/
-    │   │   ├── SystemOverview.jsx (NEW - System stability metrics)
-    │   │   ├── DiagnosticsPanel.jsx (stress breakdown, external flags)
-    │   │   ├── SimulationResults.jsx (elasticity model, ripple effects)
+    │   │   ├── SystemOverview.jsx (System stability metrics)
+    │   │   ├── LinkedMandis.jsx (NEW - Connected markets)
+    │   │   ├── DiagnosticsPanel.jsx (stress breakdown)
+    │   │   ├── SimulationResults.jsx (elasticity model)
     │   │   ├── RecommendationPanel.jsx (AI insights, tradeoff viz)
-    │   │   ├── MandiCard.jsx (rain/festival icons, MSI label)
-    │   │   ├── StressGauge.jsx (enhanced with glow animation)
-    │   │   └── Navbar.jsx (new branding, nav tabs)
-    │   ├── App.js (routing, AlertsView as Risk Monitor)
-    │   ├── App.css
-    │   └── index.css (premium animations)
+    │   │   ├── MandiCard.jsx (rounded, premium cards)
+    │   │   ├── StressGauge.jsx (MSI label, glow animation)
+    │   │   ├── StatusBadge.jsx (rounded badges)
+    │   │   └── Navbar.jsx (Inter font, rounded buttons)
+    │   ├── App.js (page header, linked mandis integration)
+    │   └── index.css (Inter font, premium shadows, rounded corners)
     └── .env
 ```
-
----
-
-## Testing Status
-- **Backend**: 100% (24/24 tests passed)
-- **Frontend**: 100%
-- **Test Report**: `/app/test_reports/iteration_2.json`
 
 ---
 
@@ -193,6 +182,13 @@ Rule-based recommendations:
 **Design Tone**:
 - Minimal
 - Premium
-- Confident
+- Spacious
 - Analytical
 - High-signal
+
+**Visual Language**:
+- Inter typography (clean, modern)
+- Rounded corners (12-16px)
+- Soft shadows (3-tier depth)
+- Premium hover states
+- Calm, analytical microinteractions
