@@ -102,13 +102,13 @@
         {
           "name": "Onion",
           "isPrimary": true,
-          "currentPrice": 2850,
-          "previousPrice": 2650,
-          "arrivals": 5200,
+          "currentPrice": 2450,
+          "previousPrice": 2380,
+          "arrivals": 6200,
           "previousArrivals": 5800,
           "baseDemand": 5000,
           "baseSupply": 5500,
-          "volatility": 9.4
+          "volatility": 7.4
         },
         {
           "name": "Garlic",
