@@ -32,121 +32,219 @@
         --chart-5: 142 40% 35%;
         --radius: 0rem;
     }
-}
 
-@layer base {
     * {
-        @apply border-border;
+        border-color: hsl(var(--border));
     }
     
     html {
-        @apply dark;
+        color-scheme: dark;
     }
     
     body {
-        @apply bg-background text-foreground antialiased;
+        background-color: hsl(var(--background));
+        color: hsl(var(--foreground));
         font-family: 'Manrope', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
     
     h1, h2, h3, h4, h5, h6 {
         font-family: 'Barlow Condensed', sans-serif;
-        @apply tracking-tight;
+        letter-spacing: -0.025em;
     }
     
     code, .font-mono, [data-mono] {
         font-family: 'JetBrains Mono', monospace;
     }
+
+    [data-debug-wrapper="true"] { 
+        display: contents !important; 
+    }
 }
 
+@layer components {
+    .navbar-glass {
+        @apply backdrop-blur-xl border-b;
+        background-color: hsl(var(--background) / 0.8);
+        border-color: hsl(var(--border));
+    }
+
+    .data-label {
+        @apply uppercase tracking-wider text-xs font-mono;
+        color: hsl(var(--muted-foreground));
+    }
+
+    .kpi-value {
+        font-family: 'JetBrains Mono', monospace;
+        @apply text-4xl font-medium tracking-tight;
+    }
+
+    .status-normal { 
+        background-color: rgb(34 197 94 / 0.1);
+        color: rgb(34 197 94);
+        border-color: rgb(34 197 94 / 0.3);
+    }
+    
+    .status-watch { 
+        background-color: rgb(249 115 22 / 0.1);
+        color: rgb(249 115 22);
+        border-color: rgb(249 115 22 / 0.3);
+    }
+    
+    .status-high-risk { 
+        background-color: rgb(239 68 68 / 0.1);
+        color: rgb(239 68 68);
+        border-color: rgb(239 68 68 / 0.3);
+    }
+
+    .gauge-container { 
+        @apply relative flex items-center justify-center; 
+    }
+    
+    .summary-stat { 
+        @apply flex flex-col items-center justify-center p-4 border;
+        background-color: hsl(var(--card));
+        border-color: hsl(var(--border));
+    }
+    
+    .chart-container { 
+        @apply p-6 border;
+        background-color: hsl(var(--card));
+        border-color: hsl(var(--border));
+    }
+    
+    .simulation-panel { 
+        @apply p-6 space-y-6 border;
+        background-color: hsl(var(--card));
+        border-color: hsl(var(--border));
+    }
+    
+    .control-group { 
+        @apply space-y-3; 
+    }
+    
+    .impact-card { 
+        @apply p-4 space-y-2 border;
+        background-color: hsl(var(--secondary) / 0.5);
+        border-color: hsl(var(--border));
+    }
+    
+    .recommendation-card { 
+        @apply p-6 space-y-4 border transition-colors duration-200;
+        background-color: hsl(var(--card));
+        border-color: hsl(var(--border));
+    }
+    
+    .recommendation-card:hover { 
+        border-color: hsl(var(--primary) / 0.3);
+    }
+    
+    .priority-high { 
+        border-left-width: 4px;
+        border-left-color: rgb(239 68 68);
+    }
+    
+    .priority-medium { 
+        border-left-width: 4px;
+        border-left-color: rgb(249 115 22);
+    }
+    
+    .priority-low { 
+        border-left-width: 4px;
+        border-left-color: rgb(34 197 94);
+    }
+    
+    .ai-insight-box { 
+        @apply p-4 mt-4 border;
+        background-color: hsl(var(--primary) / 0.05);
+        border-color: hsl(var(--primary) / 0.2);
+    }
+
+    .card-hover {
+        @apply transition-all duration-300;
+    }
+
+    .card-hover:hover {
+        border-color: hsl(var(--primary) / 0.5);
+        transform: translateY(-2px);
+    }
+}
+
+@layer utilities {
+    .animate-fade-in {
+        animation: fadeIn 0.3s ease-out forwards;
+    }
+    
+    .animate-fade-in-delay-1 {
+        animation: fadeIn 0.3s ease-out 0.1s forwards;
+        opacity: 0;
+    }
+    
+    .animate-fade-in-delay-2 {
+        animation: fadeIn 0.3s ease-out 0.2s forwards;
+        opacity: 0;
+    }
+    
+    .animate-fade-in-delay-3 {
+        animation: fadeIn 0.3s ease-out 0.3s forwards;
+        opacity: 0;
+    }
+
+    .status-pulse {
+        animation: status-pulse 2s ease-in-out infinite;
+    }
+
+    .stress-high {
+        color: rgb(239 68 68);
+        animation: pulse-glow 2s ease-in-out infinite;
+    }
+    
+    .stress-medium { 
+        color: rgb(249 115 22);
+    }
+    
+    .stress-low { 
+        color: rgb(34 197 94);
+    }
+
+    .ripple-effect { 
+        animation: ripple 1.5s ease-out infinite; 
+    }
+}
+
+/* Scrollbar */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-    @apply bg-background;
+    background-color: hsl(var(--background));
 }
 
 ::-webkit-scrollbar-thumb {
-    @apply bg-border rounded-full;
+    background-color: hsl(var(--border));
+    border-radius: 9999px;
 }
 
+/* Keyframes */
 @keyframes pulse-glow {
     0%, 100% { filter: drop-shadow(0 0 8px currentColor); }
     50% { filter: drop-shadow(0 0 16px currentColor); }
 }
-
-.stress-high {
-    @apply text-red-500;
-    animation: pulse-glow 2s ease-in-out infinite;
-}
-
-.stress-medium { @apply text-orange-500; }
-.stress-low { @apply text-green-500; }
-
-.card-hover {
-    @apply transition-all duration-300;
-}
-
-.card-hover:hover {
-    @apply border-primary/50;
-    transform: translateY(-2px);
-}
-
-.navbar-glass {
-    @apply backdrop-blur-xl bg-background/80 border-b border-border;
-}
-
-.data-label {
-    @apply uppercase tracking-wider text-xs text-muted-foreground font-mono;
-}
-
-.kpi-value {
-    font-family: 'JetBrains Mono', monospace;
-    @apply text-4xl font-medium tracking-tight;
-}
-
-.status-normal { @apply bg-green-500/10 text-green-500 border-green-500/30; }
-.status-watch { @apply bg-orange-500/10 text-orange-500 border-orange-500/30; }
-.status-high-risk { @apply bg-red-500/10 text-red-500 border-red-500/30; }
 
 @keyframes ripple {
     0% { transform: scale(1); opacity: 1; }
     100% { transform: scale(1.5); opacity: 0; }
 }
 
-.ripple-effect { animation: ripple 1.5s ease-out infinite; }
-
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-.animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
-.animate-fade-in-delay-1 { animation: fadeIn 0.3s ease-out 0.1s forwards; opacity: 0; }
-.animate-fade-in-delay-2 { animation: fadeIn 0.3s ease-out 0.2s forwards; opacity: 0; }
-.animate-fade-in-delay-3 { animation: fadeIn 0.3s ease-out 0.3s forwards; opacity: 0; }
-
 @keyframes status-pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }
-}
-
-.status-pulse { animation: status-pulse 2s ease-in-out infinite; }
-
-.gauge-container { @apply relative flex items-center justify-center; }
-.summary-stat { @apply flex flex-col items-center justify-center p-4 border border-border bg-card; }
-.chart-container { @apply bg-card border border-border p-6; }
-.simulation-panel { @apply bg-card border border-border p-6 space-y-6; }
-.control-group { @apply space-y-3; }
-.impact-card { @apply bg-secondary/50 border border-border p-4 space-y-2; }
-.recommendation-card { @apply bg-card border border-border p-6 space-y-4 transition-colors duration-200; }
-.recommendation-card:hover { @apply border-primary/30; }
-.priority-high { @apply border-l-4 border-l-red-500; }
-.priority-medium { @apply border-l-4 border-l-orange-500; }
-.priority-low { @apply border-l-4 border-l-green-500; }
-.ai-insight-box { @apply bg-primary/5 border border-primary/20 p-4 mt-4; }
-
-@layer base {
-    [data-debug-wrapper="true"] { display: contents !important; }
 }
