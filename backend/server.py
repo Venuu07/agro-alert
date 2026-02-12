@@ -1447,6 +1447,213 @@ async def run_simulation_with_graph(request: SimulationRequest):
         graph=graph_payload
     )
 
+# ============================================================
+# MARKET STATE PERSISTENCE & LIVE UPDATE ENDPOINTS
+# ============================================================
+from market_state import (
+    get_current_state,
+    get_mandi_by_id,
+    validate_arrivals_input,
+    append_market_update,
+    execute_transfer,
+    get_state_history
+)
+
+class MarketUpdateRequest(BaseModel):
+    mandiId: str
+    commodity: str
+    arrivals: int = Field(gt=0, description="New arrivals quantity (must be > 0)")
+    optionalContext: Optional[str] = None
+
+class MarketUpdateResponse(BaseModel):
+    success: bool
+    mandiId: str
+    mandiName: str
+    commodity: str
+    previousPrice: float
+    newPrice: float
+    priceChange: float
+    previousArrivals: int
+    newArrivals: int
+    arrivalsChange: float
+    timestamp: str
+    message: str
+
+@api_router.post("/market-update", response_model=MarketUpdateResponse)
+async def update_market_signals(request: MarketUpdateRequest):
+    """
+    Operator Market Input - Update arrivals for a mandi/commodity.
+    
+    CRITICAL CONSTRAINTS:
+    - Operator inputs ONLY arrivals (mandatory numeric > 0)
+    - Price, MSI, Volatility are SYSTEM-COMPUTED (not operator input)
+    - Updates are APPEND-ONLY (never overwrite historical data)
+    
+    Pipeline:
+    1. Validate arrivals input
+    2. Compute new supply (supply = arrivals)
+    3. Recompute price using EXISTING elasticity formula
+    4. Recompute stress using EXISTING engine
+    5. Append new row to history
+    """
+    # Validate input
+    is_valid, error, validated_arrivals = validate_arrivals_input(request.arrivals)
+    if not is_valid:
+        raise HTTPException(status_code=400, detail=error)
+    
+    try:
+        result = append_market_update(
+            mandi_id=request.mandiId,
+            commodity_name=request.commodity,
+            new_arrivals=validated_arrivals,
+            optional_context=request.optionalContext
+        )
+        
+        update = result["update"]
+        
+        return MarketUpdateResponse(
+            success=True,
+            mandiId=update["mandiId"],
+            mandiName=update["mandiName"],
+            commodity=update["commodity"],
+            previousPrice=update["previousPrice"],
+            newPrice=update["newPrice"],
+            priceChange=result["priceChange"],
+            previousArrivals=update["previousArrivals"],
+            newArrivals=update["newArrivals"],
+            arrivalsChange=result["arrivalsChange"],
+            timestamp=update["timestamp"],
+            message=f"Market signals updated successfully. Price adjusted from ₹{update['previousPrice']} to ₹{update['newPrice']}"
+        )
+        
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Market update failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to update market signals: {str(e)}")
+
+class TransferExecutionRequest(BaseModel):
+    transferId: Optional[str] = None
+    sourceMandiId: str
+    destMandiId: str
+    commodity: str
+    quantity: int = Field(gt=0, description="Transfer quantity (must be > 0)")
+
+class TransferExecutionResponse(BaseModel):
+    success: bool
+    sourceMandiId: str
+    sourceMandiName: str
+    destMandiId: str
+    destMandiName: str
+    commodity: str
+    quantity: int
+    sourceUpdate: Dict[str, Any]
+    destUpdate: Dict[str, Any]
+    sourcePriceChange: float
+    destPriceChange: float
+    timestamp: str
+    message: str
+
+@api_router.post("/execute-transfer", response_model=TransferExecutionResponse)
+async def execute_transfer_endpoint(request: TransferExecutionRequest):
+    """
+    Execute a commodity transfer between mandis.
+    
+    CRITICAL CONSTRAINTS:
+    - Quantity MUST be <= source supply
+    - Updates BOTH source and destination mandis
+    - Uses EXISTING elasticity model for price recomputation
+    - Updates are APPEND-ONLY (never overwrite historical data)
+    
+    Pipeline:
+    1. Validate transfer (quantity <= source supply)
+    2. Deduct quantity from SOURCE mandi
+    3. Add quantity to DESTINATION mandi
+    4. Recompute prices for BOTH using EXISTING elasticity
+    5. Recompute stress for BOTH using EXISTING engine
+    6. Append NEW ROWS for both mandis
+    """
+    if request.quantity <= 0:
+        raise HTTPException(status_code=400, detail="Transfer quantity must be greater than 0")
+    
+    if request.sourceMandiId == request.destMandiId:
+        raise HTTPException(status_code=400, detail="Source and destination mandis cannot be the same")
+    
+    try:
+        result = execute_transfer(
+            source_mandi_id=request.sourceMandiId,
+            dest_mandi_id=request.destMandiId,
+            commodity_name=request.commodity,
+            quantity=request.quantity
+        )
+        
+        transfer = result["transfer"]
+        
+        return TransferExecutionResponse(
+            success=True,
+            sourceMandiId=transfer["sourceMandiId"],
+            sourceMandiName=transfer["sourceMandiName"],
+            destMandiId=transfer["destMandiId"],
+            destMandiName=transfer["destMandiName"],
+            commodity=transfer["commodity"],
+            quantity=transfer["quantity"],
+            sourceUpdate=transfer["source"],
+            destUpdate=transfer["destination"],
+            sourcePriceChange=result["sourcePriceChange"],
+            destPriceChange=result["destPriceChange"],
+            timestamp=transfer["timestamp"],
+            message=f"Transfer executed: {transfer['quantity']} quintals of {transfer['commodity']} from {transfer['sourceMandiName']} to {transfer['destMandiName']}"
+        )
+        
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Transfer execution failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to execute transfer: {str(e)}")
+
+@api_router.get("/state-history")
+async def get_market_state_history():
+    """Get the append-only state history log (audit trail)"""
+    history = get_state_history()
+    return {
+        "history": history,
+        "totalUpdates": len(history),
+        "lastUpdate": history[-1]["timestamp"] if history else None
+    }
+
+@api_router.get("/live-state")
+async def get_live_market_state():
+    """
+    Get current live market state.
+    
+    DATA CONSISTENCY RULE: Always returns latest state per mandi/commodity.
+    """
+    state = get_current_state()
+    mandis = state.get("mandis", [])
+    
+    # Enrich with stress scores
+    enriched = []
+    for m in mandis:
+        enriched_mandi = enrich_mandi_with_stress(m)
+        enriched.append({
+            "id": enriched_mandi["id"],
+            "name": enriched_mandi["name"],
+            "location": enriched_mandi["location"],
+            "commodity": enriched_mandi["commodity"],
+            "currentPrice": enriched_mandi["currentPrice"],
+            "arrivals": enriched_mandi["arrivals"],
+            "stressScore": enriched_mandi["stressScore"],
+            "status": enriched_mandi["status"],
+            "priceChangePct": enriched_mandi["priceChangePct"],
+            "arrivalChangePct": enriched_mandi["arrivalChangePct"]
+        })
+    
+    return {
+        "mandis": enriched,
+        "totalMandis": len(enriched),
+        "timestamp": datetime.now(timezone.utc).isoformat()
+    }
+
 # Include the router in the main app
 app.include_router(api_router)
 
