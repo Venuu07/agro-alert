@@ -14,13 +14,13 @@ export const Navbar = ({ activeTab, onTabChange }) => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-primary flex items-center justify-center float-animation">
-              <Activity size={18} className="text-primary-foreground" />
+            <div className="w-9 h-9 bg-primary/10 border border-primary/30 rounded-xl flex items-center justify-center float-animation">
+              <Activity size={18} className="text-primary" />
             </div>
             <div>
-              <h1 className="text-lg font-bold tracking-tight">AGRO INTEL</h1>
-              <p className="text-[10px] text-muted-foreground font-mono tracking-wider">
-                DECISION INTELLIGENCE PLATFORM
+              <h1 className="text-base font-bold tracking-tight">AGRO INTEL</h1>
+              <p className="text-[9px] text-muted-foreground font-mono tracking-wider">
+                DECISION INTELLIGENCE
               </p>
             </div>
           </div>
@@ -35,16 +35,16 @@ export const Navbar = ({ activeTab, onTabChange }) => {
                   key={tab.id}
                   onClick={() => onTabChange(tab.id)}
                   className={`
-                    flex items-center gap-2 px-4 py-2 text-sm font-mono uppercase tracking-wider
-                    transition-all duration-300
+                    flex items-center gap-2 px-4 py-2 text-xs font-mono uppercase tracking-wider
+                    transition-all duration-300 rounded-xl
                     ${isActive 
                       ? 'text-primary bg-primary/10 border border-primary/30' 
-                      : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50 border border-transparent'
                     }
                   `}
                   data-testid={`nav-${tab.id}`}
                 >
-                  <Icon size={16} />
+                  <Icon size={14} />
                   <span className="hidden sm:inline">{tab.label}</span>
                 </button>
               );
