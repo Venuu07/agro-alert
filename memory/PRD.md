@@ -35,43 +35,59 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
 - ✅ Stabilization Strategy recommendations
 
 ### Phase 3: Enterprise UI/UX Transformation (Completed - Dec 2025)
+- ✅ Landing Page with glassmorphism header, gradient grid background
+- ✅ Hero section with 3D tilted dashboard preview
+- ✅ Jarvis Decision Intelligence Assistant
+- ✅ Network Graph Visualization
+- ✅ Global visual refinements (Inter font, 12-16px rounded corners, soft shadows)
 
-#### Landing Page / Hero Experience
-- ✅ Glassmorphism header with logo and navigation
-- ✅ Gradient grid animated background
-- ✅ Hero section with headline: "Prevent Food Market Failures Before They Happen"
-- ✅ CTA buttons: "Run Shock Propagation Engine", "Explore Decision Platform"
-- ✅ Tilted dashboard preview with 3D perspective
-- ✅ Key stats: 6 Markets, 0.4 Elasticity, 60% Ripple Factor
-- ✅ Feature cards for three engines
-- ✅ Technology section with network preview animation
+### Phase 4: Intelligence Extensions (Completed - Dec 2025)
 
-#### Jarvis Decision Intelligence Assistant
-- ✅ Floating FAB button to open assistant
-- ✅ Glassmorphism panel design
-- ✅ Welcome message with capabilities
-- ✅ Suggested query chips
-- ✅ Text input for custom queries
-- ✅ Context-aware responses (integrates with current mandi, simulation results, stress data)
-- ✅ Conversation history support
-- ✅ Structured response format (Detected Signals, System Interpretation, Suggested Action)
+#### Feature 1: Shock Description Input
+- ✅ Optional text area in Simulation Panel for additional context
+- ✅ **Deterministic keyword mapping**:
+  - `strike/protest/blockade` → Logistics Stress ↑
+  - `traffic/delay` → Arrival Friction ↑
+  - `festival/surge` → Demand Pressure ↑
+  - `flood/rain/hail` → Supply Stress ↑
+- ✅ Color-coded detected signals displayed in UI
+- ✅ Context passed to Jarvis for enhanced explanations
 
-#### Network Graph Visualization
-- ✅ Circular layout of mandi nodes
-- ✅ Color-coded by stress level (red/orange/green)
-- ✅ Connection lines between linked mandis
-- ✅ Legend showing status colors
-- ✅ Hover interaction showing mandi details
-- ✅ Shock origin indicator for simulations
-- ✅ Ripple animation for affected nodes
+#### Feature 2: Multi-Commodity Support
+- ✅ Each mandi now supports multiple commodities
+- ✅ Each commodity has: price, arrivals, volatility, stress index
+- ✅ **Commodity Intelligence Panel** on mandi detail page
+- ✅ Dashboard shows PRIMARY commodity only (UI stability preserved)
+- ✅ API: `GET /api/mandi/{id}/commodities`
 
-#### Global Visual Refinements
-- ✅ Modern font system (Inter + JetBrains Mono)
-- ✅ Consistent rounded corners (12-16px)
-- ✅ Soft shadows with depth layering
-- ✅ Smooth hover transitions
-- ✅ Card elevation animations
-- ✅ Premium dark theme throughout
+#### Feature 3: Surplus/Deficit Intelligence Engine
+- ✅ Deterministic logic: `Surplus = Supply - BaseDemand`
+- ✅ **Stabilization Signals**:
+  - Deficit + High Stress → `PULL_STOCK_URGENT`
+  - Surplus + Falling Prices → `PUSH_STOCK_RECOMMENDED`
+  - Balanced → `MONITOR_STABILITY`
+- ✅ **Supply-Demand Intelligence Panel** on mandi detail page
+- ✅ API: `GET /api/surplus-deficit/{mandi_id}`
+
+#### Feature 4: Transfer Recommendations
+- ✅ Suggests commodity transfers between surplus→deficit mandis
+- ✅ **Displays**: Source, Destination, Commodity, Quantity, Transport Cost, Price Arbitrage, Stability Impact
+- ✅ **Transfer Intelligence Panel** on Shock Engine page
+- ✅ Deterministic calculations only (no ML)
+- ✅ API: `GET /api/transfer-recommendations`
+
+#### Feature 5: Enhanced Ripple Effect Visualizer
+- ✅ Network Propagation section in simulation results
+- ✅ Level 1: 60% impact on direct neighbors
+- ✅ Level 2: 30% impact on secondary neighbors
+- ✅ Animated ripple effects in Network Graph
+- ✅ SHOCK ORIGIN indicator for simulation target
+
+#### Jarvis AI Upgrades
+- ✅ Welcome message mentions Surplus/Deficit and Transfer features
+- ✅ New suggested queries: "Explain surplus/deficit status", "Best transfer strategy?"
+- ✅ Enhanced context interpretation for shock descriptions
+- ✅ Response format includes "Expected System Impact" section
 
 ---
 
@@ -80,7 +96,7 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
 ### Tech Stack
 - **Frontend**: React 19, Tailwind CSS, Shadcn UI, Recharts, Lucide React
 - **Backend**: FastAPI (Python)
-- **Data**: Static JSON file (mock data)
+- **Data**: Static JSON file (mock data with multi-commodity support)
 - **AI**: Emergent LLM (GPT-4o) via emergentintegrations library
 
 ### File Structure
@@ -88,22 +104,27 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
 /app/
 ├── backend/
 │   ├── data/
-│   │   └── mandiData.json          # Mock data for 6 mandis
-│   ├── server.py                   # API endpoints + engines
+│   │   └── mandiData.json          # 6 mandis with multi-commodity data
+│   ├── tests/
+│   │   └── test_new_features.py    # Tests for new features
+│   ├── server.py                   # API endpoints + all engines
 │   └── .env                        # EMERGENT_LLM_KEY
 └── frontend/
     └── src/
         ├── components/
-        │   ├── LandingPage.jsx      # Hero experience
-        │   ├── JarvisAssistant.jsx  # AI assistant
-        │   ├── NetworkGraph.jsx     # Network visualization
+        │   ├── LandingPage.jsx
+        │   ├── JarvisAssistant.jsx
+        │   ├── NetworkGraph.jsx
+        │   ├── CommodityPanel.jsx        # NEW: Multi-commodity display
+        │   ├── SurplusDeficitPanel.jsx   # NEW: Supply-demand intel
+        │   ├── TransferRecommendations.jsx # NEW: Transfer suggestions
+        │   ├── SimulationPanel.jsx       # UPDATED: Shock description input
         │   ├── Navbar.jsx
         │   ├── MandiCard.jsx
         │   ├── SystemOverview.jsx
         │   ├── SummaryStats.jsx
         │   ├── StressGauge.jsx
         │   ├── DiagnosticsPanel.jsx
-        │   ├── SimulationPanel.jsx
         │   ├── SimulationResults.jsx
         │   ├── RecommendationPanel.jsx
         │   ├── LinkedMandis.jsx
@@ -119,10 +140,15 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
 |----------|--------|-------------|
 | `/api/stress` | GET | Get stress overview for all mandis |
 | `/api/mandi/{id}` | GET | Get detailed info for specific mandi |
+| `/api/mandi/{id}/commodities` | GET | **NEW**: Get multi-commodity data with stress |
 | `/api/mandis` | GET | Get list of all mandis for dropdowns |
 | `/api/shock-types` | GET | Get available shock types |
 | `/api/simulate` | POST | Run shock simulation |
 | `/api/recommend` | POST | Get intervention recommendations |
+| `/api/interpret-context` | POST | **NEW**: Interpret shock description keywords |
+| `/api/surplus-deficit/{id}` | GET | **NEW**: Get surplus/deficit analysis |
+| `/api/surplus-deficit` | GET | **NEW**: Get all mandis surplus/deficit |
+| `/api/transfer-recommendations` | GET | **NEW**: Get transfer recommendations |
 | `/api/jarvis/chat` | POST | Jarvis AI assistant chat |
 
 ---
@@ -130,7 +156,7 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
 ## Prioritized Backlog
 
 ### P0 (Critical - Next) 
-*None - All core features complete*
+*None - All requested features implemented*
 
 ### P1 (High Priority)
 1. **Database Integration**
@@ -167,9 +193,9 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
 ---
 
 ## Testing Status
-- Backend: 27/27 tests passing (100%)
-- Frontend: All components verified working
-- Test reports: `/app/test_reports/iteration_3.json`
+- Backend: 31/31 tests passing (100%)
+- Frontend: All features verified working
+- Test reports: `/app/test_reports/iteration_4.json`
 
 ## Data Model (mandiData.json)
 ```javascript
@@ -178,7 +204,7 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
     "id": "mandi-001",
     "name": "Azadpur Mandi",
     "location": "Delhi",
-    "commodity": "Tomato",
+    "commodity": "Tomato",          // Primary commodity
     "currentPrice": 4250,
     "previousPrice": 3980,
     "arrivals": 2450,
@@ -189,46 +215,58 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
     "baseDemand": 3000,
     "priceHistory": [...],
     "arrivalsHistory": [...],
-    "connectedMandis": ["mandi-002", "mandi-003"]
+    "connectedMandis": ["mandi-002", "mandi-003"],
+    "commodities": [                 // Multi-commodity support
+      {
+        "name": "Tomato",
+        "isPrimary": true,
+        "currentPrice": 4250,
+        "previousPrice": 3980,
+        "arrivals": 2450,
+        "previousArrivals": 2680,
+        "baseDemand": 3000,
+        "baseSupply": 2800,
+        "volatility": 12.5
+      },
+      { "name": "Potato", ... },
+      { "name": "Onion", ... }
+    ]
   }],
-  "shockTypes": [...]
+  "shockTypes": [...],
+  "transportCostPerKm": 2.5,
+  "baseTransportDistance": {...}     // For transfer cost calculation
 }
 ```
 
-## Stress Calculation Formula
+## Key Formulas (All Deterministic)
+
+### Stress Score
 ```
-Stress Score = Price Stress + Supply Stress + Instability Stress + External Stress
+Stress = Price Stress + Supply Stress + Instability Stress + External Stress
 
-Price Stress:
-- price_change > 8%: +35 points
-- price_change > 4%: +20 points
-
-Supply Stress:
-- arrival_change < -10%: +30 points
-- arrival_change < -5%: +15 points
-
-Instability Stress:
-- volatility > 10%: +20 points
-
-External Stress:
-- rainFlag: +10 points
-- festivalFlag: +10 points
-
-Status Classification:
-- stress > 65: HIGH_RISK
-- stress > 35: WATCH
-- stress <= 35: NORMAL
+Status: >65 = HIGH_RISK, >35 = WATCH, <=35 = NORMAL
 ```
 
-## Shock Propagation Formula
+### Shock Propagation
 ```
 price_new = price_old × (Demand/Supply)^elasticity
+elasticity = 0.4
 
-Where elasticity = 0.4
+Ripple: L1 neighbors = 60%, L2 neighbors = 30%
+```
 
-Ripple Effect:
-- Level 1 neighbors: 60% of impact
-- Level 2 neighbors: 30% of impact
+### Surplus/Deficit
+```
+Balance = Supply (arrivals) - BaseDemand
+BalancePct = Balance / BaseDemand × 100
+
+Status: >10% = Surplus, <-10% = Deficit, else = Balanced
+```
+
+### Transfer Cost
+```
+Cost = Distance × CostPerKm × (Quantity / 100)
+CostPerKm = 2.5
 ```
 
 ---
