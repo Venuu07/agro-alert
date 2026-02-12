@@ -89,6 +89,37 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
 - ✅ Enhanced context interpretation for shock descriptions
 - ✅ Response format includes "Expected System Impact" section
 
+### Phase 5: Network Graph & Forecast System (Completed - Dec 2025)
+
+#### Feature 1: Backend Graph Service Module (`/app/backend/graph_service.py`)
+- ✅ `circular_layout(names, cx, cy, radius)`: Deterministic circular positioning for nodes
+- ✅ `propagate_shock(origin_mandi, base_impacts, conn, decay_level1, decay_level2)`: Shock propagation via network edges
+- ✅ `ema(series, alpha)`: Exponential Moving Average for price forecasting
+- ✅ `apply_agent_behaviour(supply, demand, price_change_pct)`: Deterministic agent behavior rules
+- ✅ `build_graph_payload(origin_mandi, shock_result)`: Constructs complete graph payload for visualization
+
+#### Feature 2: New API Endpoints
+- ✅ **GET /api/graph**: Returns nodes with x,y coordinates and edges for SVG rendering
+- ✅ **GET /api/graph?origin=mandi-id**: Returns nodes with shock propagation impacts
+- ✅ **GET /api/forecast**: Returns EMA-based price predictions (7-30 day horizon)
+- ✅ **POST /api/simulate-with-graph**: Returns combined simulation + graph payload
+
+#### Feature 3: NetworkGraph.jsx SVG Visualizer
+- ✅ Backend-provided coordinates (NO force layout)
+- ✅ Circular node arrangement using viewBox "0 0 1000 640"
+- ✅ Color scale: green (≤0.33), amber (0.33-0.66), red (>0.66)
+- ✅ Node radius scaled by impact: r = 16 + impact * 12
+- ✅ MSI score displayed inside each node
+- ✅ Pulse radial overlay for nodes with impact > 0.15
+- ✅ Animated ripple effect for shock origin
+- ✅ Hover info panel showing mandi details
+- ✅ Reload Graph button for data refresh
+- ✅ Legend with HIGH/MEDIUM/LOW indicators
+
+#### Feature 4: Connectivity Data (`/app/backend/data/connectivity.json`)
+- ✅ 7 connections between 6 mandis
+- ✅ Edge properties: from, to, edge_strength, cost_per_qt, travel_time
+
 ---
 
 ## Architecture
