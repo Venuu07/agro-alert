@@ -17,7 +17,7 @@ export const JarvisAssistant = ({
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: `I'm **Jarvis**, your Decision Intelligence Assistant. I can help you understand:\n\n• **Market Stress Signals** - Why specific mandis are flagged\n• **Price Dynamics** - Supply-demand impacts on pricing\n• **Shock Propagation** - How disruptions ripple through networks\n• **Stabilization Strategies** - Best intervention approaches\n\nWhat would you like to analyze?`
+      content: `I'm **Jarvis**, your Decision Intelligence Assistant. I can help you understand:\n\n• **Market Stress Signals** - Why specific mandis are flagged\n• **Price Dynamics** - Supply-demand impacts on pricing\n• **Shock Propagation** - How disruptions ripple through networks\n• **Surplus/Deficit Status** - Supply-demand balance analysis\n• **Transfer Strategies** - Commodity redistribution recommendations\n• **Stabilization Strategies** - Best intervention approaches\n\nWhat would you like to analyze?`
     }
   ]);
   const [input, setInput] = useState('');
@@ -81,6 +81,10 @@ export const JarvisAssistant = ({
       if (simulationResults.affectedMandis?.length > 0) {
         context.push(`- Affected Markets: ${simulationResults.affectedMandis.map(m => `${m.mandiName}(+${m.priceChange?.toFixed(1)}%)`).join(', ')}`);
       }
+      // Include shock context if available
+      if (simulationResults.shockContext) {
+        context.push(`- User-Described Context: "${simulationResults.shockContext}"`);
+      }
     }
 
     return context.join('\n');
@@ -102,7 +106,9 @@ export const JarvisAssistant = ({
         conversationHistory: messages.slice(-6).map(m => ({
           role: m.role,
           content: m.content
-        }))
+        })),
+        // Include shock context for enhanced interpretation
+        shockContext: simulationResults?.shockContext || null
       });
 
       setMessages(prev => [...prev, { 
