@@ -2,21 +2,26 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Network } from 'lucide-react';
 
 export const NetworkGraph = ({ mandis = [], simulationTarget = null, affectedMandis = [] }) => {
-  const svgRef = useRef(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const containerRef = useRef(null);
+  const [dimensions, setDimensions] = useState({ width: 600, height: 300 });
   const [hoveredNode, setHoveredNode] = useState(null);
 
   useEffect(() => {
     const updateDimensions = () => {
-      if (svgRef.current?.parentElement) {
-        const { width, height } = svgRef.current.parentElement.getBoundingClientRect();
-        setDimensions({ width, height: Math.max(height, 300) });
+      if (containerRef.current) {
+        const { width } = containerRef.current.getBoundingClientRect();
+        setDimensions({ width: width || 600, height: 300 });
       }
     };
     
-    updateDimensions();
+    // Initial measurement after mount
+    const timer = setTimeout(updateDimensions, 100);
+    
     window.addEventListener('resize', updateDimensions);
-    return () => window.removeEventListener('resize', updateDimensions);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', updateDimensions);
+    };
   }, []);
 
   if (mandis.length === 0) return null;
