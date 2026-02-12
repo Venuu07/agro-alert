@@ -175,21 +175,31 @@
     .priority-low { 
         border-left-width: 4px;
         border-left-color: rgb(34 197 94);
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
     }
     
     .ai-insight-box { 
-        @apply p-4 mt-4 border;
+        @apply p-5 mt-4 rounded-lg;
         background-color: hsl(var(--primary) / 0.05);
-        border-color: hsl(var(--primary) / 0.2);
+        border: 1px solid hsl(var(--primary) / 0.2);
     }
 
     .card-hover {
-        @apply transition-all duration-300;
+        @apply transition-all duration-300 rounded-xl;
+        box-shadow: var(--shadow-soft);
     }
 
     .card-hover:hover {
-        border-color: hsl(var(--primary) / 0.5);
-        transform: translateY(-2px);
+        border-color: hsl(var(--primary) / 0.4);
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-elevated);
+    }
+
+    /* Premium Dashboard Grid */
+    .dashboard-grid {
+        @apply grid gap-6;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
     }
 }
 
