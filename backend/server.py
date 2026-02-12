@@ -1279,6 +1279,174 @@ Provide a helpful, analytical response based on the system context above. Struct
         logger.error(f"Jarvis chat error: {e}")
         return JarvisResponse(response="I apologize, but I encountered an issue processing your request. Please try again.")
 
+# ============================================================
+# NETWORK GRAPH & FORECAST ENDPOINTS
+# ============================================================
+from graph_service import (
+    build_graph_payload, 
+    generate_forecast, 
+    ema, 
+    apply_agent_behaviour,
+    propagate_shock
+)
+
+class GraphNode(BaseModel):
+    id: str
+    name: str
+    x: float
+    y: float
+    impact: float
+    msi: int
+    status: str
+    primary: str
+    price: float
+
+class GraphEdge(BaseModel):
+    from_node: str = Field(alias="from")
+    to_node: str = Field(alias="to")
+    strength: float
+    cost_per_qt: float
+    travel_time: float
+    
+    class Config:
+        populate_by_name = True
+
+class GraphPayload(BaseModel):
+    nodes: List[Dict[str, Any]]
+    edges: List[Dict[str, Any]]
+
+class ForecastPoint(BaseModel):
+    date: str
+    predicted_price: float
+
+class ForecastResponse(BaseModel):
+    mandi: str
+    commodity: str
+    forecast: List[ForecastPoint]
+
+@api_router.get("/graph")
+async def get_graph(origin: Optional[str] = None):
+    """
+    Get network graph payload with node coordinates and edge data.
+    
+    Args:
+        origin: Optional mandi ID for shock origin (affects impact visualization)
+    
+    Returns:
+        Graph payload with nodes (id, name, x, y, impact, msi, status, primary, price)
+        and edges (from, to, strength, cost_per_qt, travel_time)
+    """
+    logger.info(f"Graph endpoint called - origin: {origin}")
+    
+    try:
+        payload = build_graph_payload(origin_mandi=origin)
+        
+        # Validate all nodes have finite coordinates
+        for node in payload.get("nodes", []):
+            if node.get("x") is None or node.get("y") is None:
+                logger.warning(f"Node {node.get('id')} missing coordinates, applying fallback")
+                node["x"] = 500
+                node["y"] = 320
+            
+            # Ensure impact is clamped 0-1
+            if "impact" in node:
+                node["impact"] = max(0.0, min(1.0, node["impact"]))
+        
+        node_count = len(payload.get("nodes", []))
+        logger.info(f"Graph payload built - origin: {origin}, nodes: {node_count}")
+        
+        return payload
+        
+    except Exception as e:
+        logger.error(f"Graph endpoint error: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to build graph: {str(e)}")
+
+@api_router.get("/forecast", response_model=ForecastResponse)
+async def get_forecast(mandi: str, commodity: str, horizon: int = 7):
+    """
+    Get price forecast using EMA (Exponential Moving Average).
+    
+    Args:
+        mandi: Mandi ID or name
+        commodity: Commodity name
+        horizon: Number of days to forecast (default: 7, max: 30)
+    
+    Returns:
+        Forecast timeline with predicted prices
+    """
+    # Validate horizon
+    horizon = max(1, min(30, horizon))
+    
+    # Resolve mandi ID from name if necessary
+    mandi_id = mandi
+    for m in BASE_DATA["mandis"]:
+        if m["name"].lower() == mandi.lower() or m["id"] == mandi:
+            mandi_id = m["id"]
+            break
+    
+    try:
+        forecast = generate_forecast(mandi_id, commodity, horizon)
+        
+        if not forecast:
+            raise HTTPException(
+                status_code=404, 
+                detail=f"No data available for mandi '{mandi}' and commodity '{commodity}'"
+            )
+        
+        return ForecastResponse(
+            mandi=mandi_id,
+            commodity=commodity,
+            forecast=[ForecastPoint(**f) for f in forecast]
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Forecast endpoint error: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to generate forecast: {str(e)}")
+
+# ============================================================
+# ENHANCED SIMULATE ENDPOINT (Add graph payload to response)
+# ============================================================
+class SimulationWithGraphResponse(BaseModel):
+    simulation: Dict[str, Any]
+    graph: Dict[str, Any]
+
+@api_router.post("/simulate-with-graph", response_model=SimulationWithGraphResponse)
+async def run_simulation_with_graph(request: SimulationRequest):
+    """
+    Run shock simulation and return both simulation results and updated graph payload.
+    This endpoint provides complete data for visualization.
+    """
+    target_mandi = None
+    for m in BASE_DATA["mandis"]:
+        if m["id"] == request.mandiId:
+            target_mandi = m
+            break
+    
+    if not target_mandi:
+        raise HTTPException(status_code=404, detail="Mandi not found")
+    
+    # Run simulation (existing logic)
+    result = simulate_shock(
+        target_mandi=target_mandi,
+        shock_type=request.shockType,
+        intensity=request.intensity,
+        duration=request.duration,
+        all_mandis=BASE_DATA["mandis"]
+    )
+    
+    # Build graph payload with shock data
+    graph_payload = build_graph_payload(
+        origin_mandi=request.mandiId,
+        shock_result=result
+    )
+    
+    return SimulationWithGraphResponse(
+        simulation=result,
+        graph=graph_payload
+    )
+
 # Include the router in the main app
 app.include_router(api_router)
 
