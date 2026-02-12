@@ -120,6 +120,50 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
 - ✅ 7 connections between 6 mandis
 - ✅ Edge properties: from, to, edge_strength, cost_per_qt, travel_time
 
+### Phase 6: Market State Persistence & Live Updates (Completed - Dec 2025)
+
+**CRITICAL DESIGN PRINCIPLE**: All updates = APPEND NEW ROWS (never overwrite historical data)
+
+#### Feature 1: Operator Market Input (`POST /api/market-update`)
+- ✅ Operator inputs ONLY arrivals (mandatory, numeric > 0)
+- ✅ Optional contextual notes text
+- ✅ **Price is SYSTEM-COMPUTED** using existing elasticity formula: `price_new = price_old × (Demand/Supply)^0.4`
+- ✅ **MSI is SYSTEM-COMPUTED** using existing Stress Engine
+- ✅ New row appended to state history (append-only audit trail)
+- ✅ Validation: arrivals must be numeric > 0
+
+#### Feature 2: Transfer Execution (`POST /api/execute-transfer`)
+- ✅ Validates: quantity <= source supply
+- ✅ Validates: source != destination
+- ✅ Deducts quantity from SOURCE mandi
+- ✅ Adds quantity to DESTINATION mandi
+- ✅ Recomputes prices for BOTH mandis using EXISTING elasticity model
+- ✅ Appends NEW ROWS for both mandis to state history
+
+#### Feature 3: Live State API (`GET /api/live-state`)
+- ✅ Returns current market state for all mandis
+- ✅ Includes updated prices, arrivals, stressScore, status
+- ✅ Reflects recent market updates and transfers
+
+#### Feature 4: State History API (`GET /api/state-history`)
+- ✅ Append-only audit log of all changes
+- ✅ Entries include timestamp, type (market_update/transfer_execution)
+- ✅ Before/after values for price and arrivals
+
+#### Feature 5: MarketUpdatePanel Component (`/app/frontend/src/components/MarketUpdatePanel.jsx`)
+- ✅ Renders on Mandi Detail page
+- ✅ Arrivals input field (numeric, required)
+- ✅ Optional notes textarea
+- ✅ Info note: "Price and MSI will be automatically computed"
+- ✅ Displays update result with price/arrivals change percentages
+- ✅ Success toast notification
+
+#### Feature 6: Transfer Execution UI
+- ✅ "Invoke Transfer" button on Transfer Intelligence panel
+- ✅ Executes transfer via POST /api/execute-transfer
+- ✅ Shows success toast with price impact
+- ✅ Dashboard auto-refreshes after transfer
+
 ---
 
 ## Architecture
@@ -127,7 +171,7 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
 ### Tech Stack
 - **Frontend**: React 19, Tailwind CSS, Shadcn UI, Recharts, Lucide React
 - **Backend**: FastAPI (Python)
-- **Data**: Static JSON file (mock data with multi-commodity support)
+- **Data**: Static JSON file with in-memory live state persistence
 - **AI**: Emergent LLM (GPT-4o) via emergentintegrations library
 
 ### File Structure
@@ -136,11 +180,13 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
 ├── backend/
 │   ├── data/
 │   │   ├── mandiData.json          # 6 mandis with multi-commodity data
-│   │   └── connectivity.json       # NEW: Network connections for graph
+│   │   └── connectivity.json       # Network connections for graph
 │   ├── tests/
 │   │   ├── test_new_features.py    # Tests for intelligence features
-│   │   └── test_graph_forecast_endpoints.py  # NEW: Graph & forecast tests
-│   ├── graph_service.py            # NEW: Graph computation module
+│   │   ├── test_graph_forecast_endpoints.py  # Graph & forecast tests
+│   │   └── test_market_state_features.py     # NEW: Market state tests
+│   ├── graph_service.py            # Graph computation module
+│   ├── market_state.py             # NEW: Market state persistence
 │   ├── server.py                   # API endpoints + all engines
 │   └── .env                        # EMERGENT_LLM_KEY
 └── frontend/
@@ -148,11 +194,12 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
         ├── components/
         │   ├── LandingPage.jsx
         │   ├── JarvisAssistant.jsx
-        │   ├── NetworkGraph.jsx         # UPDATED: Full SVG visualizer
+        │   ├── NetworkGraph.jsx         # Full SVG visualizer
         │   ├── CommodityPanel.jsx       # Multi-commodity display
         │   ├── SurplusDeficitPanel.jsx  # Supply-demand intel
-        │   ├── TransferRecommendations.jsx # Transfer suggestions
-        │   ├── SimulationPanel.jsx       # UPDATED: Shock description input
+        │   ├── TransferRecommendations.jsx # UPDATED: Invoke Transfer button
+        │   ├── MarketUpdatePanel.jsx    # NEW: Operator input panel
+        │   ├── SimulationPanel.jsx      # Shock description input
         │   ├── Navbar.jsx
         │   ├── MandiCard.jsx
         │   ├── SystemOverview.jsx
