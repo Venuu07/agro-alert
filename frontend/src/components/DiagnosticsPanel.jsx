@@ -56,9 +56,9 @@ export const DiagnosticsPanel = ({ mandi }) => {
       </div>
 
       {/* Stress Score */}
-      <div className="flex items-center justify-center py-4 border border-border bg-secondary/30">
+      <div className="flex items-center justify-center py-4 border border-border bg-gradient-to-b from-secondary/50 to-secondary/20">
         <div className="text-center">
-          <span className="data-label block mb-2">STRESS SCORE</span>
+          <span className="data-label block mb-2">MARKET STRESS INDEX</span>
           <StressGauge score={mandi.stressScore} size={120} />
         </div>
       </div>
