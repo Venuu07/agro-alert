@@ -445,7 +445,7 @@ def generate_forecast(mandi_id: str, commodity: str, horizon: int = 7) -> List[D
     if price_history and "date" in price_history[-1]:
         try:
             base_date = datetime.strptime(price_history[-1]["date"], "%Y-%m-%d")
-        except:
+        except (ValueError, TypeError):
             pass
     
     for i in range(1, horizon + 1):
