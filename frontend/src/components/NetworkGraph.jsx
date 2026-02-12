@@ -265,6 +265,9 @@ export const NetworkGraph = ({
           className="network-svg"
           style={{ zIndex: 1 }}
         >
+          {/* Debug rectangle to verify SVG is rendering */}
+          <rect x="0" y="0" width="1000" height="640" fill="transparent" stroke="#333" strokeWidth="1" />
+          
           <defs>
             {/* Radial gradient for pulse effect */}
             <radialGradient id="pulse-gradient-green" cx="50%" cy="50%" r="50%">
