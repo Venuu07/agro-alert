@@ -206,6 +206,15 @@ const MandiDetail = ({ onMandiLoaded }) => {
         <SurplusDeficitPanel mandiId={mandiId} />
       </div>
 
+      {/* Market Update Panel - Operator Input */}
+      <MarketUpdatePanel 
+        mandiId={mandiId}
+        mandiName={mandi.name}
+        commodities={mandi.commodities || [{ name: mandi.commodity, isPrimary: true }]}
+        currentArrivals={mandi.arrivals}
+        onUpdateComplete={() => fetchMandiData()}
+      />
+
       {/* Linked Mandis */}
       <LinkedMandis 
         linkedMandis={linkedMandis} 
