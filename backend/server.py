@@ -652,7 +652,9 @@ async def health_check():
 @api_router.get("/stress", response_model=StressResponse)
 async def get_stress_data():
     """Get stress overview for all mandis with computed stress scores"""
-    mandis = BASE_DATA["mandis"]
+    # Use live state for real-time updates
+    state = get_current_state()
+    mandis = state.get("mandis", BASE_DATA["mandis"])
     
     summaries = []
     high_risk = 0
