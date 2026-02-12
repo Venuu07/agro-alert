@@ -700,7 +700,11 @@ async def get_stress_data():
 @api_router.get("/mandi/{mandi_id}", response_model=MandiDetail)
 async def get_mandi_detail(mandi_id: str):
     """Get detailed information for a specific mandi with computed stress"""
-    for m in BASE_DATA["mandis"]:
+    # Use live state for real-time updates
+    state = get_current_state()
+    mandis = state.get("mandis", BASE_DATA["mandis"])
+    
+    for m in mandis:
         if m["id"] == mandi_id:
             enriched = enrich_mandi_with_stress(m)
             return MandiDetail(
