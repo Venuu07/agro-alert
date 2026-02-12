@@ -425,7 +425,7 @@ const AlertsView = () => {
               key={mandi.id}
               className="risk-card risk-card-watch animate-fade-in"
               style={{ animationDelay: `${index * 0.05}s` }}
-              onClick={() => navigate(`/mandi/${mandi.id}`)}
+              onClick={() => navigate(`/app/mandi/${mandi.id}`)}
               data-testid={`alert-${mandi.id}`}
             >
               <div className="flex items-center justify-between">
