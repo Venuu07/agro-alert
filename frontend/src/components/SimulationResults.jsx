@@ -108,46 +108,60 @@ export const SimulationResults = ({ results, originalData }) => {
       )}
 
       {/* Before/After Chart */}
-      <PriceChart 
-        data={originalData} 
-        title="PRICE PROJECTION" 
-        showComparison={true}
-        comparisonData={results.simulatedPriceHistory}
-      />
+      <div className="chart-premium">
+        <PriceChart 
+          data={originalData} 
+          title="PRICE TRAJECTORY PROJECTION" 
+          showComparison={true}
+          comparisonData={results.simulatedPriceHistory}
+        />
+      </div>
 
       {/* Affected Mandis - Ripple Effect */}
       {results.affectedMandis && results.affectedMandis.length > 0 && (
-        <div className="bg-card border border-border p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <AlertTriangle size={18} className="text-orange-500" />
-            <h3 className="text-lg font-bold">RIPPLE EFFECT</h3>
-            <span className="text-xs text-muted-foreground ml-2">
-              ({results.affectedMandis.length} mandis affected)
-            </span>
+        <div className="system-overview-panel p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 bg-orange-500/20 border border-orange-500/30 flex items-center justify-center">
+              <AlertTriangle size={20} className="text-orange-500" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold">NETWORK PROPAGATION</h3>
+              <p className="text-xs text-muted-foreground font-mono">
+                {results.affectedMandis.length} CONNECTED MARKETS IMPACTED
+              </p>
+            </div>
           </div>
-          <p className="text-sm text-muted-foreground mb-4">
-            Impact decays: Level 1 = 60%, Level 2 = 30%
-          </p>
+          <div className="flex items-center gap-4 mb-4 p-3 bg-secondary/30 border border-border">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-orange-500 rounded-full" />
+              <span className="text-xs font-mono">LEVEL 1: 60% IMPACT</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-yellow-500 rounded-full" />
+              <span className="text-xs font-mono">LEVEL 2: 30% IMPACT</span>
+            </div>
+          </div>
 
           <div className="space-y-3">
             {results.affectedMandis.map((affected, index) => (
               <div 
                 key={affected.mandiId}
-                className="flex items-center justify-between p-4 bg-secondary/30 border border-border animate-fade-in"
+                className={`risk-card ${affected.rippleLevel === 1 ? 'risk-card-watch' : ''} animate-fade-in`}
                 style={{ animationDelay: `${index * 0.1}s` }}
                 data-testid={`affected-mandi-${affected.mandiId}`}
               >
-                <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 border flex items-center justify-center ${affected.rippleLevel === 1 ? 'border-orange-500/50 bg-orange-500/10' : 'border-yellow-500/50 bg-yellow-500/10'}`}>
-                    <Users size={16} className={affected.rippleLevel === 1 ? 'text-orange-500' : 'text-yellow-500'} />
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-10 h-10 border flex items-center justify-center ${affected.rippleLevel === 1 ? 'border-orange-500/50 bg-orange-500/10' : 'border-yellow-500/50 bg-yellow-500/10'}`}>
+                      <Users size={16} className={affected.rippleLevel === 1 ? 'text-orange-500' : 'text-yellow-500'} />
+                    </div>
+                    <div>
+                      <p className="font-mono text-sm font-bold">{affected.mandiName}</p>
+                      <p className="text-xs text-muted-foreground">
+                        Propagation Level {affected.rippleLevel}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-mono text-sm">{affected.mandiName}</p>
-                    <p className="text-xs text-muted-foreground">
-                      Level {affected.rippleLevel} • {affected.rippleLevel === 1 ? '60%' : '30%'} impact
-                    </p>
-                  </div>
-                </div>
                 <div className="text-right">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-xs text-muted-foreground">₹{affected.originalPrice?.toLocaleString()}</span>
