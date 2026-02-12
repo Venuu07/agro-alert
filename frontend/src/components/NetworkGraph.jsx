@@ -395,57 +395,6 @@ export const NetworkGraph = ({
                 onClick={() => onNodeClick && onNodeClick(node)}
                 style={{ cursor: onNodeClick ? 'pointer' : 'default' }}
               >
-                {/* Pulse overlay for impact > 0.15 */}
-                {impact > 0.15 && (
-                  <circle
-                    cx={node.x}
-                    cy={node.y}
-                    r={radius + 20}
-                    fill={`url(#${pulseGradient})`}
-                    className={isTarget ? 'animate-pulse' : ''}
-                  />
-                )}
-                
-                {/* Outer glow for high impact or target */}
-                {(impact > 0.5 || isTarget) && (
-                  <circle
-                    cx={node.x}
-                    cy={node.y}
-                    r={radius + 8}
-                    fill={color}
-                    opacity={0.25}
-                  />
-                )}
-                
-                {/* Ripple rings for shock origin */}
-                {isTarget && (
-                  <>
-                    <circle
-                      cx={node.x}
-                      cy={node.y}
-                      r={radius}
-                      fill="none"
-                      stroke={color}
-                      strokeWidth="2"
-                      opacity="0.6"
-                      className="animate-ping"
-                      style={{ animationDuration: '1.5s' }}
-                    />
-                    <circle
-                      cx={node.x}
-                      cy={node.y}
-                      r={radius + 12}
-                      fill="none"
-                      stroke={color}
-                      strokeWidth="1"
-                      opacity="0.3"
-                      className="animate-ping"
-                      style={{ animationDuration: '2s', animationDelay: '0.5s' }}
-                    />
-                  </>
-                )}
-
-                {/* Main node circle */}
                 <circle
                   cx={node.x}
                   cy={node.y}
@@ -453,53 +402,21 @@ export const NetworkGraph = ({
                   fill={color}
                   stroke={isHovered ? '#ffffff' : 'rgba(255,255,255,0.2)'}
                   strokeWidth={isHovered ? 3 : 1}
-                  filter={isTarget ? 'url(#node-glow)' : undefined}
                 />
-
-                {/* MSI score inside node */}
                 <text
                   x={node.x}
                   y={node.y}
                   textAnchor="middle"
                   dominantBaseline="middle"
                   fill="#ffffff"
-                  fontSize={radius > 20 ? '12' : '10'}
-                  fontFamily="JetBrains Mono, monospace"
+                  fontSize="10"
                   fontWeight="bold"
-                  style={{ pointerEvents: 'none' }}
                 >
                   {node.msi}
                 </text>
-
-                {/* Node label - to the right */}
-                <text
-                  x={node.x + radius + 8}
-                  y={node.y - 6}
-                  textAnchor="start"
-                  fill={isHovered ? '#ffffff' : 'rgba(255,255,255,0.85)'}
-                  fontSize="11"
-                  fontFamily="Inter, sans-serif"
-                  fontWeight="600"
-                  style={{ pointerEvents: 'none' }}
-                >
-                  {node.name?.split(' ')[0]}
-                </text>
-                
-                {/* Secondary label: commodity · price */}
-                <text
-                  x={node.x + radius + 8}
-                  y={node.y + 8}
-                  textAnchor="start"
-                  fill="rgba(255,255,255,0.5)"
-                  fontSize="9"
-                  fontFamily="JetBrains Mono, monospace"
-                  style={{ pointerEvents: 'none' }}
-                >
-                  {node.primary} · ₹{node.price?.toLocaleString()}
-                </text>
               </g>
             );
-          })}
+          }) */}
         </svg>
       </div>
 
