@@ -162,20 +162,21 @@ export const SimulationResults = ({ results, originalData }) => {
                       </p>
                     </div>
                   </div>
-                <div className="text-right">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs text-muted-foreground">₹{affected.originalPrice?.toLocaleString()}</span>
-                    <ArrowRight size={12} className="text-muted-foreground" />
-                    <span className="text-xs text-orange-500">₹{Math.round(affected.newPrice || 0).toLocaleString()}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-sm text-muted-foreground">
-                      {affected.previousStressScore}
-                    </span>
-                    <ArrowRight size={14} className="text-muted-foreground" />
-                    <span className={`font-mono text-sm ${affected.newStressScore >= 60 ? 'text-red-500' : affected.newStressScore >= 40 ? 'text-orange-500' : 'text-green-500'}`}>
-                      {affected.newStressScore}
-                    </span>
+                  <div className="text-right">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-xs text-muted-foreground">₹{affected.originalPrice?.toLocaleString()}</span>
+                      <ArrowRight size={12} className="text-muted-foreground" />
+                      <span className="text-xs text-orange-500">₹{Math.round(affected.newPrice || 0).toLocaleString()}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-sm text-muted-foreground">
+                        {affected.previousStressScore}
+                      </span>
+                      <ArrowRight size={14} className="text-muted-foreground" />
+                      <span className={`font-mono text-sm ${affected.newStressScore >= 60 ? 'text-red-500' : affected.newStressScore >= 40 ? 'text-orange-500' : 'text-green-500'}`}>
+                        {affected.newStressScore}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
