@@ -59,12 +59,17 @@ export const NetworkGraph = ({
 
   // Memoize SVG content
   const svgContent = useMemo(() => {
+    console.log('[NetworkGraph] useMemo called with graphData:', graphData);
+    
     if (!graphData?.nodes || graphData.nodes.length === 0) {
+      console.log('[NetworkGraph] No nodes, returning null');
       return null;
     }
 
     const { nodes, edges } = graphData;
     const elements = [];
+    
+    console.log('[NetworkGraph] Building SVG with', nodes.length, 'nodes and', edges?.length, 'edges');
 
     // Add edges
     if (edges && edges.length > 0) {
@@ -72,6 +77,7 @@ export const NetworkGraph = ({
         const from = nodes.find(n => n.id === edge.from);
         const to = nodes.find(n => n.id === edge.to);
         if (from && to) {
+          console.log('[NetworkGraph] Adding edge from', from.x, from.y, 'to', to.x, to.y);
           elements.push(
             <line
               key={`e-${i}`}
@@ -93,6 +99,8 @@ export const NetworkGraph = ({
       const impact = node.impact || 0;
       const color = getNodeColor(impact);
       const radius = 18 + impact * 10;
+      
+      console.log('[NetworkGraph] Adding node', node.id, 'at', node.x, node.y, 'color:', color);
       
       elements.push(
         <g key={`n-${node.id}`}>
@@ -140,6 +148,7 @@ export const NetworkGraph = ({
       );
     });
 
+    console.log('[NetworkGraph] Built', elements.length, 'SVG elements');
     return elements;
   }, [graphData]);
 
