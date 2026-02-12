@@ -30,7 +30,42 @@
         {"date": "2024-01-29", "arrivals": 2680},
         {"date": "2024-02-05", "arrivals": 2450}
       ],
-      "connectedMandis": ["mandi-002", "mandi-003"]
+      "connectedMandis": ["mandi-002", "mandi-003"],
+      "commodities": [
+        {
+          "name": "Tomato",
+          "isPrimary": true,
+          "currentPrice": 4250,
+          "previousPrice": 3980,
+          "arrivals": 2450,
+          "previousArrivals": 2680,
+          "baseDemand": 3000,
+          "baseSupply": 2800,
+          "volatility": 12.5
+        },
+        {
+          "name": "Potato",
+          "isPrimary": false,
+          "currentPrice": 1850,
+          "previousPrice": 1780,
+          "arrivals": 1800,
+          "previousArrivals": 1950,
+          "baseDemand": 2000,
+          "baseSupply": 1900,
+          "volatility": 6.2
+        },
+        {
+          "name": "Onion",
+          "isPrimary": false,
+          "currentPrice": 2650,
+          "previousPrice": 2480,
+          "arrivals": 1200,
+          "previousArrivals": 1350,
+          "baseDemand": 1400,
+          "baseSupply": 1300,
+          "volatility": 8.8
+        }
+      ]
     },
     {
       "id": "mandi-002",
@@ -62,7 +97,31 @@
         {"date": "2024-01-29", "arrivals": 5800},
         {"date": "2024-02-05", "arrivals": 5200}
       ],
-      "connectedMandis": ["mandi-001", "mandi-004"]
+      "connectedMandis": ["mandi-001", "mandi-004"],
+      "commodities": [
+        {
+          "name": "Onion",
+          "isPrimary": true,
+          "currentPrice": 2850,
+          "previousPrice": 2650,
+          "arrivals": 5200,
+          "previousArrivals": 5800,
+          "baseDemand": 5000,
+          "baseSupply": 5500,
+          "volatility": 9.4
+        },
+        {
+          "name": "Garlic",
+          "isPrimary": false,
+          "currentPrice": 8500,
+          "previousPrice": 8200,
+          "arrivals": 800,
+          "previousArrivals": 850,
+          "baseDemand": 900,
+          "baseSupply": 820,
+          "volatility": 5.6
+        }
+      ]
     },
     {
       "id": "mandi-003",
@@ -94,7 +153,42 @@
         {"date": "2024-01-29", "arrivals": 8200},
         {"date": "2024-02-05", "arrivals": 8500}
       ],
-      "connectedMandis": ["mandi-001", "mandi-005"]
+      "connectedMandis": ["mandi-001", "mandi-005"],
+      "commodities": [
+        {
+          "name": "Wheat",
+          "isPrimary": true,
+          "currentPrice": 2180,
+          "previousPrice": 2150,
+          "arrivals": 8500,
+          "previousArrivals": 8200,
+          "baseDemand": 7500,
+          "baseSupply": 8000,
+          "volatility": 3.2
+        },
+        {
+          "name": "Soybean",
+          "isPrimary": false,
+          "currentPrice": 4800,
+          "previousPrice": 4650,
+          "arrivals": 3200,
+          "previousArrivals": 3100,
+          "baseDemand": 3000,
+          "baseSupply": 3150,
+          "volatility": 4.8
+        },
+        {
+          "name": "Gram",
+          "isPrimary": false,
+          "currentPrice": 5200,
+          "previousPrice": 5050,
+          "arrivals": 2100,
+          "previousArrivals": 2000,
+          "baseDemand": 2200,
+          "baseSupply": 2050,
+          "volatility": 5.1
+        }
+      ]
     },
     {
       "id": "mandi-004",
@@ -126,7 +220,31 @@
         {"date": "2024-01-29", "arrivals": 4350},
         {"date": "2024-02-05", "arrivals": 4200}
       ],
-      "connectedMandis": ["mandi-002", "mandi-005"]
+      "connectedMandis": ["mandi-002", "mandi-005"],
+      "commodities": [
+        {
+          "name": "Rice",
+          "isPrimary": true,
+          "currentPrice": 3650,
+          "previousPrice": 3580,
+          "arrivals": 4200,
+          "previousArrivals": 4350,
+          "baseDemand": 4200,
+          "baseSupply": 4500,
+          "volatility": 4.5
+        },
+        {
+          "name": "Groundnut",
+          "isPrimary": false,
+          "currentPrice": 6200,
+          "previousPrice": 6000,
+          "arrivals": 1500,
+          "previousArrivals": 1600,
+          "baseDemand": 1700,
+          "baseSupply": 1550,
+          "volatility": 6.2
+        }
+      ]
     },
     {
       "id": "mandi-005",
@@ -158,7 +276,42 @@
         {"date": "2024-01-29", "arrivals": 2100},
         {"date": "2024-02-05", "arrivals": 1850}
       ],
-      "connectedMandis": ["mandi-003", "mandi-004"]
+      "connectedMandis": ["mandi-003", "mandi-004"],
+      "commodities": [
+        {
+          "name": "Tomato",
+          "isPrimary": true,
+          "currentPrice": 4100,
+          "previousPrice": 3850,
+          "arrivals": 1850,
+          "previousArrivals": 2100,
+          "baseDemand": 2500,
+          "baseSupply": 2200,
+          "volatility": 14.2
+        },
+        {
+          "name": "Cauliflower",
+          "isPrimary": false,
+          "currentPrice": 2200,
+          "previousPrice": 2050,
+          "arrivals": 950,
+          "previousArrivals": 1100,
+          "baseDemand": 1200,
+          "baseSupply": 1000,
+          "volatility": 9.8
+        },
+        {
+          "name": "Cabbage",
+          "isPrimary": false,
+          "currentPrice": 1450,
+          "previousPrice": 1380,
+          "arrivals": 1100,
+          "previousArrivals": 1200,
+          "baseDemand": 1300,
+          "baseSupply": 1150,
+          "volatility": 7.2
+        }
+      ]
     },
     {
       "id": "mandi-006",
@@ -190,7 +343,31 @@
         {"date": "2024-01-29", "arrivals": 5100},
         {"date": "2024-02-05", "arrivals": 4800}
       ],
-      "connectedMandis": ["mandi-002", "mandi-001"]
+      "connectedMandis": ["mandi-002", "mandi-001"],
+      "commodities": [
+        {
+          "name": "Onion",
+          "isPrimary": true,
+          "currentPrice": 2720,
+          "previousPrice": 2580,
+          "arrivals": 4800,
+          "previousArrivals": 5100,
+          "baseDemand": 4800,
+          "baseSupply": 5000,
+          "volatility": 7.5
+        },
+        {
+          "name": "Potato",
+          "isPrimary": false,
+          "currentPrice": 1720,
+          "previousPrice": 1680,
+          "arrivals": 2200,
+          "previousArrivals": 2300,
+          "baseDemand": 2400,
+          "baseSupply": 2250,
+          "volatility": 4.8
+        }
+      ]
     }
   ],
   "shockTypes": [
@@ -218,5 +395,15 @@
       "description": "Logistics disruption affecting arrivals",
       "icon": "truck"
     }
-  ]
+  ],
+  "transportCostPerKm": 2.5,
+  "baseTransportDistance": {
+    "mandi-001-mandi-002": 180,
+    "mandi-001-mandi-003": 220,
+    "mandi-002-mandi-004": 450,
+    "mandi-003-mandi-005": 150,
+    "mandi-004-mandi-005": 380,
+    "mandi-002-mandi-006": 85,
+    "mandi-001-mandi-006": 195
+  }
 }
