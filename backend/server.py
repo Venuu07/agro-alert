@@ -817,12 +817,380 @@ async def get_all_mandis():
     }
 
 # ============================================================
-# JARVIS AI ASSISTANT - Decision Intelligence Chat
+# CONTEXT INTERPRETER - Deterministic Keyword Mapping
+# ============================================================
+CONTEXT_KEYWORD_MAPPING = {
+    "logistics_stress": ["strike", "protest", "blockade", "road block", "highway"],
+    "arrival_friction": ["traffic", "delay", "congestion", "slow", "jam"],
+    "demand_pressure": ["festival", "surge", "celebration", "wedding", "diwali", "holi", "eid"],
+    "supply_stress": ["flood", "rain", "hail", "storm", "cyclone", "drought", "crop failure"]
+}
+
+def interpret_shock_context(description: str) -> Dict:
+    """Deterministic keyword-based context interpretation"""
+    if not description:
+        return {"signals": [], "interpretation": None}
+    
+    description_lower = description.lower()
+    detected_signals = []
+    
+    for signal_type, keywords in CONTEXT_KEYWORD_MAPPING.items():
+        for keyword in keywords:
+            if keyword in description_lower:
+                detected_signals.append({
+                    "type": signal_type,
+                    "keyword": keyword,
+                    "impact": get_signal_impact(signal_type)
+                })
+                break  # One match per signal type is enough
+    
+    return {
+        "signals": detected_signals,
+        "interpretation": generate_context_interpretation(detected_signals) if detected_signals else None
+    }
+
+def get_signal_impact(signal_type: str) -> str:
+    """Get deterministic impact description for a signal type"""
+    impacts = {
+        "logistics_stress": "Transport disruption → Arrival delays → Supply pressure ↑",
+        "arrival_friction": "Delivery slowdown → Stock uncertainty → Price volatility ↑",
+        "demand_pressure": "Consumption spike → Demand surge → Price pressure ↑",
+        "supply_stress": "Production/transport impact → Supply reduction → Price increase ↑"
+    }
+    return impacts.get(signal_type, "Unknown impact")
+
+def generate_context_interpretation(signals: List[Dict]) -> str:
+    """Generate deterministic interpretation from detected signals"""
+    if not signals:
+        return None
+    
+    signal_names = [s["type"].replace("_", " ").title() for s in signals]
+    return f"Detected contextual factors: {', '.join(signal_names)}. These signals may amplify shock impact on the target mandi and connected markets."
+
+class ContextInterpretRequest(BaseModel):
+    description: str
+
+@api_router.post("/interpret-context")
+async def interpret_context(request: ContextInterpretRequest):
+    """Interpret shock description using deterministic keyword mapping"""
+    result = interpret_shock_context(request.description)
+    return result
+
+# ============================================================
+# SURPLUS/DEFICIT INTELLIGENCE ENGINE - Deterministic
+# ============================================================
+def calculate_commodity_surplus_deficit(commodity: Dict) -> Dict:
+    """Calculate surplus/deficit for a commodity using deterministic rules"""
+    supply = commodity.get("arrivals", 0)
+    base_demand = commodity.get("baseDemand", supply)
+    
+    balance = supply - base_demand
+    balance_pct = (balance / base_demand * 100) if base_demand > 0 else 0
+    
+    # Determine status
+    if balance_pct > 10:
+        status = "surplus"
+        action = "push_stock"
+    elif balance_pct < -10:
+        status = "deficit"
+        action = "pull_stock"
+    else:
+        status = "balanced"
+        action = "monitor"
+    
+    # Calculate stress contribution from imbalance
+    price_change_pct = ((commodity.get("currentPrice", 0) - commodity.get("previousPrice", 0)) / 
+                        commodity.get("previousPrice", 1)) * 100 if commodity.get("previousPrice", 0) > 0 else 0
+    
+    # Deterministic stabilization rule
+    stabilization_signal = None
+    if status == "deficit" and price_change_pct > 5:
+        stabilization_signal = "PULL_STOCK_URGENT"
+    elif status == "surplus" and price_change_pct < -3:
+        stabilization_signal = "PUSH_STOCK_RECOMMENDED"
+    elif status == "balanced":
+        stabilization_signal = "MONITOR_STABILITY"
+    else:
+        stabilization_signal = "STANDARD_OPERATIONS"
+    
+    return {
+        "commodity": commodity.get("name", "Unknown"),
+        "supply": supply,
+        "baseDemand": base_demand,
+        "balance": balance,
+        "balancePct": round(balance_pct, 1),
+        "status": status,
+        "suggestedAction": action,
+        "priceChangePct": round(price_change_pct, 1),
+        "stabilizationSignal": stabilization_signal,
+        "volatility": commodity.get("volatility", 0)
+    }
+
+def get_mandi_surplus_deficit(mandi: Dict) -> Dict:
+    """Get surplus/deficit analysis for all commodities in a mandi"""
+    commodities = mandi.get("commodities", [])
+    
+    if not commodities:
+        # Fallback to primary commodity data
+        primary_commodity = {
+            "name": mandi.get("commodity", "Unknown"),
+            "arrivals": mandi.get("arrivals", 0),
+            "baseDemand": mandi.get("baseDemand", mandi.get("arrivals", 0)),
+            "currentPrice": mandi.get("currentPrice", 0),
+            "previousPrice": mandi.get("previousPrice", 0),
+            "volatility": calculate_price_volatility(mandi.get("priceHistory", []))
+        }
+        commodities = [primary_commodity]
+    
+    analyses = [calculate_commodity_surplus_deficit(c) for c in commodities]
+    
+    # Aggregate status
+    deficit_count = sum(1 for a in analyses if a["status"] == "deficit")
+    surplus_count = sum(1 for a in analyses if a["status"] == "surplus")
+    
+    if deficit_count > surplus_count:
+        overall_status = "net_deficit"
+    elif surplus_count > deficit_count:
+        overall_status = "net_surplus"
+    else:
+        overall_status = "balanced"
+    
+    return {
+        "mandiId": mandi["id"],
+        "mandiName": mandi["name"],
+        "overallStatus": overall_status,
+        "commodityAnalyses": analyses,
+        "deficitCommodities": [a["commodity"] for a in analyses if a["status"] == "deficit"],
+        "surplusCommodities": [a["commodity"] for a in analyses if a["status"] == "surplus"]
+    }
+
+@api_router.get("/surplus-deficit/{mandi_id}")
+async def get_surplus_deficit(mandi_id: str):
+    """Get surplus/deficit intelligence for a mandi"""
+    for m in BASE_DATA["mandis"]:
+        if m["id"] == mandi_id:
+            return get_mandi_surplus_deficit(m)
+    raise HTTPException(status_code=404, detail="Mandi not found")
+
+@api_router.get("/surplus-deficit")
+async def get_all_surplus_deficit():
+    """Get surplus/deficit intelligence for all mandis"""
+    return {
+        "mandis": [get_mandi_surplus_deficit(m) for m in BASE_DATA["mandis"]]
+    }
+
+# ============================================================
+# TRANSFER RECOMMENDATION ENGINE - Deterministic
+# ============================================================
+def calculate_transport_cost(source_id: str, dest_id: str, quantity: int) -> float:
+    """Calculate deterministic transport cost based on distance and quantity"""
+    cost_per_km = BASE_DATA.get("transportCostPerKm", 2.5)
+    distances = BASE_DATA.get("baseTransportDistance", {})
+    
+    # Try both key combinations
+    key1 = f"{source_id}-{dest_id}"
+    key2 = f"{dest_id}-{source_id}"
+    
+    distance = distances.get(key1, distances.get(key2, 200))  # Default 200km
+    
+    # Cost = distance * cost_per_km * (quantity/100) for quintals
+    return round(distance * cost_per_km * (quantity / 100), 2)
+
+def generate_transfer_recommendations(all_mandis: List[Dict]) -> List[Dict]:
+    """Generate deterministic transfer recommendations based on surplus/deficit"""
+    analyses = [get_mandi_surplus_deficit(m) for m in all_mandis]
+    recommendations = []
+    
+    # Find surplus and deficit mandis
+    surplus_mandis = []
+    deficit_mandis = []
+    
+    for analysis in analyses:
+        for commodity_analysis in analysis["commodityAnalyses"]:
+            if commodity_analysis["status"] == "surplus":
+                surplus_mandis.append({
+                    "mandiId": analysis["mandiId"],
+                    "mandiName": analysis["mandiName"],
+                    "commodity": commodity_analysis["commodity"],
+                    "surplus": commodity_analysis["balance"],
+                    "price": get_mandi_price(analysis["mandiId"], commodity_analysis["commodity"])
+                })
+            elif commodity_analysis["status"] == "deficit":
+                deficit_mandis.append({
+                    "mandiId": analysis["mandiId"],
+                    "mandiName": analysis["mandiName"],
+                    "commodity": commodity_analysis["commodity"],
+                    "deficit": abs(commodity_analysis["balance"]),
+                    "price": get_mandi_price(analysis["mandiId"], commodity_analysis["commodity"])
+                })
+    
+    # Match surplus to deficit for same commodity
+    for deficit in deficit_mandis:
+        matching_surplus = [s for s in surplus_mandis 
+                          if s["commodity"] == deficit["commodity"] 
+                          and s["mandiId"] != deficit["mandiId"]]
+        
+        if matching_surplus:
+            # Pick the one with highest surplus
+            best_source = max(matching_surplus, key=lambda x: x["surplus"])
+            
+            # Calculate transfer quantity (minimum of surplus and deficit)
+            transfer_qty = min(best_source["surplus"], deficit["deficit"])
+            
+            # Calculate costs
+            transport_cost = calculate_transport_cost(
+                best_source["mandiId"], 
+                deficit["mandiId"], 
+                transfer_qty
+            )
+            
+            # Calculate expected stability impact
+            # Simple deterministic formula: impact = min(20, transfer_qty/deficit["deficit"] * 15)
+            stability_impact = min(20, round((transfer_qty / deficit["deficit"]) * 15, 1)) if deficit["deficit"] > 0 else 0
+            
+            # Price arbitrage
+            price_diff = deficit["price"] - best_source["price"]
+            arbitrage_value = round(price_diff * transfer_qty / 100, 2)  # In lakhs
+            
+            recommendations.append({
+                "id": str(uuid.uuid4()),
+                "type": "commodity_transfer",
+                "sourceMandi": {
+                    "id": best_source["mandiId"],
+                    "name": best_source["mandiName"]
+                },
+                "destinationMandi": {
+                    "id": deficit["mandiId"],
+                    "name": deficit["mandiName"]
+                },
+                "commodity": deficit["commodity"],
+                "suggestedQuantity": int(transfer_qty),
+                "transportCost": f"₹{transport_cost:,.0f}",
+                "transportCostValue": transport_cost,
+                "priceArbitrage": f"₹{arbitrage_value:,.2f}L",
+                "expectedStabilityImpact": f"+{stability_impact}%",
+                "priority": "high" if stability_impact > 10 else "medium",
+                "reasoning": f"Transfer {int(transfer_qty)} quintals of {deficit['commodity']} from {best_source['mandiName']} (surplus) to {deficit['mandiName']} (deficit) to stabilize supply-demand balance.",
+                "metrics": {
+                    "sourceSurplus": best_source["surplus"],
+                    "destDeficit": deficit["deficit"],
+                    "sourcePrice": best_source["price"],
+                    "destPrice": deficit["price"],
+                    "priceDifferential": price_diff
+                }
+            })
+    
+    return recommendations
+
+def get_mandi_price(mandi_id: str, commodity_name: str) -> float:
+    """Get current price for a commodity in a mandi"""
+    for m in BASE_DATA["mandis"]:
+        if m["id"] == mandi_id:
+            for c in m.get("commodities", []):
+                if c["name"] == commodity_name:
+                    return c.get("currentPrice", 0)
+            return m.get("currentPrice", 0)
+    return 0
+
+@api_router.get("/transfer-recommendations")
+async def get_transfer_recommendations():
+    """Get deterministic transfer recommendations based on surplus/deficit analysis"""
+    recommendations = generate_transfer_recommendations(BASE_DATA["mandis"])
+    return {
+        "recommendations": recommendations,
+        "totalRecommendations": len(recommendations),
+        "generatedAt": datetime.now(timezone.utc).isoformat()
+    }
+
+# ============================================================
+# MULTI-COMMODITY ENDPOINTS
+# ============================================================
+@api_router.get("/mandi/{mandi_id}/commodities")
+async def get_mandi_commodities(mandi_id: str):
+    """Get all commodities for a mandi with stress analysis"""
+    for m in BASE_DATA["mandis"]:
+        if m["id"] == mandi_id:
+            commodities = m.get("commodities", [])
+            
+            if not commodities:
+                # Return primary commodity if no multi-commodity data
+                return {
+                    "mandiId": mandi_id,
+                    "mandiName": m["name"],
+                    "commodities": [{
+                        "name": m.get("commodity", "Unknown"),
+                        "isPrimary": True,
+                        "currentPrice": m.get("currentPrice", 0),
+                        "previousPrice": m.get("previousPrice", 0),
+                        "arrivals": m.get("arrivals", 0),
+                        "baseDemand": m.get("baseDemand", 0),
+                        "volatility": calculate_price_volatility(m.get("priceHistory", [])),
+                        "stressIndex": calculate_commodity_stress(m)
+                    }],
+                    "dataAvailable": True
+                }
+            
+            enriched_commodities = []
+            for c in commodities:
+                enriched_commodities.append({
+                    **c,
+                    "stressIndex": calculate_commodity_stress_from_data(c),
+                    "priceChangePct": round(((c.get("currentPrice", 0) - c.get("previousPrice", 0)) / 
+                                            c.get("previousPrice", 1)) * 100, 1) if c.get("previousPrice", 0) > 0 else 0,
+                    "arrivalChangePct": round(((c.get("arrivals", 0) - c.get("previousArrivals", 0)) / 
+                                              c.get("previousArrivals", 1)) * 100, 1) if c.get("previousArrivals", 0) > 0 else 0
+                })
+            
+            return {
+                "mandiId": mandi_id,
+                "mandiName": m["name"],
+                "commodities": enriched_commodities,
+                "dataAvailable": True
+            }
+    
+    raise HTTPException(status_code=404, detail="Mandi not found")
+
+def calculate_commodity_stress(mandi: Dict) -> int:
+    """Calculate stress index for primary commodity"""
+    stress_data = calculate_stress_score(mandi)
+    return stress_data["stressScore"]
+
+def calculate_commodity_stress_from_data(commodity: Dict) -> int:
+    """Calculate stress index for a commodity from its data"""
+    stress = 0
+    
+    # Price stress
+    price_change = ((commodity.get("currentPrice", 0) - commodity.get("previousPrice", 0)) / 
+                   commodity.get("previousPrice", 1)) * 100 if commodity.get("previousPrice", 0) > 0 else 0
+    if price_change > 8:
+        stress += 35
+    elif price_change > 4:
+        stress += 20
+    
+    # Supply stress
+    arrival_change = ((commodity.get("arrivals", 0) - commodity.get("previousArrivals", 0)) / 
+                     commodity.get("previousArrivals", 1)) * 100 if commodity.get("previousArrivals", 0) > 0 else 0
+    if arrival_change < -10:
+        stress += 30
+    elif arrival_change < -5:
+        stress += 15
+    
+    # Volatility stress
+    if commodity.get("volatility", 0) > 10:
+        stress += 20
+    
+    return min(100, stress)
+
+# ============================================================
+# JARVIS AI ASSISTANT - Decision Intelligence Chat (Enhanced)
 # ============================================================
 class JarvisRequest(BaseModel):
     message: str
     systemContext: str = ""
     conversationHistory: List[Dict[str, str]] = []
+    shockContext: Optional[str] = None
+    surplusDeficitContext: Optional[Dict] = None
+    transferContext: Optional[List[Dict]] = None
 
 class JarvisResponse(BaseModel):
     response: str
@@ -842,22 +1210,29 @@ Your role is to interpret pre-computed system outputs and explain market dynamic
 
 IMPORTANT GUIDELINES:
 1. You DO NOT compute any values - all numbers are pre-computed by deterministic engines
-2. You EXPLAIN stress signals, price dynamics, shock propagation, and recommendations
+2. You EXPLAIN stress signals, price dynamics, shock propagation, surplus/deficit status, and transfer recommendations
 3. Be analytical, calm, and expert-like in your responses
-4. Reference specific metrics when available (Market Stress Index, Supply/Demand, etc.)
-5. Keep responses structured and concise (under 150 words unless detailed analysis requested)
+4. Reference specific metrics when available (Market Stress Index, Supply/Demand, Surplus/Deficit, etc.)
+5. Keep responses structured and concise (under 200 words unless detailed analysis requested)
 
 RESPONSE FORMAT for market queries:
 **Detected Signals**
-• Key observations from the data
+• Supply/Demand/Stress insights from system data
 
 **System Interpretation**
 • Analytical reasoning about the situation
 
-**Suggested Action**
-• Clear, actionable insight
+**Suggested Stabilization Insight**
+• Clear, actionable recommendation based on system outputs
 
-Avoid generic AI responses. Be specific to the agricultural market context."""
+**Expected System Impact**
+• Stability implications if actions are taken
+
+When shock context is provided, interpret detected keywords (strike, flood, festival, etc.) and explain their impact.
+When surplus/deficit data is provided, explain the balance status and recommended actions.
+When transfer recommendations are provided, explain the logistics strategy.
+
+Avoid generic AI responses. Be specific to the agricultural market context. Never compute values yourself."""
 
         chat = LlmChat(
             api_key=llm_key,
@@ -865,14 +1240,35 @@ Avoid generic AI responses. Be specific to the agricultural market context."""
             system_message=system_message
         ).with_model("openai", "gpt-4o")
         
-        # Build context-aware prompt
+        # Build enhanced context
+        context_parts = []
+        
+        if request.systemContext:
+            context_parts.append(f"SYSTEM STATE:\n{request.systemContext}")
+        
+        if request.shockContext:
+            # Interpret the shock context using deterministic mapping
+            interpreted = interpret_shock_context(request.shockContext)
+            if interpreted["signals"]:
+                context_parts.append(f"\nSHOCK CONTEXT (User Described): {request.shockContext}")
+                context_parts.append(f"DETECTED SIGNALS: {json.dumps(interpreted['signals'], indent=2)}")
+                context_parts.append(f"INTERPRETATION: {interpreted['interpretation']}")
+        
+        if request.surplusDeficitContext:
+            context_parts.append(f"\nSURPLUS/DEFICIT STATUS:\n{json.dumps(request.surplusDeficitContext, indent=2)}")
+        
+        if request.transferContext:
+            context_parts.append(f"\nTRANSFER RECOMMENDATIONS:\n{json.dumps(request.transferContext, indent=2)}")
+        
+        full_context = "\n".join(context_parts) if context_parts else "No specific context provided."
+        
         context_prompt = f"""
 CURRENT SYSTEM CONTEXT:
-{request.systemContext if request.systemContext else "No specific context provided."}
+{full_context}
 
 USER QUERY: {request.message}
 
-Provide a helpful, analytical response based on the system context above. If the context is empty, respond based on general agricultural market knowledge."""
+Provide a helpful, analytical response based on the system context above. Structure your response clearly."""
 
         user_message = UserMessage(text=context_prompt)
         response = await chat.send_message(user_message)
