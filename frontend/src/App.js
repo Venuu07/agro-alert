@@ -212,7 +212,7 @@ const MandiDetail = ({ onMandiLoaded }) => {
         mandiName={mandi.name}
         commodities={mandi.commodities || [{ name: mandi.commodity, isPrimary: true }]}
         currentArrivals={mandi.arrivals}
-        onUpdateComplete={() => fetchMandiData()}
+        onUpdateComplete={() => fetchMandiDetail()}
       />
 
       {/* Linked Mandis */}
