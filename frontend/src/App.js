@@ -19,6 +19,7 @@ import { NetworkGraph } from './components/NetworkGraph';
 import { CommodityPanel } from './components/CommodityPanel';
 import { SurplusDeficitPanel } from './components/SurplusDeficitPanel';
 import { TransferRecommendations } from './components/TransferRecommendations';
+import { MarketUpdatePanel } from './components/MarketUpdatePanel';
 import { Button } from './components/ui/button';
 import { ArrowLeft, Loader2, AlertTriangle, CheckCircle, BarChart3 } from 'lucide-react';
 import { StressGauge } from './components/StressGauge';
