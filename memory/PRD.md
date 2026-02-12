@@ -135,9 +135,12 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
 /app/
 ├── backend/
 │   ├── data/
-│   │   └── mandiData.json          # 6 mandis with multi-commodity data
+│   │   ├── mandiData.json          # 6 mandis with multi-commodity data
+│   │   └── connectivity.json       # NEW: Network connections for graph
 │   ├── tests/
-│   │   └── test_new_features.py    # Tests for new features
+│   │   ├── test_new_features.py    # Tests for intelligence features
+│   │   └── test_graph_forecast_endpoints.py  # NEW: Graph & forecast tests
+│   ├── graph_service.py            # NEW: Graph computation module
 │   ├── server.py                   # API endpoints + all engines
 │   └── .env                        # EMERGENT_LLM_KEY
 └── frontend/
@@ -145,10 +148,10 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
         ├── components/
         │   ├── LandingPage.jsx
         │   ├── JarvisAssistant.jsx
-        │   ├── NetworkGraph.jsx
-        │   ├── CommodityPanel.jsx        # NEW: Multi-commodity display
-        │   ├── SurplusDeficitPanel.jsx   # NEW: Supply-demand intel
-        │   ├── TransferRecommendations.jsx # NEW: Transfer suggestions
+        │   ├── NetworkGraph.jsx         # UPDATED: Full SVG visualizer
+        │   ├── CommodityPanel.jsx       # Multi-commodity display
+        │   ├── SurplusDeficitPanel.jsx  # Supply-demand intel
+        │   ├── TransferRecommendations.jsx # Transfer suggestions
         │   ├── SimulationPanel.jsx       # UPDATED: Shock description input
         │   ├── Navbar.jsx
         │   ├── MandiCard.jsx
