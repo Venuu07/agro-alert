@@ -77,16 +77,16 @@ export const MandiCard = ({ mandi, onClick }) => {
         </div>
 
         {/* Volatility indicator */}
-        <div className="pt-3 border-t border-border">
-          <div className="flex items-center justify-between">
+        <div className="pt-4 border-t border-border/50">
+          <div className="flex items-center justify-between mb-2">
             <span className="data-label">VOLATILITY</span>
             <span className={`font-mono text-sm ${mandi.volatility > 15 ? 'text-red-500' : mandi.volatility > 10 ? 'text-orange-500' : 'text-green-500'}`}>
               {mandi.volatility?.toFixed(1) || 0}%
             </span>
           </div>
-          <div className="mt-2 h-1.5 bg-secondary overflow-hidden">
+          <div className="h-1.5 bg-secondary/50 rounded-full overflow-hidden">
             <div 
-              className={`h-full transition-all duration-500 ${mandi.volatility > 15 ? 'bg-red-500' : mandi.volatility > 10 ? 'bg-orange-500' : 'bg-green-500'}`}
+              className={`h-full rounded-full transition-all duration-700 ${mandi.volatility > 15 ? 'bg-red-500' : mandi.volatility > 10 ? 'bg-orange-500' : 'bg-green-500'}`}
               style={{ width: `${Math.min((mandi.volatility || 0) * 5, 100)}%` }}
             />
           </div>
