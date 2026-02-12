@@ -74,30 +74,30 @@ export const SimulationResults = ({ results, originalData }) => {
 
       {/* Simulation Parameters (Elasticity Model) */}
       {results.simulationParameters && (
-        <div className="bg-card border border-border p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <Box size={18} className="text-primary" />
-            <h3 className="text-lg font-bold">ELASTICITY MODEL</h3>
+        <div className="intelligence-panel">
+          <div className="intelligence-panel-header">
+            <Box size={16} className="text-primary" />
+            <span className="data-label text-primary">ECONOMIC MODEL PARAMETERS</span>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-            <div className="p-3 bg-secondary/30 border border-border text-center">
-              <span className="text-xs text-muted-foreground">ELASTICITY</span>
-              <p className="font-mono text-lg">{results.simulationParameters.elasticity}</p>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-3">
+            <div className="signal-card text-center">
+              <span className="text-[10px] text-muted-foreground uppercase">ELASTICITY</span>
+              <p className="font-mono text-xl font-bold text-primary">{results.simulationParameters.elasticity}</p>
             </div>
-            <div className="p-3 bg-secondary/30 border border-border text-center">
-              <span className="text-xs text-muted-foreground">SUPPLY BEFORE</span>
+            <div className="signal-card text-center">
+              <span className="text-[10px] text-muted-foreground uppercase">SUPPLY PRE</span>
               <p className="font-mono text-lg">{Math.round(results.simulationParameters.supplyBefore)}</p>
             </div>
-            <div className="p-3 bg-secondary/30 border border-border text-center">
-              <span className="text-xs text-muted-foreground">SUPPLY AFTER</span>
+            <div className="signal-card text-center">
+              <span className="text-[10px] text-muted-foreground uppercase">SUPPLY POST</span>
               <p className="font-mono text-lg text-orange-500">{Math.round(results.simulationParameters.supplyAfter)}</p>
             </div>
-            <div className="p-3 bg-secondary/30 border border-border text-center">
-              <span className="text-xs text-muted-foreground">DEMAND BEFORE</span>
+            <div className="signal-card text-center">
+              <span className="text-[10px] text-muted-foreground uppercase">DEMAND PRE</span>
               <p className="font-mono text-lg">{Math.round(results.simulationParameters.demandBefore)}</p>
             </div>
-            <div className="p-3 bg-secondary/30 border border-border text-center">
-              <span className="text-xs text-muted-foreground">DEMAND AFTER</span>
+            <div className="signal-card text-center">
+              <span className="text-[10px] text-muted-foreground uppercase">DEMAND POST</span>
               <p className="font-mono text-lg">{Math.round(results.simulationParameters.demandAfter)}</p>
             </div>
           </div>
