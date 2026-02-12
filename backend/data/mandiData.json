@@ -48,22 +48,22 @@
           "isPrimary": false,
           "currentPrice": 1850,
           "previousPrice": 1780,
-          "arrivals": 1800,
-          "previousArrivals": 1950,
-          "baseDemand": 2000,
-          "baseSupply": 1900,
+          "arrivals": 1400,
+          "previousArrivals": 1600,
+          "baseDemand": 1800,
+          "baseSupply": 1500,
           "volatility": 6.2
         },
         {
           "name": "Onion",
           "isPrimary": false,
-          "currentPrice": 2650,
-          "previousPrice": 2480,
-          "arrivals": 1200,
-          "previousArrivals": 1350,
+          "currentPrice": 2850,
+          "previousPrice": 2600,
+          "arrivals": 900,
+          "previousArrivals": 1100,
           "baseDemand": 1400,
-          "baseSupply": 1300,
-          "volatility": 8.8
+          "baseSupply": 1100,
+          "volatility": 11.2
         }
       ]
     },
