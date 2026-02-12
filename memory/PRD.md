@@ -231,10 +231,14 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
 | `/api/surplus-deficit` | GET | Get all mandis surplus/deficit |
 | `/api/transfer-recommendations` | GET | Get transfer recommendations |
 | `/api/jarvis/chat` | POST | Jarvis AI assistant chat |
-| `/api/graph` | GET | **NEW**: Get network graph nodes & edges |
-| `/api/graph?origin=<id>` | GET | **NEW**: Graph with shock propagation impacts |
-| `/api/forecast` | GET | **NEW**: EMA-based price forecast |
-| `/api/simulate-with-graph` | POST | **NEW**: Simulation with graph payload |
+| `/api/graph` | GET | Get network graph nodes & edges |
+| `/api/graph?origin=<id>` | GET | Graph with shock propagation impacts |
+| `/api/forecast` | GET | EMA-based price forecast |
+| `/api/simulate-with-graph` | POST | Simulation with graph payload |
+| `/api/market-update` | POST | **NEW**: Operator market input (arrivals) |
+| `/api/execute-transfer` | POST | **NEW**: Execute commodity transfer |
+| `/api/live-state` | GET | **NEW**: Current market state |
+| `/api/state-history` | GET | **NEW**: Append-only audit log |
 
 ---
 
@@ -245,13 +249,13 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
 
 ### P1 (High Priority)
 1. **Database Integration**
-   - Replace static JSON with MongoDB
-   - CRUD operations for mandis
+   - Replace in-memory state with MongoDB
+   - Persist state history to database
    - Historical data storage
 
 2. **User Authentication**
    - JWT-based auth system
-   - Role-based access control
+   - Role-based access control (Operator vs Admin)
 
 ### P2 (Medium Priority)
 1. **Enhanced Network Graph**
