@@ -135,8 +135,8 @@ export const JarvisAssistant = ({
 
   const suggestedQueries = [
     "Why is this mandi High Risk?",
-    "Impact of heavy rainfall?",
-    "Best stabilization strategy?",
+    "Explain surplus/deficit status",
+    "Best transfer strategy?",
     "Explain the ripple effects"
   ];
 
