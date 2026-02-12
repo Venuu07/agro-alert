@@ -1,164 +1,93 @@
 /**
- * NetworkGraph Component - SVG-based Network Visualization
- * =========================================================
- * Renders a deterministic network graph with backend-provided coordinates.
+ * NetworkGraph Component - SVG Network Visualization
  */
 
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Network, RefreshCw, AlertCircle, Loader2 } from 'lucide-react';
 import { Button } from './ui/button';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-const getNodeColor = (impact) => {
+const getColor = (impact) => {
   if (impact <= 0.33) return '#22c55e';
   if (impact <= 0.66) return '#ffb86b';
   return '#ff6b6b';
 };
 
-export const NetworkGraph = ({ 
-  simulationTarget = null, 
-  affectedMandis = [],
-  onNodeClick = null 
-}) => {
-  const [graphData, setGraphData] = useState(null);
+// Separate SVG component that only renders when it has data
+const GraphSVG = ({ nodes, edges }) => {
+  if (!nodes || nodes.length === 0) return null;
+  
+  return (
+    <>
+      {/* Edges */}
+      {edges.map((edge, i) => {
+        const from = nodes.find(n => n.id === edge.from);
+        const to = nodes.find(n => n.id === edge.to);
+        if (!from || !to) return null;
+        return (
+          <line
+            key={`e${i}`}
+            x1={from.x}
+            y1={from.y}
+            x2={to.x}
+            y2={to.y}
+            stroke="#4a5568"
+            strokeWidth="2"
+            strokeOpacity="0.5"
+          />
+        );
+      })}
+      
+      {/* Nodes */}
+      {nodes.map((node) => {
+        const color = getColor(node.impact || 0);
+        const r = 18 + (node.impact || 0) * 10;
+        return (
+          <g key={`n${node.id}`}>
+            <circle cx={node.x} cy={node.y} r={r} fill={color} stroke="rgba(255,255,255,0.3)" strokeWidth="1" />
+            <text x={node.x} y={node.y} textAnchor="middle" dominantBaseline="middle" fill="#fff" fontSize="10" fontWeight="bold">{node.msi}</text>
+            <text x={node.x} y={node.y + r + 12} textAnchor="middle" fill="rgba(255,255,255,0.7)" fontSize="9">{node.name?.split(' ')[0]}</text>
+          </g>
+        );
+      })}
+    </>
+  );
+};
+
+export const NetworkGraph = ({ simulationTarget = null, affectedMandis = [], onNodeClick = null }) => {
+  const [data, setData] = useState({ nodes: [], edges: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [hoveredNode, setHoveredNode] = useState(null);
 
-  const fetchGraphData = useCallback(async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
-    setError(null);
-    
     try {
       const url = simulationTarget 
         ? `${BACKEND_URL}/api/graph?origin=${simulationTarget}`
         : `${BACKEND_URL}/api/graph`;
-      
       console.log('[NetworkGraph] Fetching:', url);
-      const response = await fetch(url);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
-      
-      const data = await response.json();
-      console.log('[NetworkGraph] Received:', data.nodes?.length, 'nodes');
-      setGraphData(data);
-    } catch (err) {
-      console.error('[NetworkGraph] Error:', err);
-      setError(err.message);
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      console.log('[NetworkGraph] Got:', json.nodes?.length, 'nodes');
+      setData(json);
+      setError(null);
+    } catch (e) {
+      console.error('[NetworkGraph] Error:', e);
+      setError(e.message);
     } finally {
       setLoading(false);
     }
   }, [simulationTarget]);
 
-  useEffect(() => {
-    fetchGraphData();
-  }, [fetchGraphData]);
-
-  // Memoize SVG content
-  const svgContent = useMemo(() => {
-    console.log('[NetworkGraph] useMemo called with graphData:', graphData);
-    
-    if (!graphData?.nodes || graphData.nodes.length === 0) {
-      console.log('[NetworkGraph] No nodes, returning null');
-      return null;
-    }
-
-    const { nodes, edges } = graphData;
-    const elements = [];
-    
-    console.log('[NetworkGraph] Building SVG with', nodes.length, 'nodes and', edges?.length, 'edges');
-
-    // Add edges
-    if (edges && edges.length > 0) {
-      edges.forEach((edge, i) => {
-        const from = nodes.find(n => n.id === edge.from);
-        const to = nodes.find(n => n.id === edge.to);
-        if (from && to) {
-          console.log('[NetworkGraph] Adding edge from', from.x, from.y, 'to', to.x, to.y);
-          elements.push(
-            <line
-              key={`e-${i}`}
-              x1={from.x}
-              y1={from.y}
-              x2={to.x}
-              y2={to.y}
-              stroke="#4a5568"
-              strokeWidth="2"
-              strokeOpacity="0.5"
-            />
-          );
-        }
-      });
-    }
-
-    // Add nodes
-    nodes.forEach((node, i) => {
-      const impact = node.impact || 0;
-      const color = getNodeColor(impact);
-      const radius = 18 + impact * 10;
-      
-      console.log('[NetworkGraph] Adding node', node.id, 'at', node.x, node.y, 'color:', color);
-      
-      elements.push(
-        <g key={`n-${node.id}`}>
-          {/* Glow */}
-          {impact > 0.5 && (
-            <circle
-              cx={node.x}
-              cy={node.y}
-              r={radius + 10}
-              fill={color}
-              opacity="0.2"
-            />
-          )}
-          {/* Main circle */}
-          <circle
-            cx={node.x}
-            cy={node.y}
-            r={radius}
-            fill={color}
-            stroke="rgba(255,255,255,0.3)"
-            strokeWidth="1"
-          />
-          {/* Label */}
-          <text
-            x={node.x}
-            y={node.y}
-            textAnchor="middle"
-            dominantBaseline="middle"
-            fill="#fff"
-            fontSize="10"
-            fontWeight="bold"
-          >
-            {node.msi}
-          </text>
-          <text
-            x={node.x}
-            y={node.y + radius + 12}
-            textAnchor="middle"
-            fill="rgba(255,255,255,0.7)"
-            fontSize="9"
-          >
-            {node.name?.split(' ')[0]}
-          </text>
-        </g>
-      );
-    });
-
-    console.log('[NetworkGraph] Built', elements.length, 'SVG elements');
-    return elements;
-  }, [graphData]);
+  useEffect(() => { fetchData(); }, [fetchData]);
 
   if (loading) {
     return (
       <div className="bg-card border border-border rounded-2xl p-6" style={{ minHeight: '520px' }} data-testid="network-graph-loading">
         <Header />
-        <div className="flex items-center justify-center h-[400px]">
-          <Loader2 size={32} className="animate-spin text-primary" />
-        </div>
+        <div className="flex items-center justify-center h-[400px]"><Loader2 size={32} className="animate-spin text-primary" /></div>
       </div>
     );
   }
@@ -166,22 +95,8 @@ export const NetworkGraph = ({
   if (error) {
     return (
       <div className="bg-card border border-border rounded-2xl p-6" style={{ minHeight: '520px' }} data-testid="network-graph-error">
-        <div className="flex items-center gap-3 mb-4">
-          <AlertCircle size={20} className="text-red-400" />
-          <span className="text-red-400">{error}</span>
-        </div>
-        <Button variant="outline" size="sm" onClick={fetchGraphData}>Retry</Button>
-      </div>
-    );
-  }
-
-  if (!graphData?.nodes?.length) {
-    return (
-      <div className="bg-card border border-border rounded-2xl p-6" style={{ minHeight: '520px' }} data-testid="network-graph-empty">
-        <Header />
-        <div className="flex items-center justify-center h-[400px] text-muted-foreground">
-          No data
-        </div>
+        <div className="flex items-center gap-3 mb-4"><AlertCircle size={20} className="text-red-400" /><span className="text-red-400">{error}</span></div>
+        <Button variant="outline" size="sm" onClick={fetchData}>Retry</Button>
       </div>
     );
   }
@@ -198,7 +113,7 @@ export const NetworkGraph = ({
             <p className="text-xs text-muted-foreground font-mono">SUPPLY CHAIN CONNECTIONS</p>
           </div>
         </div>
-        <Button variant="ghost" size="sm" onClick={fetchGraphData} className="gap-2 text-xs" data-testid="reload-graph-btn">
+        <Button variant="ghost" size="sm" onClick={fetchData} className="gap-2 text-xs" data-testid="reload-graph-btn">
           <RefreshCw size={14} /> Reload
         </Button>
       </div>
@@ -211,15 +126,7 @@ export const NetworkGraph = ({
 
       <div className="relative rounded-xl overflow-hidden border border-border" style={{ height: '400px', backgroundColor: '#0a0d14' }}>
         <svg width="100%" height="100%" viewBox="0 0 1000 640" preserveAspectRatio="xMidYMid meet">
-          {/* Debug: Always render these test circles */}
-          <circle cx="200" cy="200" r="25" fill="#ff0000" />
-          <circle cx="500" cy="320" r="25" fill="#00ff00" />
-          
-          {/* Dynamic content */}
-          {svgContent}
-          
-          {/* Debug: Show count */}
-          <text x="50" y="50" fill="white" fontSize="14">Nodes: {graphData?.nodes?.length || 0}</text>
+          <GraphSVG nodes={data.nodes} edges={data.edges} />
         </svg>
       </div>
     </div>
