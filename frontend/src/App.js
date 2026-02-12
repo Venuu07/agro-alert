@@ -158,24 +158,43 @@ const MandiDetail = () => {
   if (!mandi) return null;
 
   return (
-    <div className="space-y-6 animate-fade-in" data-testid="mandi-detail">
+    <div className="space-y-8 animate-fade-in" data-testid="mandi-detail">
       {/* Back Button */}
       <Button 
         variant="ghost" 
         onClick={() => navigate('/')}
-        className="font-mono uppercase tracking-wider"
+        className="font-mono text-xs uppercase tracking-wider rounded-lg"
         data-testid="back-btn"
       >
-        <ArrowLeft size={16} className="mr-2" />
+        <ArrowLeft size={14} className="mr-2" />
         Back to Dashboard
       </Button>
+
+      {/* Page Header */}
+      <div className="page-header">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 bg-primary/10 border border-primary/20 rounded-xl flex items-center justify-center">
+            <BarChart3 size={28} className="text-primary" />
+          </div>
+          <div>
+            <h1 className="page-header-title">{mandi.name}</h1>
+            <p className="page-header-subtitle">
+              {mandi.location} • {mandi.commodity} • Market Stress Index Analysis
+            </p>
+          </div>
+        </div>
+      </div>
 
       {/* Detail Layout */}
       <div className="detail-layout">
         {/* Charts Column */}
-        <div className="detail-charts">
-          <PriceChart data={mandi.priceHistory} title="PRICE HISTORY" />
-          <ArrivalsChart data={mandi.arrivalsHistory} title="ARRIVALS HISTORY" />
+        <div className="detail-charts space-y-6">
+          <div className="chart-container">
+            <PriceChart data={mandi.priceHistory} title="PRICE HISTORY" />
+          </div>
+          <div className="chart-container">
+            <ArrivalsChart data={mandi.arrivalsHistory} title="ARRIVALS HISTORY" />
+          </div>
         </div>
 
         {/* Diagnostics Column */}
@@ -183,6 +202,13 @@ const MandiDetail = () => {
           <DiagnosticsPanel mandi={mandi} />
         </div>
       </div>
+
+      {/* Linked Mandis */}
+      <LinkedMandis 
+        linkedMandis={linkedMandis} 
+        currentMandiId={mandiId}
+        onMandiClick={handleLinkedMandiClick}
+      />
 
       {/* Recommendations */}
       <RecommendationPanel 
