@@ -305,9 +305,9 @@ export const NetworkGraph = ({
                   y1={fromNode.y}
                   x2={toNode.x}
                   y2={toNode.y}
-                  stroke={isAffected ? '#ff6b6b' : 'rgba(148, 163, 184, 0.3)'}
-                  strokeWidth={2 + strength * 3}
-                  strokeOpacity={isAffected ? 0.7 : 0.3 + strength * 0.4}
+                  stroke={isAffected ? '#ff6b6b' : '#64748b'}
+                  strokeWidth={2 + strength * 2}
+                  strokeOpacity={isAffected ? 0.8 : 0.4 + strength * 0.3}
                   strokeLinecap="round"
                 />
                 {/* Animated particle for affected edges */}
