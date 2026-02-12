@@ -1,194 +1,236 @@
-# AGRO INTEL - Decision Intelligence Platform - PRD
+# Food System Early Warning & Shock Simulator - PRD
 
 ## Original Problem Statement
-Build a modern, visually impressive, production-quality full stack web application for mandi/agricultural market operators to monitor price stability, detect stress signals, simulate disruptions, and receive intervention recommendations.
+Build a modern, visually impressive, production-quality full stack web application called: "Food System Early Warning & Shock Simulator". This is an AI-powered decision support dashboard for agricultural market operators.
 
-## User Personas
-1. **Mandi Operators** - Monitor daily market conditions, stress scores, price volatility
-2. **Government Officials** - Track regional market stability, intervention planning
-3. **Policy Makers** - Simulate disruption scenarios, understand ripple effects
+## Product Overview
+An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators:
+- Detect systemic stress signals in agricultural markets
+- Understand supply-demand instability 
+- Simulate disruptions and view ripple effects
+- Receive operational recommendations for market stabilization
+
+## Design Philosophy
+- **Tone**: Minimal, Confident, Analytical, Premium
+- **Style**: Dark premium theme, Glassmorphism, Gradient grid background, Futuristic glow, Clean modern typography
+- **Avoid**: Flashy gimmicks, Overloaded UI, Visual clutter
 
 ---
 
 ## What's Been Implemented
 
-### Phase 1: UI/UX Foundation (Completed)
-- Modern dark theme dashboard with 6 mandi cards
-- Price and arrivals charts using Recharts
-- Stress gauges and status badges
-- Shock simulation interface with intensity/duration sliders
-- Responsive design with smooth animations
+### Phase 1: Core Backend Logic (Completed - Dec 2025)
+- ✅ **Stress Score Engine**: Deterministic calculation based on price change, supply change, volatility, external factors
+- ✅ **Shock Simulation Engine**: Elasticity-based price propagation (0.4 elasticity factor)
+- ✅ **Intervention Recommendation Engine**: Rule-based strategy generation
+- ✅ **LLM Integration**: AI-generated explanations for recommendations (using Emergent LLM Key)
 
-### Phase 2: Backend Logic Engines (Completed)
+### Phase 2: Frontend Dashboard (Completed - Dec 2025)
+- ✅ System Stability Overview panel
+- ✅ Summary statistics (Total Mandis, High Risk, Watch, Stable)
+- ✅ Mandi cards grid with stress gauges
+- ✅ Price and Arrivals history charts
+- ✅ Diagnostics panel with stress breakdown
+- ✅ Linked Markets section
+- ✅ Stabilization Strategy recommendations
 
-#### 1. Stress Score Engine ✅
-Deterministic calculation using exact rules:
-- **Price Stress**: price_change > 8% = +35, > 4% = +20
-- **Supply Stress**: arrival_change < -10% = +30, < -5% = +15
-- **Instability Stress**: volatility > threshold = +20
-- **External Stress**: rain_flag = +10, festival_flag = +10
-- **Classification**: > 65 = High Risk, > 35 = Watch, else Normal
-- **Clamped**: 0-100 range
+### Phase 3: Enterprise UI/UX Transformation (Completed - Dec 2025)
 
-#### 2. Shock Simulation Engine ✅
-Elasticity-based mathematical propagation:
-- **Formula**: `price_new = price_old × (Demand/Supply)^elasticity`
-- **Elasticity constant**: 0.4
-- **Supply shocks** (rain, supply_drop, transport): Reduce supply → arrivals ↓ → price ↑
-- **Demand shocks** (demand_spike, festival): Increase demand → price ↑
-- **Ripple Effects**: Level 1 = 60% impact, Level 2 = 30% impact
+#### Landing Page / Hero Experience
+- ✅ Glassmorphism header with logo and navigation
+- ✅ Gradient grid animated background
+- ✅ Hero section with headline: "Prevent Food Market Failures Before They Happen"
+- ✅ CTA buttons: "Run Shock Propagation Engine", "Explore Decision Platform"
+- ✅ Tilted dashboard preview with 3D perspective
+- ✅ Key stats: 6 Markets, 0.4 Elasticity, 60% Ripple Factor
+- ✅ Feature cards for three engines
+- ✅ Technology section with network preview animation
 
-#### 3. Intervention Recommendation Engine ✅
-Rule-based recommendations:
-1. **High Risk + Supply Stress** → Pull Stock from Surplus Neighbor
-2. **Surplus + Falling Prices** → Push Stock to High Demand Nodes / Recommend Storage
-3. **Festival + Normal Supply** → Pre-buffer Creation
-4. **Price Rise Without Supply Stress** → Speculation Alert / Monitor
+#### Jarvis Decision Intelligence Assistant
+- ✅ Floating FAB button to open assistant
+- ✅ Glassmorphism panel design
+- ✅ Welcome message with capabilities
+- ✅ Suggested query chips
+- ✅ Text input for custom queries
+- ✅ Context-aware responses (integrates with current mandi, simulation results, stress data)
+- ✅ Conversation history support
+- ✅ Structured response format (Detected Signals, System Interpretation, Suggested Action)
 
-#### 4. LLM Integration ✅
-- **Provider**: Emergent LLM Key (OpenAI GPT-4o)
-- **Usage**: Explanation text only (NOT decision-making)
-- **Purpose**: Generate human-readable AI Intelligence Analysis
+#### Network Graph Visualization
+- ✅ Circular layout of mandi nodes
+- ✅ Color-coded by stress level (red/orange/green)
+- ✅ Connection lines between linked mandis
+- ✅ Legend showing status colors
+- ✅ Hover interaction showing mandi details
+- ✅ Shock origin indicator for simulations
+- ✅ Ripple animation for affected nodes
 
-### Phase 3: UI/UX Refinement (Completed Dec 2025)
-
-#### Typography & Branding
-- **Global Font**: Inter (clean, modern sans-serif)
-- **Monospace Font**: JetBrains Mono (for data)
-- App name: "AGRO INTEL - Decision Intelligence Platform"
-
-#### Terminology Updates
-- "Stress Score" → **Market Stress Index (MSI)**
-- "Simulator" → **Shock Propagation Engine**
-- "Recommendations" → **Stabilization Strategy Engine**
-- "Alerts" → **System Risk Monitor**
-- "Normal" → **STABLE**
-
-#### Visual Design System
-- **Border Radius**: 12-16px (rounded corners on all components)
-- **Shadows**: 3-tier system (--shadow-soft, --shadow-card, --shadow-elevated)
-- **Spacing**: Increased padding (p-5 to p-6, gap-3 to gap-6)
-
-#### New Components
-1. **System Stability Overview Panel** - Premium header metrics
-   - System Stability Score (%)
-   - Volatility Dampening (%)
-   - Supply Stress Level (Critical/Moderate/Low)
-   - Avg Market Stress Index
-
-2. **Linked Markets Section** (NEW)
-   - Shows connected mandis with mini stress gauges
-   - Clickable pills to navigate to linked mandis
-   - Network Effect explanation text
-
-3. **Enhanced Page Header**
-   - Large mandi name with icon
-   - Breadcrumb context (location, commodity, analysis type)
-
-4. **Premium Risk Cards**
-   - Left border severity indicators
-   - Gradient backgrounds
-   - Large stress index display
-
-#### Microinteractions
-- Card hover: translateY(-4px) + elevated shadow
-- Button hover: translateY(-2px) + glow effect
-- Critical pulse animation for high-risk items
-- Smooth chart transitions
-
----
-
-## API Endpoints
-
-### Core APIs
-- `GET /api/stress` - Returns all mandis with computed stress scores and breakdown
-- `GET /api/mandi/{id}` - Detailed mandi info with stress breakdown and connected mandis
-- `GET /api/mandis` - List of mandis for dropdowns
-- `GET /api/shock-types` - Available shock scenarios
-- `POST /api/simulate` - Run shock simulation with elasticity-based pricing
-- `POST /api/recommend` - Get rule-based recommendations with AI explanations
-
----
-
-## Key Technical Constraints
-- ❌ NO randomness in calculations
-- ❌ NO ML models
-- ❌ NO probabilistic outputs
-- ❌ NO LLM decision-making
-- ✅ Deterministic logic ONLY
-
----
-
-## P0/P1/P2 Features Remaining
-
-### P0 (Critical) - ALL DONE ✅
-- [x] Dashboard with stress scores
-- [x] Mandi detail view with charts
-- [x] Shock simulation panel
-- [x] Intervention recommendations
-- [x] Stress Score Engine
-- [x] Shock Simulation Engine
-- [x] Recommendation Engine
-- [x] LLM Integration for explanations
-- [x] UI/UX Refinement & Polish
-- [x] Linked Markets Section
-
-### P1 (Important) - NOT STARTED
-- [ ] Real-time data integration (WebSocket/SSE)
-- [ ] User authentication for operators
-- [ ] Historical simulation comparisons
-- [ ] Export simulation reports (PDF/CSV)
-- [ ] Database integration (replace static JSON with MongoDB)
-
-### P2 (Nice to Have)
-- [ ] Force-directed network graph for ripple effect
-- [ ] Multiple mandi comparison view
-- [ ] Custom alert thresholds
-- [ ] Mobile responsive optimization
+#### Global Visual Refinements
+- ✅ Modern font system (Inter + JetBrains Mono)
+- ✅ Consistent rounded corners (12-16px)
+- ✅ Soft shadows with depth layering
+- ✅ Smooth hover transitions
+- ✅ Card elevation animations
+- ✅ Premium dark theme throughout
 
 ---
 
 ## Architecture
 
+### Tech Stack
+- **Frontend**: React 19, Tailwind CSS, Shadcn UI, Recharts, Lucide React
+- **Backend**: FastAPI (Python)
+- **Data**: Static JSON file (mock data)
+- **AI**: Emergent LLM (GPT-4o) via emergentintegrations library
+
+### File Structure
 ```
 /app/
 ├── backend/
 │   ├── data/
-│   │   └── mandiData.json (6 mandis with rainFlag, festivalFlag, baseSupply, baseDemand)
-│   ├── server.py (Stress Engine, Simulation Engine, Recommendation Engine, LLM Integration)
-│   └── .env (EMERGENT_LLM_KEY)
+│   │   └── mandiData.json          # Mock data for 6 mandis
+│   ├── server.py                   # API endpoints + engines
+│   └── .env                        # EMERGENT_LLM_KEY
 └── frontend/
-    ├── src/
-    │   ├── components/
-    │   │   ├── SystemOverview.jsx (System stability metrics)
-    │   │   ├── LinkedMandis.jsx (NEW - Connected markets)
-    │   │   ├── DiagnosticsPanel.jsx (stress breakdown)
-    │   │   ├── SimulationResults.jsx (elasticity model)
-    │   │   ├── RecommendationPanel.jsx (AI insights, tradeoff viz)
-    │   │   ├── MandiCard.jsx (rounded, premium cards)
-    │   │   ├── StressGauge.jsx (MSI label, glow animation)
-    │   │   ├── StatusBadge.jsx (rounded badges)
-    │   │   └── Navbar.jsx (Inter font, rounded buttons)
-    │   ├── App.js (page header, linked mandis integration)
-    │   └── index.css (Inter font, premium shadows, rounded corners)
-    └── .env
+    └── src/
+        ├── components/
+        │   ├── LandingPage.jsx      # Hero experience
+        │   ├── JarvisAssistant.jsx  # AI assistant
+        │   ├── NetworkGraph.jsx     # Network visualization
+        │   ├── Navbar.jsx
+        │   ├── MandiCard.jsx
+        │   ├── SystemOverview.jsx
+        │   ├── SummaryStats.jsx
+        │   ├── StressGauge.jsx
+        │   ├── DiagnosticsPanel.jsx
+        │   ├── SimulationPanel.jsx
+        │   ├── SimulationResults.jsx
+        │   ├── RecommendationPanel.jsx
+        │   ├── LinkedMandis.jsx
+        │   ├── PriceChart.jsx
+        │   ├── ArrivalsChart.jsx
+        │   └── StatusBadge.jsx
+        ├── App.js                   # Main routing
+        └── index.css                # Global styles
+```
+
+### API Endpoints
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/stress` | GET | Get stress overview for all mandis |
+| `/api/mandi/{id}` | GET | Get detailed info for specific mandi |
+| `/api/mandis` | GET | Get list of all mandis for dropdowns |
+| `/api/shock-types` | GET | Get available shock types |
+| `/api/simulate` | POST | Run shock simulation |
+| `/api/recommend` | POST | Get intervention recommendations |
+| `/api/jarvis/chat` | POST | Jarvis AI assistant chat |
+
+---
+
+## Prioritized Backlog
+
+### P0 (Critical - Next) 
+*None - All core features complete*
+
+### P1 (High Priority)
+1. **Database Integration**
+   - Replace static JSON with MongoDB
+   - CRUD operations for mandis
+   - Historical data storage
+
+2. **User Authentication**
+   - JWT-based auth system
+   - Role-based access control
+
+### P2 (Medium Priority)
+1. **Enhanced Network Graph**
+   - Force-directed layout option
+   - Zoom and pan capabilities
+   - Click to navigate to mandi detail
+
+2. **Real-time Data Updates**
+   - WebSocket integration
+   - Live price feeds
+   - Automatic stress recalculation
+
+3. **Export & Reporting**
+   - PDF report generation
+   - CSV data export
+   - Scheduled alerts
+
+### P3 (Lower Priority)
+1. Mobile responsive optimization
+2. Dark/Light theme toggle
+3. Multi-language support
+4. Historical simulation comparison
+
+---
+
+## Testing Status
+- Backend: 27/27 tests passing (100%)
+- Frontend: All components verified working
+- Test reports: `/app/test_reports/iteration_3.json`
+
+## Data Model (mandiData.json)
+```javascript
+{
+  "mandis": [{
+    "id": "mandi-001",
+    "name": "Azadpur Mandi",
+    "location": "Delhi",
+    "commodity": "Tomato",
+    "currentPrice": 4250,
+    "previousPrice": 3980,
+    "arrivals": 2450,
+    "previousArrivals": 2680,
+    "rainFlag": true,
+    "festivalFlag": false,
+    "baseSupply": 2800,
+    "baseDemand": 3000,
+    "priceHistory": [...],
+    "arrivalsHistory": [...],
+    "connectedMandis": ["mandi-002", "mandi-003"]
+  }],
+  "shockTypes": [...]
+}
+```
+
+## Stress Calculation Formula
+```
+Stress Score = Price Stress + Supply Stress + Instability Stress + External Stress
+
+Price Stress:
+- price_change > 8%: +35 points
+- price_change > 4%: +20 points
+
+Supply Stress:
+- arrival_change < -10%: +30 points
+- arrival_change < -5%: +15 points
+
+Instability Stress:
+- volatility > 10%: +20 points
+
+External Stress:
+- rainFlag: +10 points
+- festivalFlag: +10 points
+
+Status Classification:
+- stress > 65: HIGH_RISK
+- stress > 35: WATCH
+- stress <= 35: NORMAL
+```
+
+## Shock Propagation Formula
+```
+price_new = price_old × (Demand/Supply)^elasticity
+
+Where elasticity = 0.4
+
+Ripple Effect:
+- Level 1 neighbors: 60% of impact
+- Level 2 neighbors: 30% of impact
 ```
 
 ---
 
-## Design Philosophy
-**Target Feel**: Funded SaaS startup, Decision Intelligence Platform, NOT student hackathon UI
-
-**Design Tone**:
-- Minimal
-- Premium
-- Spacious
-- Analytical
-- High-signal
-
-**Visual Language**:
-- Inter typography (clean, modern)
-- Rounded corners (12-16px)
-- Soft shadows (3-tier depth)
-- Premium hover states
-- Calm, analytical microinteractions
+*Last Updated: December 2025*
