@@ -45,18 +45,17 @@ export const DiagnosticsPanel = ({ mandi }) => {
   };
 
   return (
-    <div className="bg-card border border-border p-6 space-y-6" data-testid="diagnostics-panel">
+    <div className="bg-card border border-border p-6 space-y-6 rounded-xl" style={{ boxShadow: 'var(--shadow-card)' }} data-testid="diagnostics-panel">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-xl font-bold">{mandi.name}</h3>
-          <p className="text-sm text-muted-foreground">{mandi.location} • {mandi.commodity}</p>
+          <p className="text-sm text-muted-foreground mb-1">{mandi.location} • {mandi.commodity}</p>
         </div>
         <StatusBadge status={mandi.status} />
       </div>
 
       {/* Stress Score */}
-      <div className="flex items-center justify-center py-4 border border-border bg-gradient-to-b from-secondary/50 to-secondary/20">
+      <div className="flex items-center justify-center py-6 rounded-xl bg-gradient-to-b from-secondary/50 to-secondary/20">
         <div className="text-center">
           <span className="data-label block mb-2">MARKET STRESS INDEX</span>
           <StressGauge score={mandi.stressScore} size={120} />
