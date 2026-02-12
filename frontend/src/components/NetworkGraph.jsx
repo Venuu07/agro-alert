@@ -205,6 +205,11 @@ export const NetworkGraph = ({
           viewBox="0 0 1000 640"
           preserveAspectRatio="xMidYMid meet"
         >
+          {/* Test circles - should always show */}
+          <circle cx="200" cy="200" r="30" fill="red" />
+          <circle cx="500" cy="320" r="30" fill="green" />
+          <circle cx="800" cy="200" r="30" fill="blue" />
+          
           {/* Background grid */}
           <rect x="0" y="0" width="1000" height="640" fill="transparent" />
           
