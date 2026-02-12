@@ -268,11 +268,6 @@ export const NetworkGraph = ({
           {/* Debug rectangle to verify SVG is rendering */}
           <rect x="0" y="0" width="1000" height="640" fill="transparent" stroke="#333" strokeWidth="1" />
           
-          {/* Debug circles at known positions */}
-          <circle cx="500" cy="80" r="20" fill="#ff6b6b" />
-          <circle cx="708" cy="200" r="20" fill="#ffb86b" />
-          <circle cx="292" cy="440" r="20" fill="#22c55e" />
-          
           <defs>
             {/* Radial gradient for pulse effect */}
             <radialGradient id="pulse-gradient-green" cx="50%" cy="50%" r="50%">
