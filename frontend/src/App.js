@@ -345,7 +345,10 @@ const SimulateView = ({ stressData, onSimulationComplete }) => {
       </div>
       
       {/* Transfer Recommendations */}
-      <TransferRecommendations />
+      <TransferRecommendations onTransferComplete={() => {
+        // Refresh mandis list after transfer
+        axios.get(`${API}/mandis`).then(res => setMandis(res.data.mandis)).catch(console.error);
+      }} />
     </div>
   );
 };
