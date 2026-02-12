@@ -303,7 +303,10 @@ export const NetworkGraph = ({
             const fromNode = nodes.find(n => n.id === edge.from);
             const toNode = nodes.find(n => n.id === edge.to);
             
-            if (!fromNode || !toNode) return null;
+            if (!fromNode || !toNode) {
+              console.log('[NetworkGraph] Edge skipped - missing node', { from: edge.from, to: edge.to, fromNode: !!fromNode, toNode: !!toNode });
+              return null;
+            }
             
             const strength = edge.strength || 0.5;
             const isAffected = simulationTarget && (
@@ -338,8 +341,40 @@ export const NetworkGraph = ({
             );
           })}
 
-          {/* Nodes */}
-          {nodes.map((node) => {
+          {/* Nodes - Simple circles without conditions first */}
+          {nodes.map((node, idx) => {
+            console.log('[NetworkGraph] Rendering node:', node.id, node.x, node.y);
+            return (
+              <circle 
+                key={`simple-${node.id}`}
+                cx={node.x}
+                cy={node.y}
+                r={18}
+                fill={node.impact > 0.66 ? '#ff6b6b' : node.impact > 0.33 ? '#ffb86b' : '#22c55e'}
+                stroke="#fff"
+                strokeWidth="2"
+              />
+            );
+          })}
+
+          {/* Node labels */}
+          {nodes.map((node) => (
+            <text
+              key={`label-${node.id}`}
+              x={node.x}
+              y={node.y}
+              textAnchor="middle"
+              dominantBaseline="middle"
+              fill="#fff"
+              fontSize="10"
+              fontWeight="bold"
+            >
+              {node.msi}
+            </text>
+          ))}
+
+          {/* Original Complex Nodes - disabled for debugging */}
+          {/* nodes.map((node) => {
             const impact = getNodeImpact(node);
             const radius = getNodeRadius(impact);
             const color = getNodeColor(impact);
