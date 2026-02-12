@@ -13,7 +13,7 @@ import {
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-card border border-border p-3 shadow-lg">
+      <div className="bg-card border border-border p-3 shadow-lg rounded-lg">
         <p className="data-label mb-1">{label}</p>
         <p className="font-mono text-sm text-primary">
           Arrivals: {payload[0].value.toLocaleString()} quintals
@@ -43,41 +43,41 @@ export const ArrivalsChart = ({ data, title }) => {
   const isDecreasing = trend < 0;
 
   return (
-    <div className="chart-container" data-testid="arrivals-chart">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-bold">{title || 'ARRIVALS TREND'}</h3>
+    <div data-testid="arrivals-chart">
+      <div className="flex items-center justify-between mb-5">
+        <h3 className="text-lg font-semibold">{title || 'ARRIVALS TREND'}</h3>
         <span className={`data-label ${isDecreasing ? 'text-orange-500' : 'text-green-500'}`}>
           {isDecreasing ? '▼' : '▲'} {Math.abs(trend).toLocaleString()} QTL
         </span>
       </div>
-      <ResponsiveContainer width="100%" height={200}>
+      <ResponsiveContainer width="100%" height={220}>
         <BarChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
           <CartesianGrid 
             strokeDasharray="3 3" 
-            stroke="#27272a" 
+            stroke="rgba(255,255,255,0.05)" 
             vertical={false} 
           />
           <XAxis 
             dataKey="date" 
             stroke="#64748b" 
-            tick={{ fontSize: 11, fontFamily: 'JetBrains Mono' }}
-            axisLine={{ stroke: '#27272a' }}
+            tick={{ fontSize: 11, fontFamily: 'Inter' }}
+            axisLine={{ stroke: 'rgba(255,255,255,0.1)' }}
             tickLine={false}
           />
           <YAxis 
             stroke="#64748b" 
-            tick={{ fontSize: 11, fontFamily: 'JetBrains Mono' }}
-            axisLine={{ stroke: '#27272a' }}
+            tick={{ fontSize: 11, fontFamily: 'Inter' }}
+            axisLine={{ stroke: 'rgba(255,255,255,0.1)' }}
             tickLine={false}
             width={50}
             tickFormatter={(value) => `${(value / 1000).toFixed(1)}k`}
           />
           <Tooltip content={<CustomTooltip />} />
-          <Bar dataKey="arrivals" radius={[2, 2, 0, 0]}>
+          <Bar dataKey="arrivals" radius={[6, 6, 0, 0]}>
             {chartData.map((entry, index) => (
               <Cell 
                 key={`cell-${index}`} 
-                fill={entry.isLatest ? (isDecreasing ? '#f97316' : '#22c55e') : '#3f3f46'} 
+                fill={entry.isLatest ? (isDecreasing ? '#f97316' : '#22c55e') : '#27272a'} 
               />
             ))}
           </Bar>
