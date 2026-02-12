@@ -132,6 +132,10 @@ export const NetworkGraph = ({
   }
 
   const { nodes, edges } = graphData;
+  
+  // Debug: Log what we're about to render
+  console.log('[NetworkGraph] About to render nodes:', nodes);
+  console.log('[NetworkGraph] About to render edges:', edges);
 
   // Calculate node impact considering simulation
   const getImpact = (node) => {
