@@ -242,6 +242,34 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
 
 ---
 
+## Bug Fixes
+
+### Transfer Execution State Inconsistency (Fixed - Dec 2025)
+**Problem**: After executing a transfer, surplus supply was NOT reduced, deficit supply was NOT increased, and dashboard reflected stale values.
+
+**Root Cause**: Multiple API endpoints were reading from `BASE_DATA["mandis"]` (static data loaded at server startup) instead of `get_current_state()["mandis"]` (the live market state that gets updated after transfers).
+
+**Affected Endpoints (Fixed)**:
+- `/api/transfer-recommendations` - Now reads from live state
+- `/api/surplus-deficit/{mandi_id}` - Now reads from live state
+- `/api/surplus-deficit` - Now reads from live state
+- `/api/simulate` - Now reads from live state
+- `/api/recommend` - Now reads from live state
+- `/api/mandis` - Now reads from live state
+- `/api/mandi/{mandi_id}/commodities` - Now reads from live state
+- `/api/forecast` - Now reads from live state
+- `/api/simulate-with-graph` - Now reads from live state
+
+**Verification**: After fix, transfers correctly:
+- ✅ Reduce source supply
+- ✅ Increase destination supply
+- ✅ Recompute prices using elasticity formula
+- ✅ Update dashboard values in real-time
+- ✅ Update surplus/deficit intelligence
+- ✅ Update transfer recommendations
+
+---
+
 ## Prioritized Backlog
 
 ### P0 (Critical - Next) 
