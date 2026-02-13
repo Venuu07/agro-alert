@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import "@/App.css";
-import { BrowserRouter, Routes, Route, useNavigate, useParams, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate, useParams, useLocation, Navigate } from "react-router-dom";
 import axios from "axios";
 import { Toaster, toast } from 'sonner';
 import { Navbar } from './components/Navbar';
@@ -14,6 +14,7 @@ import { SimulationPanel } from './components/SimulationPanel';
 import { SimulationResults } from './components/SimulationResults';
 import { RecommendationPanel } from './components/RecommendationPanel';
 import { LandingPage } from './components/LandingPage';
+import { LoginScreen } from './components/LoginScreen';
 import { JarvisAssistant } from './components/JarvisAssistant';
 import { NetworkGraph } from './components/NetworkGraph';
 import { CommodityPanel } from './components/CommodityPanel';
@@ -24,12 +25,54 @@ import { Button } from './components/ui/button';
 import { ArrowLeft, Loader2, AlertTriangle, CheckCircle, BarChart3 } from 'lucide-react';
 import { StressGauge } from './components/StressGauge';
 import { LinkedMandis } from './components/LinkedMandis';
-import { TierProvider, FEATURES } from './context/TierContext';
+import { TierProvider, FEATURES, useTier } from './context/TierContext';
 import { LockedFeature } from './components/LockedFeature';
 import { UpgradeModal } from './components/UpgradeModal';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
+
+// Protected Route wrapper - redirects to login if not authenticated
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated, isInitialized } = useTier();
+  
+  // Show loading while checking auth state
+  if (!isInitialized) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+  
+  // Redirect to login if not authenticated
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  return children;
+};
+
+// Auth Route wrapper - redirects to app if already authenticated
+const AuthRoute = ({ children }) => {
+  const { isAuthenticated, isInitialized } = useTier();
+  
+  // Show loading while checking auth state
+  if (!isInitialized) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+  
+  // Redirect to app if already authenticated
+  if (isAuthenticated) {
+    return <Navigate to="/app" replace />;
+  }
+  
+  return children;
+};
 
 // Dashboard View
 const Dashboard = ({ stressData, loading }) => {
