@@ -195,6 +195,10 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
 - ✅ `hasAccess(feature)` function for tier checking
 - ✅ `promptUpgrade(feature)` to show upgrade modal
 - ✅ `toggleTier()` for demo tier switching
+- ✅ `isAuthenticated` state for login flow
+- ✅ `loginAsFree()` / `loginAsPremium()` functions
+- ✅ `logout()` function clears session
+- ✅ Session persistence via localStorage
 
 **LockedFeature Component** (`/app/frontend/src/components/LockedFeature.jsx`):
 - ✅ Blurred content preview with lock overlay
@@ -214,6 +218,36 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
 - ✅ Navbar tier indicator (FREE/PREMIUM)
 - ✅ Toggle switch for demo tier switching
 - ✅ Crown icon for premium, User icon for free
+
+### Phase 8: Mock Authentication & Tier Selection (Completed - Dec 2025)
+
+**CRITICAL CONSTRAINTS**: No real authentication, no JWT, no backend auth logic - UI-level simulation only.
+
+#### Login Screen (`/app/frontend/src/components/LoginScreen.jsx`)
+- ✅ Premium glassmorphism UI with animated grid background
+- ✅ "Select Your Access Level" heading
+- ✅ Two tier selection cards:
+  - **Free Operator**: Dashboard Overview, Shock Simulation, Risk Monitoring
+  - **Premium Operator** (Recommended): Surplus/Deficit, Transfer Intelligence, Price Forecasting
+- ✅ "Continue as Free" / "Continue as Premium" CTAs
+- ✅ Smooth transition animation on login
+- ✅ Demo mode note at bottom
+
+#### Route Protection
+- ✅ `ProtectedRoute` wrapper - redirects unauthenticated users to `/login`
+- ✅ `AuthRoute` wrapper - redirects authenticated users to `/app`
+- ✅ Landing page "Enter Platform" now routes to `/login`
+- ✅ Direct `/app` access blocked without login
+
+#### Session Management
+- ✅ Session persisted in localStorage (`agro_intel_session`)
+- ✅ Session includes tier and timestamp
+- ✅ Session restored on page reload
+- ✅ "Sign Out" button in navbar clears session
+
+#### Navbar Updates
+- ✅ "Sign Out" button added with LogOut icon
+- ✅ Tier toggle visible showing FREE/PREMIUM status
 
 ---
 
