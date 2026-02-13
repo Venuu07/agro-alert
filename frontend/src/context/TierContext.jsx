@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 
 /**
  * Feature Tier Configuration
@@ -6,7 +6,14 @@ import React, { createContext, useContext, useState, useCallback } from 'react';
  * TIER STRUCTURE:
  * - FREE: Dashboard, Stress Index, Basic Simulation, Ripple Visualizer, Limited History, Basic Jarvis
  * - PREMIUM: All features including Surplus/Deficit, Transfer Intelligence, Forecast, Advanced Analytics
+ * 
+ * AUTHENTICATION:
+ * - Mock authentication layer (UI-level simulation only)
+ * - No backend auth logic - state persisted in localStorage
  */
+
+// Storage key for session persistence
+const STORAGE_KEY = 'agro_intel_session';
 
 // Feature definitions with tier requirements
 export const FEATURES = {
@@ -71,13 +78,87 @@ const TIER_HIERARCHY = {
   premium: 1,
 };
 
+// Load session from localStorage
+const loadSession = () => {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const session = JSON.parse(stored);
+      // Validate session structure
+      if (session && (session.tier === 'free' || session.tier === 'premium')) {
+        return session;
+      }
+    }
+  } catch (e) {
+    console.warn('Failed to load session:', e);
+  }
+  return null;
+};
+
+// Save session to localStorage
+const saveSession = (tier) => {
+  try {
+    const session = {
+      tier,
+      timestamp: Date.now(),
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+  } catch (e) {
+    console.warn('Failed to save session:', e);
+  }
+};
+
+// Clear session from localStorage
+const clearSession = () => {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (e) {
+    console.warn('Failed to clear session:', e);
+  }
+};
+
 const TierContext = createContext(null);
 
 export const TierProvider = ({ children }) => {
-  // Default tier - can be toggled for demo purposes
+  // Initialize from stored session
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentTier, setCurrentTier] = useState('free');
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [upgradeFeature, setUpgradeFeature] = useState(null);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Load session on mount
+  useEffect(() => {
+    const session = loadSession();
+    if (session) {
+      setCurrentTier(session.tier);
+      setIsAuthenticated(true);
+    }
+    setIsInitialized(true);
+  }, []);
+
+  // Login as Free Operator
+  const loginAsFree = useCallback(() => {
+    setCurrentTier('free');
+    setIsAuthenticated(true);
+    saveSession('free');
+  }, []);
+
+  // Login as Premium Operator
+  const loginAsPremium = useCallback(() => {
+    setCurrentTier('premium');
+    setIsAuthenticated(true);
+    saveSession('premium');
+  }, []);
+
+  // Logout
+  const logout = useCallback(() => {
+    setIsAuthenticated(false);
+    setCurrentTier('free');
+    clearSession();
+    setShowUpgradeModal(false);
+    setUpgradeFeature(null);
+  }, []);
 
   // Check if a feature is accessible based on current tier
   const hasAccess = useCallback((feature) => {
@@ -95,13 +176,16 @@ export const TierProvider = ({ children }) => {
 
   // Toggle tier (for demo purposes)
   const toggleTier = useCallback(() => {
-    setCurrentTier(prev => prev === 'free' ? 'premium' : 'free');
-  }, []);
+    const newTier = currentTier === 'free' ? 'premium' : 'free';
+    setCurrentTier(newTier);
+    saveSession(newTier);
+  }, [currentTier]);
 
   // Set specific tier
   const setTier = useCallback((tier) => {
     if (tier === 'free' || tier === 'premium') {
       setCurrentTier(tier);
+      saveSession(tier);
     }
   }, []);
 
@@ -120,18 +204,31 @@ export const TierProvider = ({ children }) => {
   // Upgrade to premium (simulated)
   const upgradeToPremium = useCallback(() => {
     setCurrentTier('premium');
+    saveSession('premium');
     setShowUpgradeModal(false);
     setUpgradeFeature(null);
   }, []);
 
   const value = {
+    // Authentication state
+    isAuthenticated,
+    isInitialized,
+    loginAsFree,
+    loginAsPremium,
+    logout,
+    
+    // Tier state
     currentTier,
     isPremium: currentTier === 'premium',
     isFree: currentTier === 'free',
+    
+    // Feature access
     hasAccess,
     hasFeatureAccess,
     toggleTier,
     setTier,
+    
+    // Upgrade modal
     promptUpgrade,
     closeUpgradeModal,
     upgradeToPremium,
