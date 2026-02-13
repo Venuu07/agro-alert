@@ -24,6 +24,9 @@ import { Button } from './components/ui/button';
 import { ArrowLeft, Loader2, AlertTriangle, CheckCircle, BarChart3 } from 'lucide-react';
 import { StressGauge } from './components/StressGauge';
 import { LinkedMandis } from './components/LinkedMandis';
+import { TierProvider, FEATURES } from './context/TierContext';
+import { LockedFeature } from './components/LockedFeature';
+import { UpgradeModal } from './components/UpgradeModal';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
