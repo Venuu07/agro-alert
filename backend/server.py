@@ -740,8 +740,12 @@ async def get_shock_types():
 @api_router.post("/simulate", response_model=SimulationResponse)
 async def run_simulation(request: SimulationRequest):
     """Run deterministic shock simulation with elasticity-based price propagation"""
+    # Use LIVE STATE - not static BASE_DATA
+    state = get_current_state()
+    mandis = state.get("mandis", BASE_DATA["mandis"])
+    
     target_mandi = None
-    for m in BASE_DATA["mandis"]:
+    for m in mandis:
         if m["id"] == request.mandiId:
             target_mandi = m
             break
@@ -754,7 +758,7 @@ async def run_simulation(request: SimulationRequest):
         shock_type=request.shockType,
         intensity=request.intensity,
         duration=request.duration,
-        all_mandis=BASE_DATA["mandis"]
+        all_mandis=mandis
     )
     
     return SimulationResponse(**result)
@@ -762,8 +766,12 @@ async def run_simulation(request: SimulationRequest):
 @api_router.post("/recommend", response_model=RecommendationResponse)
 async def get_recommendations(request: RecommendationRequest):
     """Get rule-based intervention recommendations with optional AI explanations"""
+    # Use LIVE STATE - not static BASE_DATA
+    state = get_current_state()
+    mandis = state.get("mandis", BASE_DATA["mandis"])
+    
     target_mandi = None
-    for m in BASE_DATA["mandis"]:
+    for m in mandis:
         if m["id"] == request.mandiId:
             target_mandi = m
             break
@@ -772,7 +780,7 @@ async def get_recommendations(request: RecommendationRequest):
         raise HTTPException(status_code=404, detail="Mandi not found")
     
     # Generate recommendations
-    recommendations = generate_recommendations(target_mandi, BASE_DATA["mandis"])
+    recommendations = generate_recommendations(target_mandi, mandis)
     
     # Get stress data
     stress_data = calculate_stress_score(target_mandi)
@@ -809,6 +817,9 @@ async def get_recommendations(request: RecommendationRequest):
 @api_router.get("/mandis")
 async def get_all_mandis():
     """Get list of all mandis for dropdowns"""
+    # Use LIVE STATE - not static BASE_DATA
+    state = get_current_state()
+    mandis = state.get("mandis", BASE_DATA["mandis"])
     return {
         "mandis": [
             {
@@ -818,7 +829,7 @@ async def get_all_mandis():
                 "commodity": m["commodity"],
                 "connectedMandis": m.get("connectedMandis", [])
             }
-            for m in BASE_DATA["mandis"]
+            for m in mandis
         ]
     }
 
@@ -1124,7 +1135,11 @@ async def get_transfer_recommendations():
 @api_router.get("/mandi/{mandi_id}/commodities")
 async def get_mandi_commodities(mandi_id: str):
     """Get all commodities for a mandi with stress analysis"""
-    for m in BASE_DATA["mandis"]:
+    # Use LIVE STATE - not static BASE_DATA
+    state = get_current_state()
+    mandis = state.get("mandis", BASE_DATA["mandis"])
+    
+    for m in mandis:
         if m["id"] == mandi_id:
             commodities = m.get("commodities", [])
             
