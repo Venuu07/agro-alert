@@ -164,6 +164,57 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
 - ✅ Shows success toast with price impact
 - ✅ Dashboard auto-refreshes after transfer
 
+### Phase 7: Feature Tiering / Business Model Layer (Completed - Dec 2025)
+
+**CRITICAL CONSTRAINTS**: No authentication, no payment systems, only feature gating & tier simulation.
+
+#### Tier Structure
+
+**🟢 FREE TIER** - Accessible Features:
+- ✅ Dashboard Overview
+- ✅ Market Stress Index
+- ✅ Basic Shock Simulation
+- ✅ Ripple Visualizer / Network Graph
+- ✅ Mandi Details
+- ✅ Basic Jarvis Explanations
+- ✅ Price History (7 days)
+
+**🔵 PREMIUM TIER** - Locked Features (gated for free users):
+- ❌ Surplus/Deficit Intelligence
+- ❌ Transfer Intelligence
+- ❌ Price Forecast Engine
+- ❌ Advanced Analytics
+- ❌ Market Update Panel
+- ❌ Multi-Commodity Analysis
+- ❌ Full Historical Data
+
+#### Implementation
+
+**TierContext** (`/app/frontend/src/context/TierContext.jsx`):
+- ✅ Global tier state: `USER_TIER = "free" | "premium"`
+- ✅ `hasAccess(feature)` function for tier checking
+- ✅ `promptUpgrade(feature)` to show upgrade modal
+- ✅ `toggleTier()` for demo tier switching
+
+**LockedFeature Component** (`/app/frontend/src/components/LockedFeature.jsx`):
+- ✅ Blurred content preview with lock overlay
+- ✅ Lock icon with feature name
+- ✅ "PREMIUM INTELLIGENCE" badge
+- ✅ "Unlock Feature" CTA button
+- ✅ Click-to-upgrade interaction
+
+**UpgradeModal Component** (`/app/frontend/src/components/UpgradeModal.jsx`):
+- ✅ Premium benefits grid (6 features)
+- ✅ $49/month pricing display (simulated)
+- ✅ Feature checklist
+- ✅ "Upgrade to Premium" CTA
+- ✅ Highlighted feature that triggered modal
+
+**TierToggle Component** (`/app/frontend/src/components/TierToggle.jsx`):
+- ✅ Navbar tier indicator (FREE/PREMIUM)
+- ✅ Toggle switch for demo tier switching
+- ✅ Crown icon for premium, User icon for free
+
 ---
 
 ## Architecture
