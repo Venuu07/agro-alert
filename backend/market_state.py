@@ -403,7 +403,8 @@ def execute_transfer(
         dest_mandi["arrivalsHistory"].append({"date": current_date, "arrivals": dest_new_arrivals})
     _market_state["mandis"][dest_idx] = dest_mandi
     
-    logger.info(f"Transfer executed: {quantity} quintals of {commodity_name} from {source_mandi_id} to {dest_mandi_id}")
+    logger.info(f"[TRANSFER] Transfer executed: {quantity} quintals of {commodity_name} from {source_mandi_id} to {dest_mandi_id}")
+    logger.info(f"[TRANSFER] Updated _market_state: source arrivals now={_market_state['mandis'][source_idx].get('arrivals')}, dest arrivals now={_market_state['mandis'][dest_idx].get('arrivals')}")
     
     return {
         "success": True,
