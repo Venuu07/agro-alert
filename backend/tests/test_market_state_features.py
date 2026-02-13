@@ -7,7 +7,7 @@ import requests
 import os
 import time
 
-BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://cropshield-dash.preview.emergentagent.com').rstrip('/')
+BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://cropmonitor-14.preview.emergentagent.com').rstrip('/')
 
 
 class TestMarketUpdateEndpoint:
