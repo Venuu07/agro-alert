@@ -277,9 +277,10 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
 └── frontend/
     └── src/
         ├── context/
-        │   └── TierContext.jsx         # NEW: Feature tier state management
+        │   └── TierContext.jsx         # Feature tier + auth state management
         ├── components/
         │   ├── LandingPage.jsx
+        │   ├── LoginScreen.jsx          # NEW: Mock auth login screen
         │   ├── JarvisAssistant.jsx
         │   ├── NetworkGraph.jsx         # Full SVG visualizer
         │   ├── CommodityPanel.jsx       # Multi-commodity display
@@ -287,10 +288,10 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
         │   ├── TransferRecommendations.jsx # Invoke Transfer button
         │   ├── MarketUpdatePanel.jsx    # Operator input panel
         │   ├── SimulationPanel.jsx      # Shock description input
-        │   ├── Navbar.jsx               # UPDATED: TierToggle integration
-        │   ├── LockedFeature.jsx        # NEW: Feature lock overlay
-        │   ├── UpgradeModal.jsx         # NEW: Premium upgrade modal
-        │   ├── TierToggle.jsx           # NEW: Tier switch control
+        │   ├── Navbar.jsx               # TierToggle + Sign Out button
+        │   ├── LockedFeature.jsx        # Feature lock overlay
+        │   ├── UpgradeModal.jsx         # Premium upgrade modal
+        │   ├── TierToggle.jsx           # Tier switch control
         │   ├── MandiCard.jsx
         │   ├── SystemOverview.jsx
         │   ├── SummaryStats.jsx
@@ -302,7 +303,7 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
         │   ├── PriceChart.jsx
         │   ├── ArrivalsChart.jsx
         │   └── StatusBadge.jsx
-        ├── App.js                   # Main routing + TierProvider
+        ├── App.js                   # Routing + ProtectedRoute + AuthRoute
         └── index.css                # Global styles + animations
 ```
 
