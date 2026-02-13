@@ -16,10 +16,17 @@ import { RecommendationPanel } from './components/RecommendationPanel';
 import { LandingPage } from './components/LandingPage';
 import { JarvisAssistant } from './components/JarvisAssistant';
 import { NetworkGraph } from './components/NetworkGraph';
+import { CommodityPanel } from './components/CommodityPanel';
+import { SurplusDeficitPanel } from './components/SurplusDeficitPanel';
+import { TransferRecommendations } from './components/TransferRecommendations';
+import { MarketUpdatePanel } from './components/MarketUpdatePanel';
 import { Button } from './components/ui/button';
 import { ArrowLeft, Loader2, AlertTriangle, CheckCircle, BarChart3 } from 'lucide-react';
 import { StressGauge } from './components/StressGauge';
 import { LinkedMandis } from './components/LinkedMandis';
+import { TierProvider, FEATURES } from './context/TierContext';
+import { LockedFeature } from './components/LockedFeature';
+import { UpgradeModal } from './components/UpgradeModal';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -191,10 +198,31 @@ const MandiDetail = ({ onMandiLoaded }) => {
         </div>
 
         {/* Diagnostics Column */}
-        <div className="detail-sidebar">
+        <div className="detail-sidebar space-y-6">
           <DiagnosticsPanel mandi={mandi} />
         </div>
       </div>
+
+      {/* Multi-Commodity & Supply-Demand Intelligence - PREMIUM */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <LockedFeature feature={FEATURES.COMMODITY_PANEL}>
+          <CommodityPanel mandiId={mandiId} mandiName={mandi.name} />
+        </LockedFeature>
+        <LockedFeature feature={FEATURES.SURPLUS_DEFICIT}>
+          <SurplusDeficitPanel mandiId={mandiId} />
+        </LockedFeature>
+      </div>
+
+      {/* Market Update Panel - Operator Input - PREMIUM */}
+      <LockedFeature feature={FEATURES.MARKET_UPDATE}>
+        <MarketUpdatePanel 
+          mandiId={mandiId}
+          mandiName={mandi.name}
+          commodities={mandi.commodities || [{ name: mandi.commodity, isPrimary: true }]}
+          currentArrivals={mandi.arrivals}
+          onUpdateComplete={() => fetchMandiDetail()}
+        />
+      </LockedFeature>
 
       {/* Linked Mandis */}
       <LinkedMandis 
@@ -221,6 +249,7 @@ const SimulateView = ({ stressData, onSimulationComplete }) => {
   const [shockTypes, setShockTypes] = useState([]);
   const [simulationResults, setSimulationResults] = useState(null);
   const [originalMandi, setOriginalMandi] = useState(null);
+  const [shockContext, setShockContext] = useState(null);
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
 
@@ -251,10 +280,21 @@ const SimulateView = ({ stressData, onSimulationComplete }) => {
       const mandiRes = await axios.get(`${API}/mandi/${params.mandiId}`);
       setOriginalMandi(mandiRes.data);
 
+      // Store shock context for Jarvis
+      if (params.shockDescription) {
+        setShockContext({
+          description: params.shockDescription,
+          detectedSignals: params.detectedSignals || []
+        });
+      }
+
       // Run simulation
       const simRes = await axios.post(`${API}/simulate`, params);
       setSimulationResults(simRes.data);
-      onSimulationComplete && onSimulationComplete(simRes.data);
+      onSimulationComplete && onSimulationComplete({
+        ...simRes.data,
+        shockContext: params.shockDescription
+      });
       toast.success('Simulation completed');
     } catch (error) {
       console.error('Simulation failed:', error);
@@ -273,7 +313,7 @@ const SimulateView = ({ stressData, onSimulationComplete }) => {
   }
 
   return (
-    <div className="animate-fade-in" data-testid="simulate-view">
+    <div className="animate-fade-in space-y-6" data-testid="simulate-view">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Simulation Controls */}
         <div className="lg:col-span-1 space-y-6">
@@ -295,11 +335,12 @@ const SimulateView = ({ stressData, onSimulationComplete }) => {
         </div>
 
         {/* Results */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 space-y-6">
           {simulationResults ? (
             <SimulationResults 
               results={simulationResults}
               originalData={originalMandi?.priceHistory || []}
+              shockContext={shockContext}
             />
           ) : (
             <div className="bg-card border border-border p-12 text-center rounded-2xl">
@@ -311,6 +352,14 @@ const SimulateView = ({ stressData, onSimulationComplete }) => {
           )}
         </div>
       </div>
+      
+      {/* Transfer Recommendations - PREMIUM */}
+      <LockedFeature feature={FEATURES.TRANSFER_INTELLIGENCE}>
+        <TransferRecommendations onTransferComplete={() => {
+          // Refresh mandis list after transfer
+          axios.get(`${API}/mandis`).then(res => setMandis(res.data.mandis)).catch(console.error);
+        }} />
+      </LockedFeature>
     </div>
   );
 };
@@ -555,25 +604,28 @@ const LandingWrapper = () => {
 
 function App() {
   return (
-    <BrowserRouter>
-      <Toaster 
-        position="top-right" 
-        toastOptions={{
-          style: {
-            background: 'hsl(240 6% 10%)',
-            border: '1px solid hsl(240 5% 18%)',
-            color: '#f8fafc',
-            fontFamily: 'Inter, sans-serif',
-            fontSize: '13px',
-            borderRadius: '12px',
-          },
-        }}
-      />
-      <Routes>
-        <Route path="/" element={<LandingWrapper />} />
-        <Route path="/app/*" element={<MainApp />} />
-      </Routes>
-    </BrowserRouter>
+    <TierProvider>
+      <BrowserRouter>
+        <Toaster 
+          position="top-right" 
+          toastOptions={{
+            style: {
+              background: 'hsl(240 6% 10%)',
+              border: '1px solid hsl(240 5% 18%)',
+              color: '#f8fafc',
+              fontFamily: 'Inter, sans-serif',
+              fontSize: '13px',
+              borderRadius: '12px',
+            },
+          }}
+        />
+        <UpgradeModal />
+        <Routes>
+          <Route path="/" element={<LandingWrapper />} />
+          <Route path="/app/*" element={<MainApp />} />
+        </Routes>
+      </BrowserRouter>
+    </TierProvider>
   );
 }
 

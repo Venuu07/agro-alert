@@ -1,0 +1,58 @@
+{
+  "connections": [
+    {
+      "from": "mandi-001",
+      "to": "mandi-002",
+      "edge_strength": 0.85,
+      "cost_per_qt": 45,
+      "travel_time": 3.5
+    },
+    {
+      "from": "mandi-001",
+      "to": "mandi-003",
+      "edge_strength": 0.72,
+      "cost_per_qt": 55,
+      "travel_time": 4.0
+    },
+    {
+      "from": "mandi-002",
+      "to": "mandi-004",
+      "edge_strength": 0.65,
+      "cost_per_qt": 110,
+      "travel_time": 8.5
+    },
+    {
+      "from": "mandi-003",
+      "to": "mandi-005",
+      "edge_strength": 0.78,
+      "cost_per_qt": 38,
+      "travel_time": 2.5
+    },
+    {
+      "from": "mandi-004",
+      "to": "mandi-005",
+      "edge_strength": 0.60,
+      "cost_per_qt": 95,
+      "travel_time": 7.0
+    },
+    {
+      "from": "mandi-002",
+      "to": "mandi-006",
+      "edge_strength": 0.90,
+      "cost_per_qt": 22,
+      "travel_time": 1.5
+    },
+    {
+      "from": "mandi-001",
+      "to": "mandi-006",
+      "edge_strength": 0.70,
+      "cost_per_qt": 50,
+      "travel_time": 4.0
+    }
+  ],
+  "metadata": {
+    "unit_cost": "INR per quintal",
+    "unit_time": "hours",
+    "edge_strength_range": "0.0 to 1.0"
+  }
+}

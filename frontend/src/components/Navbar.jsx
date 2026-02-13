@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Activity, AlertTriangle, BarChart3, Zap } from 'lucide-react';
+import { TierToggle } from './TierToggle';
 
 export const Navbar = ({ activeTab, onTabChange }) => {
   const navigate = useNavigate();
@@ -61,6 +62,9 @@ export const Navbar = ({ activeTab, onTabChange }) => {
               );
             })}
           </div>
+
+          {/* Tier Toggle */}
+          <TierToggle />
         </div>
       </div>
     </nav>
