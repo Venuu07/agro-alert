@@ -625,16 +625,29 @@ const MainApp = () => {
   );
 };
 
-// Landing Wrapper
+// Landing Wrapper - Now routes to login for authentication
 const LandingWrapper = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useTier();
 
   const handleEnterPlatform = () => {
-    navigate('/app');
+    // If already authenticated, go directly to app
+    if (isAuthenticated) {
+      navigate('/app');
+    } else {
+      // Otherwise, go to login
+      navigate('/login');
+    }
   };
 
   const handleRunSimulator = () => {
-    navigate('/app/simulate');
+    // If already authenticated, go directly to simulator
+    if (isAuthenticated) {
+      navigate('/app/simulate');
+    } else {
+      // Otherwise, go to login
+      navigate('/login');
+    }
   };
 
   return (
