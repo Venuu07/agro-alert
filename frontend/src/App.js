@@ -353,11 +353,13 @@ const SimulateView = ({ stressData, onSimulationComplete }) => {
         </div>
       </div>
       
-      {/* Transfer Recommendations */}
-      <TransferRecommendations onTransferComplete={() => {
-        // Refresh mandis list after transfer
-        axios.get(`${API}/mandis`).then(res => setMandis(res.data.mandis)).catch(console.error);
-      }} />
+      {/* Transfer Recommendations - PREMIUM */}
+      <LockedFeature feature={FEATURES.TRANSFER_INTELLIGENCE}>
+        <TransferRecommendations onTransferComplete={() => {
+          // Refresh mandis list after transfer
+          axios.get(`${API}/mandis`).then(res => setMandis(res.data.mandis)).catch(console.error);
+        }} />
+      </LockedFeature>
     </div>
   );
 };
