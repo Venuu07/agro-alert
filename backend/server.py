@@ -1408,9 +1408,13 @@ async def get_forecast(mandi: str, commodity: str, horizon: int = 7):
     # Validate horizon
     horizon = max(1, min(30, horizon))
     
+    # Use LIVE STATE - not static BASE_DATA
+    state = get_current_state()
+    mandis = state.get("mandis", BASE_DATA["mandis"])
+    
     # Resolve mandi ID from name if necessary
     mandi_id = mandi
-    for m in BASE_DATA["mandis"]:
+    for m in mandis:
         if m["name"].lower() == mandi.lower() or m["id"] == mandi:
             mandi_id = m["id"]
             break
@@ -1449,8 +1453,12 @@ async def run_simulation_with_graph(request: SimulationRequest):
     Run shock simulation and return both simulation results and updated graph payload.
     This endpoint provides complete data for visualization.
     """
+    # Use LIVE STATE - not static BASE_DATA
+    state = get_current_state()
+    mandis = state.get("mandis", BASE_DATA["mandis"])
+    
     target_mandi = None
-    for m in BASE_DATA["mandis"]:
+    for m in mandis:
         if m["id"] == request.mandiId:
             target_mandi = m
             break
@@ -1464,7 +1472,7 @@ async def run_simulation_with_graph(request: SimulationRequest):
         shock_type=request.shockType,
         intensity=request.intensity,
         duration=request.duration,
-        all_mandis=BASE_DATA["mandis"]
+        all_mandis=mandis
     )
     
     # Build graph payload with shock data
