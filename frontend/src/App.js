@@ -203,20 +203,26 @@ const MandiDetail = ({ onMandiLoaded }) => {
         </div>
       </div>
 
-      {/* Multi-Commodity & Supply-Demand Intelligence */}
+      {/* Multi-Commodity & Supply-Demand Intelligence - PREMIUM */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <CommodityPanel mandiId={mandiId} mandiName={mandi.name} />
-        <SurplusDeficitPanel mandiId={mandiId} />
+        <LockedFeature feature={FEATURES.COMMODITY_PANEL}>
+          <CommodityPanel mandiId={mandiId} mandiName={mandi.name} />
+        </LockedFeature>
+        <LockedFeature feature={FEATURES.SURPLUS_DEFICIT}>
+          <SurplusDeficitPanel mandiId={mandiId} />
+        </LockedFeature>
       </div>
 
-      {/* Market Update Panel - Operator Input */}
-      <MarketUpdatePanel 
-        mandiId={mandiId}
-        mandiName={mandi.name}
-        commodities={mandi.commodities || [{ name: mandi.commodity, isPrimary: true }]}
-        currentArrivals={mandi.arrivals}
-        onUpdateComplete={() => fetchMandiDetail()}
-      />
+      {/* Market Update Panel - Operator Input - PREMIUM */}
+      <LockedFeature feature={FEATURES.MARKET_UPDATE}>
+        <MarketUpdatePanel 
+          mandiId={mandiId}
+          mandiName={mandi.name}
+          commodities={mandi.commodities || [{ name: mandi.commodity, isPrimary: true }]}
+          currentArrivals={mandi.arrivals}
+          onUpdateComplete={() => fetchMandiDetail()}
+        />
+      </LockedFeature>
 
       {/* Linked Mandis */}
       <LinkedMandis 
