@@ -292,6 +292,8 @@ def execute_transfer(
     global _market_state
     state = get_current_state()
     
+    logger.info(f"[TRANSFER] Starting transfer: {quantity} Q of {commodity_name} from {source_mandi_id} to {dest_mandi_id}")
+    
     # Find source mandi
     source_mandi = None
     source_idx = None
@@ -341,9 +343,15 @@ def execute_transfer(
     if dest_demand <= 0:
         dest_demand = quantity  # Use transferred quantity as baseline demand
     
+    logger.info(f"[TRANSFER] Source ({source_mandi_id}): arrivals BEFORE={source_prev_arrivals}, price={source_prev_price}")
+    logger.info(f"[TRANSFER] Dest ({dest_mandi_id}): arrivals BEFORE={dest_prev_arrivals}, price={dest_prev_price}")
+    
     # Step 2 & 3: Adjust supplies
     source_new_arrivals = source_prev_arrivals - quantity
     dest_new_arrivals = dest_prev_arrivals + quantity
+    
+    logger.info(f"[TRANSFER] Source ({source_mandi_id}): arrivals AFTER={source_new_arrivals}")
+    logger.info(f"[TRANSFER] Dest ({dest_mandi_id}): arrivals AFTER={dest_new_arrivals}")
     
     # Step 4: Recompute prices using EXISTING elasticity model
     source_new_price = compute_new_price(source_prev_price, source_new_arrivals, source_demand)
