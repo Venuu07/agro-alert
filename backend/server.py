@@ -973,7 +973,10 @@ def get_mandi_surplus_deficit(mandi: Dict) -> Dict:
 @api_router.get("/surplus-deficit/{mandi_id}")
 async def get_surplus_deficit(mandi_id: str):
     """Get surplus/deficit intelligence for a mandi"""
-    for m in BASE_DATA["mandis"]:
+    # Use LIVE STATE - not static BASE_DATA
+    state = get_current_state()
+    mandis = state.get("mandis", BASE_DATA["mandis"])
+    for m in mandis:
         if m["id"] == mandi_id:
             return get_mandi_surplus_deficit(m)
     raise HTTPException(status_code=404, detail="Mandi not found")
@@ -981,8 +984,11 @@ async def get_surplus_deficit(mandi_id: str):
 @api_router.get("/surplus-deficit")
 async def get_all_surplus_deficit():
     """Get surplus/deficit intelligence for all mandis"""
+    # Use LIVE STATE - not static BASE_DATA
+    state = get_current_state()
+    mandis = state.get("mandis", BASE_DATA["mandis"])
     return {
-        "mandis": [get_mandi_surplus_deficit(m) for m in BASE_DATA["mandis"]]
+        "mandis": [get_mandi_surplus_deficit(m) for m in mandis]
     }
 
 # ============================================================
@@ -1101,7 +1107,11 @@ def get_mandi_price(mandi_id: str, commodity_name: str) -> float:
 @api_router.get("/transfer-recommendations")
 async def get_transfer_recommendations():
     """Get deterministic transfer recommendations based on surplus/deficit analysis"""
-    recommendations = generate_transfer_recommendations(BASE_DATA["mandis"])
+    # Use LIVE STATE - not static BASE_DATA
+    state = get_current_state()
+    mandis = state.get("mandis", BASE_DATA["mandis"])
+    logger.info(f"[TRANSFER-REC] Generating recommendations from live state with {len(mandis)} mandis")
+    recommendations = generate_transfer_recommendations(mandis)
     return {
         "recommendations": recommendations,
         "totalRecommendations": len(recommendations),
