@@ -235,23 +235,28 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
 │   ├── tests/
 │   │   ├── test_new_features.py    # Tests for intelligence features
 │   │   ├── test_graph_forecast_endpoints.py  # Graph & forecast tests
-│   │   └── test_market_state_features.py     # NEW: Market state tests
+│   │   └── test_market_state_features.py     # Market state tests
 │   ├── graph_service.py            # Graph computation module
-│   ├── market_state.py             # NEW: Market state persistence
+│   ├── market_state.py             # Market state persistence
 │   ├── server.py                   # API endpoints + all engines
 │   └── .env                        # EMERGENT_LLM_KEY
 └── frontend/
     └── src/
+        ├── context/
+        │   └── TierContext.jsx         # NEW: Feature tier state management
         ├── components/
         │   ├── LandingPage.jsx
         │   ├── JarvisAssistant.jsx
         │   ├── NetworkGraph.jsx         # Full SVG visualizer
         │   ├── CommodityPanel.jsx       # Multi-commodity display
         │   ├── SurplusDeficitPanel.jsx  # Supply-demand intel
-        │   ├── TransferRecommendations.jsx # UPDATED: Invoke Transfer button
-        │   ├── MarketUpdatePanel.jsx    # NEW: Operator input panel
+        │   ├── TransferRecommendations.jsx # Invoke Transfer button
+        │   ├── MarketUpdatePanel.jsx    # Operator input panel
         │   ├── SimulationPanel.jsx      # Shock description input
-        │   ├── Navbar.jsx
+        │   ├── Navbar.jsx               # UPDATED: TierToggle integration
+        │   ├── LockedFeature.jsx        # NEW: Feature lock overlay
+        │   ├── UpgradeModal.jsx         # NEW: Premium upgrade modal
+        │   ├── TierToggle.jsx           # NEW: Tier switch control
         │   ├── MandiCard.jsx
         │   ├── SystemOverview.jsx
         │   ├── SummaryStats.jsx
@@ -263,8 +268,8 @@ An Enterprise-Grade AI Decision Intelligence Platform that helps mandi operators
         │   ├── PriceChart.jsx
         │   ├── ArrivalsChart.jsx
         │   └── StatusBadge.jsx
-        ├── App.js                   # Main routing
-        └── index.css                # Global styles
+        ├── App.js                   # Main routing + TierProvider
+        └── index.css                # Global styles + animations
 ```
 
 ### API Endpoints
