@@ -1,10 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Activity, AlertTriangle, BarChart3, Zap } from 'lucide-react';
+import { Activity, AlertTriangle, BarChart3, Zap, LogOut } from 'lucide-react';
 import { TierToggle } from './TierToggle';
+import { useTier } from '../context/TierContext';
 
 export const Navbar = ({ activeTab, onTabChange }) => {
   const navigate = useNavigate();
+  const { logout, isPremium } = useTier();
   
   const tabs = [
     { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
@@ -13,6 +15,11 @@ export const Navbar = ({ activeTab, onTabChange }) => {
   ];
 
   const handleLogoClick = () => {
+    navigate('/');
+  };
+
+  const handleLogout = () => {
+    logout();
     navigate('/');
   };
 
@@ -63,8 +70,23 @@ export const Navbar = ({ activeTab, onTabChange }) => {
             })}
           </div>
 
-          {/* Tier Toggle */}
-          <TierToggle />
+          {/* User Controls */}
+          <div className="flex items-center gap-3">
+            <TierToggle />
+            <button
+              onClick={handleLogout}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all ${
+                isPremium 
+                  ? 'border-amber-500/20 hover:border-amber-500/40 hover:bg-amber-500/5' 
+                  : 'border-border hover:border-primary/30 hover:bg-secondary/50'
+              }`}
+              data-testid="logout-btn"
+              title="Sign out"
+            >
+              <LogOut size={14} className="text-muted-foreground" />
+              <span className="text-xs font-mono text-muted-foreground hidden sm:inline">Sign Out</span>
+            </button>
+          </div>
         </div>
       </div>
     </nav>
