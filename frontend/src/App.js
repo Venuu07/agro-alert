@@ -604,25 +604,28 @@ const LandingWrapper = () => {
 
 function App() {
   return (
-    <BrowserRouter>
-      <Toaster 
-        position="top-right" 
-        toastOptions={{
-          style: {
-            background: 'hsl(240 6% 10%)',
-            border: '1px solid hsl(240 5% 18%)',
-            color: '#f8fafc',
-            fontFamily: 'Inter, sans-serif',
-            fontSize: '13px',
-            borderRadius: '12px',
-          },
-        }}
-      />
-      <Routes>
-        <Route path="/" element={<LandingWrapper />} />
-        <Route path="/app/*" element={<MainApp />} />
-      </Routes>
-    </BrowserRouter>
+    <TierProvider>
+      <BrowserRouter>
+        <Toaster 
+          position="top-right" 
+          toastOptions={{
+            style: {
+              background: 'hsl(240 6% 10%)',
+              border: '1px solid hsl(240 5% 18%)',
+              color: '#f8fafc',
+              fontFamily: 'Inter, sans-serif',
+              fontSize: '13px',
+              borderRadius: '12px',
+            },
+          }}
+        />
+        <UpgradeModal />
+        <Routes>
+          <Route path="/" element={<LandingWrapper />} />
+          <Route path="/app/*" element={<MainApp />} />
+        </Routes>
+      </BrowserRouter>
+    </TierProvider>
   );
 }
 
