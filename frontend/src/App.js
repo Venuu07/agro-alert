@@ -645,6 +645,15 @@ const LandingWrapper = () => {
   );
 };
 
+// Login wrapper - checks auth and shows login screen
+const LoginWrapper = () => {
+  return (
+    <AuthRoute>
+      <LoginScreen />
+    </AuthRoute>
+  );
+};
+
 function App() {
   return (
     <TierProvider>
@@ -665,7 +674,12 @@ function App() {
         <UpgradeModal />
         <Routes>
           <Route path="/" element={<LandingWrapper />} />
-          <Route path="/app/*" element={<MainApp />} />
+          <Route path="/login" element={<LoginWrapper />} />
+          <Route path="/app/*" element={
+            <ProtectedRoute>
+              <MainApp />
+            </ProtectedRoute>
+          } />
         </Routes>
       </BrowserRouter>
     </TierProvider>
